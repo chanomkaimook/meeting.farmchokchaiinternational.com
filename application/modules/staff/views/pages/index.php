@@ -33,7 +33,24 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -57,6 +74,24 @@
 
 <script>
     $(document).ready(function() {
+        $('#datatable').datatable({
+            scrollY: dataTableHeight(),
+            scrollCollapse: false,
+            order: [],
+            columnDefs: [{
+                    responsivePriority: 1,
+                    targets: 0
+                },
+
+                {
+                    responsivePriority: 2,
+                    targets: 2
+                },
+            ],
+            dom: datatable_dom,
+            buttons: datatable_button,
+        })
+        return false
         //
         // # datatable_name = form script.php
         let datatable = $('#datatable')
