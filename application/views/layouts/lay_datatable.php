@@ -1,17 +1,26 @@
 <?php
 // path
-$path_navbar = 'application/views/partials/e_navbar.php';
-$path_topbar = 'application/views/partials/e_topbar.php';
-$path_sidebar = 'application/views/partials/e_sidebar_menu.php';
+$path_navbar = 'application/views/partials/e_nav.php';
 $path_footer = 'application/views/partials/e_footer.php';
 $path_head_link = 'application/views/partials/e_head_link.php';
 $path_head_title = 'application/views/partials/e_head_title.php';
 $path_script_begin = 'application/views/partials/e_script_begin.php';
 $path_script_end = 'application/views/partials/e_script_end.php';
+$path_script = 'application/views/partials/e_script.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    .card {
+        height: 1090px;
+    }
+
+    footer {
+        position: fixed !important;
+        bottom: 0 !important;
+    }
+</style>
 
 <head>
     <!-- Head title -->
@@ -24,13 +33,10 @@ $path_script_end = 'application/views/partials/e_script_end.php';
     <link href="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
 
     <!-- Link main -->
-    <?php
-    echo $template['partials']['headlink'];
-    ?>
     <?php include($path_head_link); ?>
 </head>
 
-<body>
+<body data-layout="horizontal">
 
     <!-- Begin page -->
     <div id="wrapper">
@@ -38,17 +44,32 @@ $path_script_end = 'application/views/partials/e_script_end.php';
         <?php include($path_navbar); ?>
         <!-- end Topbar -->
 
-        <!-- ========== Left Sidebar Start ========== -->
-        <?php include($path_sidebar); ?>
-        <!-- Left Sidebar End -->
-
         <!-- ============================================================== -->
         <!-- Start Page Content here -->
         <!-- ============================================================== -->
         <div class="content-page">
-            <?php include($path_topbar); ?>
 
-            <?php echo $template['body']; ?>
+            <div class="content">
+
+                <!-- Start Content-->
+                <div class="container-fluid">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title"><?php echo $template['title']; ?></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+                    <?php echo $template['body']; ?>
+
+                </div> <!-- end container-fluid -->
+
+            </div> <!-- end content -->
+
 
             <!-- Footer Start -->
             <?php include($path_footer); ?>
@@ -64,9 +85,6 @@ $path_script_end = 'application/views/partials/e_script_end.php';
 
     <!-- Script Begin -->
     <?php include($path_script_begin); ?>
-    <?php
-    echo $template['partials']['footerscript'];
-    ?>
 
     <!-- Required datatable js -->
     <script src="<?= base_url('') ?>asset/libs/datatables/jquery.dataTables.min.js"></script>

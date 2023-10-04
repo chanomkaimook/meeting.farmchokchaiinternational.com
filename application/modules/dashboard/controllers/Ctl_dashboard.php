@@ -16,7 +16,7 @@ class Ctl_dashboard extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('mdl_catagory', 'mdl_ticket'));
+        $this->load->model(array('mdl_ticket'));
         $this->load->helper(array('my_calculate'));
 
         $this->middleware();

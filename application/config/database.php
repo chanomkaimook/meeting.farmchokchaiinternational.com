@@ -79,9 +79,12 @@ $db['default'] = array(
 	'username' => 'root',
 	'password' => '',
 	'database' => 'db_datacenter',
-	// 'username' => 'server',
-	// 'password' => 'password',
-	// 'database' => 'database',
+	
+	// 'hostname' => 'https://chokchaiinternational.com',
+	// 'username' => 'db_datacenter',
+	// 'password' => 'f62r20zD&',
+	// 'database' => 'db_datacenter',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

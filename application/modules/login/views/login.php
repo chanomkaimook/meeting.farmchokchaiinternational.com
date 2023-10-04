@@ -14,6 +14,7 @@
 
     <link href="<?= base_url('') ?>asset/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
+    <script src="<?= base_url('asset/js/jquery/jquery_3.5.1.min.js') ?>"></script>
     <!-- App css -->
     <link href="<?= base_url('asset/css/bootstrap.min.css') ?>" rel="stylesheet" type="text/css" id="bootstrap-stylesheet" />
     <link href="<?= base_url('asset/css/icons.min.css') ?>" rel="stylesheet" type="text/css" />
@@ -105,15 +106,14 @@ if ($this->session->has_userdata('user_code')) {
         </div>
         <!-- end page -->
     </div>
-    <script src="<?= base_url('') ?>asset/js/jquery/jquery-3.5.1.min.js"></script>
 
     <!-- Sweet alert -->
     <script src="<?= base_url('') ?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
-
+<!-- D:\xampp\htdocs\datacenter.com\asset\js\jquery\jquery-3.5.1.min.js -->
     <script>
         // url
-        // let domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[1] + '/'
-        let domain = window.location.origin
+        let domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[1] + '/'
+        // let domain = window.location.origin
         $(document).ready(function() {
 
             $(document).on('submit', '#login', function() {

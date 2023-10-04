@@ -1,5 +1,5 @@
 <div id="accordion">
-    <div class="card mb-0">
+    <div class="cardd mb-0">
 
         <?php require_once('application/views/partials/dom_filter_collaspe.php'); ?>
 
