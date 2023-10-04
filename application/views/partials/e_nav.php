@@ -4,7 +4,7 @@
     <!-- end Topbar -->
 
     <!-- script -->
-    <?php require_once('e_script.php') ?>
+    <?php require_once('e_script_nav_top.php') ?>
     <!-- end script -->
 
     <?php require_once('e_nav_menu.php') ?>
