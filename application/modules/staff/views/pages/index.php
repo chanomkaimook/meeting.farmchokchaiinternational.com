@@ -74,7 +74,7 @@
         // # datatable_dom     = form e_navbar.php
         // # datatable_button  = form e_navbar.php
         //
-        let urlname = new URL(path(url_moduleControl + '/ctl_page/get_dataTable'), domain);
+        let urlname = new URL(path(url_moduleControl + '/get_dataTable'), domain);
 
         let table = datatable.DataTable({
             scrollY: dataTableHeight(),
