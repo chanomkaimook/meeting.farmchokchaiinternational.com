@@ -17,7 +17,7 @@
 
            
 
-            <li class="dropdown notification-list">
+            <li class="dropdown notification-list d-none">
                 <a class="nav-link dropdown-toggle  waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                     <i class="dripicons-bell noti-icon"></i>
                     <span class="badge badge-pink rounded-circle noti-icon-badge">4</span>

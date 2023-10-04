@@ -74,7 +74,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#datatable').datatable({
+        $('#datatable').DataTable({
             scrollY: dataTableHeight(),
             scrollCollapse: false,
             order: [],

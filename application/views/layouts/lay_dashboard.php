@@ -83,7 +83,6 @@ $path_script = 'application/views/partials/e_script.php';
     </div>
     <!-- END wrapper -->
 
-    <?php include($path_script); ?>
     <!-- Script Begin -->
     <?php include($path_script_begin); ?>
 
