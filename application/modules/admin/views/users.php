@@ -24,7 +24,105 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr data-id="1">
+                            <td>user</td>
+                            <td>01</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            <td>2023-10-02</td>
+                            <td>2023-10-05</td>
+                            <td>
+                                <li class="dropdown d-none d-lg-block">
+                                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">รายละเอียด</span>
+                                        </a>
 
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">แก้ไข</span>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">ลบ</span>
+                                        </a>
+
+                                    </div>
+                                </li>
+                            </td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>user</td>
+                            <td>02</td>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            <td>2023-10-02</td>
+                            <td>2023-10-05</td>
+                            <td>
+                                <li class="dropdown d-none d-lg-block">
+                                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">รายละเอียด</span>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">แก้ไข</span>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">ลบ</span>
+                                        </a>
+
+                                    </div>
+                                </li>
+                            </td>
+                        </tr>
+                        <tr data-id="3">
+                            <td>user</td>
+                            <td>03</td>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                            <td>2023-10-02</td>
+                            <td>2023-10-05</td>
+                            <td>
+                                <li class="dropdown d-none d-lg-block">
+                                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">รายละเอียด</span>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">แก้ไข</span>
+                                        </a>
+
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                            <span class="align-middle">ลบ</span>
+                                        </a>
+
+                                    </div>
+                                </li>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -42,6 +140,23 @@
 
 <script>
     $(document).ready(function() {
+        /* $('.verify').click(function() {
+            let id = $(this).attr('data-sub-id')
+            console.log(id)
+            // console.log($('tr').attr('data-id', id).class)
+            $('tr[data-id=' + id + ']').addClass('d-none')
+        }) */
+
+        $('#datatable_users').DataTable({
+            order: [
+                [1, 'asc']
+            ],
+            dom: datatable_dom,
+            buttons: datatable_button,
+
+        })
+        return false
+
         let frm = $('#dataform')
         let method = $('#dataform input#method')
 

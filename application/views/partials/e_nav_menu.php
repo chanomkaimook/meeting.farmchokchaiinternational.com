@@ -1,3 +1,19 @@
+<style>
+    .navigation-menu .active a.main-menu {
+        color: #4d0286 !important;
+        background-color: #eec7ff !important;
+    }
+
+    .has-submenu.active a/*  u.submenu a.sub-menu.active */ {
+        color: #eec7ff !important;
+        background-color: #4d0286 !important;
+    }
+
+    .has-submenu a.sub-menu.active {
+        color: #4d0286 !important;
+        background-color: #eec7ff !important;
+    }
+</style>
 <div class="topbar-menu">
     <div class="container-fluid">
         <div id="navigation">
@@ -5,44 +21,31 @@
             <ul class="navigation-menu">
 
                 <li class="has-submenu">
-                    <a href="#"> <i class="mdi mdi-tablet-dashboard"></i>Dashboard</a>
-                    <ul class="submenu">
-                        <li><a href="<?= site_url('dashboard/ctl_dashboard') ?>"> Dashboard</a></li>
-                    </ul>
+                    <a class="main-menu" href="<?= site_url('dashboard/ctl_dashboard') ?>"> <i class="mdi mdi-tablet-dashboard"></i>Dashboard</a>
                 </li>
 
                 <li class="has-submenu">
-                    <a href="<?= site_url('folder/ctl_folder') ?>">
+                    <a class="main-menu" href="<?= site_url('folder/ctl_folder') ?>">
                         <i class="mdi mdi-folder-outline"></i>Folder
                     </a>
-                    <!-- <ul class="submenu megamenu">
-                        <li>
-                            <ul>
-                                <li>
-                                    <span class="menu-title">UI Kit</span>
-                                </li>
-                                <li><a href="ui-typography.html">Typography</a></li>
-                                <li><a href="ui-cards.html">Cards</a></li>
-                                <li><a href="ui-buttons.html">Buttons</a></li>
-                                <li><a href="ui-modals.html">Modals</a></li>
-                                <li><a href="ui-checkbox-radio.html">Checkboxs-Radios</a></li>
-                                <li><a href="ui-spinners.html">Spinners</a></li>
-                                <li><a href="ui-ribbons.html">Ribbons</a></li>
-                                <li><a href="ui-portlets.html">Portlets</a></li>
-                                <li><a href="<?= site_url('folder/ctl_folder') ?>">Folder</a></li>
-                            </ul>
-                        </li>
-                    </ul> -->
                 </li>
 
                 <li class="has-submenu">
-                    <a href="#">
-                        <i class="mdi mdi-google-classroom"></i>Admin</a>
+                    <a class="main-menu" href="<?= site_url('record/ctl_record') ?>">
+                        <i class="mdi mdi-file-document-box-plus-outline"></i>บันทึกข้อมูล
+                    </a>
+                </li>
+
+                <li class="has-submenu">
+                    <a class="main-menu" href="#">
+                        <i class="mdi mdi-google-classroom"></i>Admin
+                    </a>
+
                     <ul class="submenu">
-                        <li class="has-submenu"><a href="<?= site_url('admin/ctl_register') ?>" data-show="ลงทะเบียน">ลงทะเบียน</a></li>
-                        <li class="has-submenu"><a href="<?= site_url('admin/ctl_user') ?>" data-show="ผู้ใช้งาน">ผู้ใช้งาน</a></li>
-                        <li class="has-submenu"><a href="<?= site_url('staff/ctl_page') ?>" data-show="พนักงาน">พนักงาน</a></li>
-                        <li class="has-submenu"><a href="<?= site_url('page/ctl_page') ?>" data-show="Blank">Blank</a></li>
+                        <li class="has-submenu"><a class="sub-menu" href="<?= site_url('admin/ctl_register') ?>" data-show="ลงทะเบียน">ลงทะเบียน</a></li>
+                        <li class="has-submenu"><a class="sub-menu" href="<?= site_url('admin/ctl_user') ?>" data-show="ผู้ใช้งาน">ผู้ใช้งาน</a></li>
+                        <!-- <li class="has-submenu"><a class="sub-menu" href="<?= site_url('staff/ctl_page') ?>" data-show="พนักงาน">พนักงาน</a></li> -->
+                        <li class="has-submenu"><a class="sub-menu" href="<?= site_url('folder/ctl_file_manage') ?>" data-show="File management">File management</a></li>
                     </ul>
                 </li>
                 <!-- <li class="has-submenu">

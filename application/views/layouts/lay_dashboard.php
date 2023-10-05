@@ -27,10 +27,10 @@ $path_script = 'application/views/partials/e_script.php';
     <?php include($path_head_title); ?>
 
     <!-- third party css -->
-    <link href="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" /> -->
 
-    <link href="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.css" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.css" rel="stylesheet" type="text/css" /> -->
 
     <!-- Link main -->
     <?php include($path_head_link); ?>
@@ -91,18 +91,29 @@ $path_script = 'application/views/partials/e_script.php';
     <script src="<?= base_url('') ?>asset/plugins/chartjs/chartjs.min.js"></script>
     <!-- <script src="<?= base_url('') ?>asset/js/pages/chartjs.init.js"></script> -->
 
+    <script src="<?= base_url('') ?>asset/libs/morris-js/morris.min.js"></script>
+    <script src="<?= base_url('') ?>asset/libs/raphael/raphael.min.js"></script>
+
+    <!-- KNOB JS -->
+    <script src="<?= base_url('') ?>asset/libs/jquery-knob/jquery.knob.min.js"></script>
+
+    <!-- Sparkline charts -->
+    <script src="<?= base_url('') ?>asset/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+    <script src="<?= base_url('') ?>asset/js/pages/dashboard-2.init.js"></script>
+
     <!-- Required datatable js -->
-    <script src="<?= base_url('') ?>asset/libs/datatables/jquery.dataTables.min.js"></script>
-    <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- <script src="<?= base_url('') ?>asset/libs/datatables/jquery.dataTables.min.js"></script> -->
+    <!-- <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.min.js"></script> -->
     <!-- Buttons examples -->
-    <script src="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.js"></script>
+    <!-- <script src="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.js"></script> -->
 
     <!-- Responsive examples -->
-    <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.responsive.min.js"></script>
-    <script src="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.min.js"></script>
+    <!-- <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.responsive.min.js"></script> -->
+    <!-- <script src="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.min.js"></script> -->
 
     <!-- Datatables init -->
-    <script src="<?= base_url('') ?>asset/js/pages/datatables.init.js"></script>
+    <!-- <script src="<?= base_url('') ?>asset/js/pages/datatables.init.js"></script> -->
 
     <!-- Script End -->
     <?php include($path_script_end); ?>

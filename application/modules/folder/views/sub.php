@@ -32,7 +32,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="Preview" data-filename="">
+                            <a href="#" class="Preview" data-type="png" data-filename="<?=site_url('test.png')?>">
                                 <div class="file-img-box">
                                     <img src="<?= site_url("asset/images/file_icons/png.svg") ?>" alt="">
                                 </div>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="Preview" data-filename="">
+                            <a href="#" class="Preview" data-type="jpg" data-filename="<?=site_url('test.jpg')?>">
                                 <div class="file-img-box">
                                     <img src="<?= site_url("asset/images/file_icons/jpg.svg") ?>" alt="">
                                 </div>
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="Preview" data-filename="">
+                            <a href="#" class="Preview" data-type="ppt" data-filename="<?=site_url('test.pptx')?>">
                                 <div class="file-img-box">
                                     <img src="<?= site_url("asset/images/file_icons/ppt.svg") ?>" alt="">
                                 </div>
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="Preview" data-filename="">
+                            <a href="#" class="Preview" data-type="xls" data-filename="<?=site_url('test.xlsx')?>">
                                 <div class="file-img-box">
                                     <img src="<?= site_url("asset/images/file_icons/xls.svg") ?>" alt="">
                                 </div>
@@ -140,7 +140,7 @@
                                 </div>
                             </div>
 
-                            <a href="#" class="Preview" data-filename="">
+                            <a href="#" class="Preview" data-type="pdf" data-filename="<?=site_url('test.pdf')?>">
                                 <div class="file-img-box">
                                     <img src="<?= site_url("asset/images/file_icons/pdf.svg") ?>" alt="">
                                 </div>
@@ -156,3 +156,6 @@
         </div>
     </div>
 </div>
+<?php
+include "crud_modal.php";
+?>

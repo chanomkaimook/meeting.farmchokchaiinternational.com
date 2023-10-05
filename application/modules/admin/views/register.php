@@ -17,7 +17,30 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        <tr data-id="1">
+                            <td>user</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            <td>2023-10-05</td>
+                            <td><button type="button" class="btn btn-primary verify" data-sub-id="1">อนุญาต</button></td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>user</td>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            <td>2023-10-05</td>
+                            <td><button type="button" class="btn btn-primary verify" data-sub-id="2">อนุญาต</button></td>
+                        </tr>
+                        <tr data-id="3">
+                            <td>user</td>
+                            <td>Larry</td>
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                            <td>2023-10-05</td>
+                            <td><button type="button" class="btn btn-primary verify" data-sub-id="3">อนุญาต</button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -32,6 +55,22 @@
 
 <script>
     $(document).ready(function() {
+        $('.verify').click(function() {
+            let id = $(this).attr('data-sub-id')
+            console.log(id)
+            // console.log($('tr').attr('data-id', id).class)
+            $('tr[data-id=' + id + ']').addClass('d-none')
+        })
+
+        $('#datatable_staff').DataTable({
+            order: [
+                [4, 'asc']
+            ],
+            dom: datatable_dom,
+            buttons: datatable_button,
+
+        })
+        return false
 
         let url_register = new URL('admin/ctl_register/fetch_data', domain);
         $('#datatable_staff').DataTable({
@@ -41,7 +80,9 @@
                 dataType: "json",
 
             },
-            order: [[ 4, 'asc' ]],
+            order: [
+                [4, 'asc']
+            ],
             columns: [{
                     "data": "ROLE",
                 },
@@ -78,7 +119,7 @@
          */
         $(document).on('click', '.btn_verify', function() {
             event.preventDefault();
-            
+
             var data = new FormData();
             data.append('id', $(this).attr('data-id'))
             data.append('username', $(this).attr('data-username'))
@@ -91,10 +132,10 @@
             fetch(url, option)
                 .then(res => res.json())
                 .then((resp) => {
-                    if(resp.error){
-                        swal.fire('ผิดพลาด',resp.message , 'warning')
-                    }else{
-                        swal.fire('สำเร็จ',resp.message , 'success')
+                    if (resp.error) {
+                        swal.fire('ผิดพลาด', resp.message, 'warning')
+                    } else {
+                        swal.fire('สำเร็จ', resp.message, 'success')
                         $(this).parents('tr').remove()
                     }
                 })

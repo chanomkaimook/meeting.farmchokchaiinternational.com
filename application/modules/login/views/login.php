@@ -9,8 +9,8 @@
     <meta content="Coderthemes" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- App favicon -->
-    <link rel="icon" type="image/png" sizes="16x16"  href="<?= base_url('') ?>asset/images/favicon-16x16.png">
-    
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('') ?>asset/images/favicon-16x16.png">
+
 
     <link href="<?= base_url('') ?>asset/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
@@ -109,11 +109,15 @@ if ($this->session->has_userdata('user_code')) {
 
     <!-- Sweet alert -->
     <script src="<?= base_url('') ?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
-<!-- D:\xampp\htdocs\datacenter.com\asset\js\jquery\jquery-3.5.1.min.js -->
+    <!-- D:\xampp\htdocs\datacenter.com\asset\js\jquery\jquery-3.5.1.min.js -->
     <script>
         // url
-        let domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[1] + '/'
-        // let domain = window.location.origin
+        let domain
+        if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+            domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[1] + '/'
+        } else {
+            domain = window.location.protocol + '//' + window.location.hostname + '/'
+        } // let domain = window.location.origin
         $(document).ready(function() {
 
             $(document).on('submit', '#login', function() {
