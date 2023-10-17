@@ -112,13 +112,7 @@ function detail_meeting(calEvent, jsEvent, view) {
 }
 
 function update_meeting(update_data, ctl) {
-    // console.log(update_data)
     let url = "update_data"
-    /* if (ctl == "calendar") {
-        url = "ctl_calendar/update_data"
-    } else if (ctl == "datatable") {
-        url = "ctl_datatable/update_data"
-    } */
     fetch(url, {
             method: 'post',
             body: update_data
