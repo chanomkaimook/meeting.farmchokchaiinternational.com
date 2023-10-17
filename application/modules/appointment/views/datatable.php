@@ -1,3 +1,5 @@
+<!-- <input type="hidden" name="my-id" id="my-id" value="<?=$_SESSION["user_code"]?>"> -->
+<input type="hidden" name="my-id" id="my-id" value="1">
 <div class="row">
     <div class="col-12">
         <div class="row">
@@ -20,20 +22,20 @@
                         <select class="form-control form-white" name="time">
                             <option selected disabled>เวลา</option>
                             <?php
-                            foreach ($time as $val) {
-                                if (!$val["START"]) {
-                                    $times = $val["END"];
-                                } elseif (!$val["END"]) {
-                                    $times = $val["START"];
-                                } else {
-                                    $times = $val["START"];
-                                }
-                            ?>
-                            <option value="<?= date('H:i', strtotime($times)) ?>"><?= date('H:i', strtotime($times)) ?>
+foreach ($time as $val) {
+    if (!$val["START"]) {
+        $times = $val["END"];
+    } elseif (!$val["END"]) {
+        $times = $val["START"];
+    } else {
+        $times = $val["START"];
+    }
+    ?>
+                            <option value="<?=date('H:i', strtotime($times))?>"><?=date('H:i', strtotime($times))?>
                             </option>
                             <?php
-                            }
-                            ?>
+}
+?>
                         </select>
                     </div>
 
@@ -42,12 +44,12 @@
                             name="user_create">
                             <option>ผู้สร้าง</option>
                             <?php
-                            foreach ($staff as $data) {
-                            ?>
-                            <option value="<?= $data->ID ?>"><?= $data->NAME . " " . $data->LASTNAME ?></option>
+foreach ($staff as $data) {
+    ?>
+                            <option value="<?=$data->ID?>"><?=$data->NAME . " " . $data->LASTNAME?></option>
                             <?php
-                            }
-                            ?>
+}
+?>
                         </select>
                     </div>
 
@@ -76,121 +78,17 @@
                         <table id="data_table" class="table table-hover w-100">
                             <thead>
                                 <tr>
-                                    <th scope="col">ชื่อ-นามสกุล</th>
-                                    <th scope="col">เรื่อง</th>
-                                    <th scope="col">วันที่</th>
-                                    <th scope="col">เวลา</th>
-                                    <th scope="col">ผู้สร้าง</th>
-                                    <th scope="col">สถานะ</th>
-                                    <th scope="col"></th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>เรื่อง</th>
+                                    <th>วันที่</th>
+                                    <th>เวลา</th>
+                                    <th>ผู้สร้าง</th>
+                                    <th>สถานะ</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr data-id="1">
-                                    <td>Mark Otto</td>
-                                    <td>เก็บหิน สนง.ฟาร์ม</td>
-                                    <td>2023-10-02</td>
-                                    <td>07:00</td>
-                                    <td>admin HR</td>
-                                    <td>รอดำเนินการ</td>
-                                    <td>
-                                        <li class="dropdown d-none d-lg-block">
-                                            <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown"
-                                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#detail-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">รายละเอียด</span>
-                                                </a>
 
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#update-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">แก้ไข</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" class="dropdown-item notify-item btn-delete" data-id="1">
-                                                    <span class="align-middle">ลบ</span>
-                                                </a>
-
-                                            </div>
-                                        </li>
-                                    </td>
-                                </tr>
-                                <tr data-id="2">
-                                    <td>Jacob Thornton</td>
-                                    <td>อบรมจป.หัวหน้างาน</td>
-                                    <td>2023-10-05</td>
-                                    <td>09:00</td>
-                                    <td>admin HR</td>
-                                    <td>รอดำเนินการ</td>
-                                    <td>
-                                        <li class="dropdown d-none d-lg-block">
-                                            <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown"
-                                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#detail-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">รายละเอียด</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#update-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">แก้ไข</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" class="dropdown-item notify-item btn-delete" data-id="2">
-                                                    <span class="align-middle">ลบ</span>
-                                                </a>
-
-                                            </div>
-                                        </li>
-                                    </td>
-                                </tr>
-                                <tr data-id="3">
-                                    <td>Larry the Bird</td>
-                                    <td>เก็บผักจบชวา สนง.ฟาร์ม</td>
-                                    <td>2023-10-05</td>
-                                    <td>09:00</td>
-                                    <td>admin HR</td>
-                                    <td>รอดำเนินการ</td>
-                                    <td>
-                                        <li class="dropdown d-none d-lg-block">
-                                            <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown"
-                                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#detail-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">รายละเอียด</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#update-modal"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">แก้ไข</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" class="dropdown-item notify-item btn-delete" data-id="3">
-                                                    <span class="align-middle">ลบ</span>
-                                                </a>
-
-                                            </div>
-                                        </li>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -200,6 +98,24 @@
         </div>
     </div>
 </div>
+
+<div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+    <!-- item-->
+    <a href="#" data-toggle="modal" data-target="#detail-modal" class="dropdown-item notify-item">
+        <span class="align-middle">รายละเอียด</span>
+    </a>
+
+    <!-- item-->
+    <a href="#" data-toggle="modal" data-target="#update-modal" class="dropdown-item notify-item">
+        <span class="align-middle">แก้ไข</span>
+    </a>
+
+    <!-- item-->
+    <a href="#" class="dropdown-item notify-item btn-delete" data-id="1">
+        <span class="align-middle">ลบ</span>
+    </a>
+
+</div>
 <?php
 include "crud_modal.php";
 ?>
@@ -207,7 +123,7 @@ include "crud_modal.php";
 $(document).ready(function() {
 
     // select2
-    $('[data-toggle=select2]').select2({
+    /* $('[data-toggle=select2]').select2({
         theme: "bootstrap"
     });
 
@@ -222,7 +138,7 @@ $(document).ready(function() {
         "order": [],
         //  dom: datatable_dom,
         //  buttons: datatable_button,
-    })
+    }) */
     $('.btn-delete').click(function() {
         Swal.fire({
             title: 'โปรดยืนยัน',
@@ -235,7 +151,8 @@ $(document).ready(function() {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.value) {
-                $('#data_table').find('tr[data-id='+$(this).attr('data-id')+']').addClass('d-none')
+                $('#data_table').find('tr[data-id=' + $(this).attr('data-id') + ']').addClass(
+                    'd-none')
                 Swal.fire(
                     'สำเร็จ!',
                     '',
@@ -244,9 +161,9 @@ $(document).ready(function() {
             }
         })
     })
-    return false
+    // return false
     /**
-     * Button modal 
+     * Button modal
      */
     /**
      * #
@@ -260,8 +177,8 @@ $(document).ready(function() {
      * 7. btn_loading = button save (spinner) in #detail-modal
      * 8. btn_edit = button edit in #detail-modal target #update-modal
      * 9. btn_delete = button delete in #detail-modal
-     * 
-     * 
+     *
+     *
      */
 
     let btn_insert = '#btn-insert'
@@ -280,10 +197,10 @@ $(document).ready(function() {
      */
 
     /**
-     * 
+     *
      * #
-     * # FUNCTION 
-     * 
+     * # FUNCTION
+     *
      */
 
     // inisialize datepicker
@@ -314,93 +231,132 @@ $(document).ready(function() {
      */
 
     /**
-     * 
+     *
      * #
      * # FUNCTION GET DATA
-     * 
+     *
      * #######################
      * ###### GET DATA ######
-     * 
+     *
+     */
+    let my_id = $('#my-id').val();
+    /* async function get_data() {
+        let url_datatable = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
+        const response = await fetch(url_calendar, {})
+
+        return response.json()
+    } */
+
+    /**
+     * #
+     * #
      */
 
-    function get_data() {
+    /**
+     *
+     * #######################
+     * ###### DATATABLE ######
+     *
+     */
+    // let url = new URL('appointment/ctl_datatable/get_data', domain);
+    createDatatable()
+
+    function createDatatable() {
+
+        let url_datatable = new URL('appointment/ctl_datatable/get_data', domain);
+        url_datatable.searchParams.append('id', my_id)
+
+        // console.log('appointment/ctl_datatable/get_data?id=' + my_id, domain)
+        console.log(url_datatable)
+        $('#data_table').DataTable({
+            ajax: {
+                url: url_datatable,
+                type: "get",
+                dataType: "json",
+                // data: function(d) {
+                //     d.date = $('#hidden_date').val();
+                //     d.time = $('#hidden_time').val();
+                //     d.visitor = $('#hidden_visitor').val();
+                //     d.status = $('#hidden_status').val();
+                // }
+            },
+            autoWidth: false,
+            // "order": [],
+            columns: [{
+                    "data": "STAFF_ID"
+                },
+                {
+                    "data": "EVENT_NAME"
+                },
+                {
+                    "data": "DATE_BEGIN"
+                },
+                {
+                    "data": "TIME_BEGIN"
+                },
+                {
+                    "data": "USER_START"
+                },
+                {
+                    "data": "STATUS_COMPLETE_NAME"
+                },
+                {
+                    "data": "ID"
+                },
+            ],
+            "createdRow": function(row, data, index) {
+                let table_btn_name =
+                    `
+                    <li class="dropdown d-none d-lg-block">
+                                            <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown"
+                                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                                <i class="mdi mdi-dots-vertical"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                                <!-- item-->
+                                                <a href="#" data-toggle="modal" data-target="#detail-modal"
+                                                    class="dropdown-item notify-item">
+                                                    <span class="align-middle">รายละเอียด</span>
+                                                </a>
+
+                                                <!-- item-->
+                                                <a href="#" data-toggle="modal" data-target="#update-modal"
+                                                    class="dropdown-item notify-item">
+                                                    <span class="align-middle">แก้ไข</span>
+                                                </a>
+
+                                                <!-- item-->
+                                                <a href="#" class="dropdown-item notify-item btn-delete" data-id="3">
+                                                    <span class="align-middle">ลบ</span>
+                                                </a>
+
+                                            </div>
+                                        </li>
+
+                 `
+                $('td', row).eq(6).html(table_btn_name)
+            },
+
+            dom: datatable_dom,
+            buttons: datatable_button,
+
+        });
 
     }
 
     /**
-     * #
-     * #
-     */
-
-    /**
-     * 
-     * #######################
-     * ###### DATATABLE ######
-     * 
-     */
-    let url = new URL('appointment/ctl_datatable/get_datatable', domain);
-    $('#data_table').DataTable({
-        ajax: {
-            url: url,
-            type: "get",
-            dataType: "json",
-            data: function(d) {
-                d.date = $('#hidden_date').val();
-                d.time = $('#hidden_time').val();
-                d.visitor = $('#hidden_visitor').val();
-                d.status = $('#hidden_status').val();
-            }
-        },
-        autoWidth: false,
-        "order": [],
-        columns: [{
-                "data": "FULLNAME"
-            },
-            {
-                "data": "EVENT_DESCRIPTION"
-            },
-            {
-                "data": "DATE_START"
-            },
-            {
-                "data": "TIME_START"
-            },
-            {
-                "data": "USER_CREATE"
-            },
-            {
-                "data": "STATUS_COMPLETE"
-            },
-            {
-                "data": "ID"
-            },
-        ],
-        "createdRow": function(row, data, index) {
-            let table_btn_name =
-                `
-                 <a id="btn_doc" data-id="${data['EMP_ID']}" class="text-purple waves-effect mt-2 waves-light">${data['FULLNAME']}</a>
-                 `
-            $('td', row).eq(1).html(table_btn_name)
-        },
-
-        //  dom: datatable_dom,
-        //  buttons: datatable_button,
-
-    });
-
-    /**
-     * 
-     * 
+     *
+     *
      * #
      * # FUNCTION CRUD
-     * 
-     * 
+     *
+     *
      * #############################
      * ###### CREATE / UPDATE ######
-     * 
-     * 
+     *
+     *
      */
-    function insert() {
+    /* function insert() {
 
         let dataArray = $('.form').serializeArray()
 
@@ -422,14 +378,14 @@ $(document).ready(function() {
                     swal_success(resp.msg)
                 }
             })
-    }
+    } */
     /**
-     * 
-     * 
+     *
+     *
      * ####################
      * ###### READ ######
-     * 
-     * 
+     *
+     *
      */
 })
 </script>

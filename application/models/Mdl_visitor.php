@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mdl_page extends CI_Model
+class Mdl_visitor extends CI_Model
 
 {
-    private $table = "blank";
+    private $table = "event_visitor";
     private $fildstatus = "status";
 
     public function __construct()

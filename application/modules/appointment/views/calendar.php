@@ -1,11 +1,13 @@
-<!-- <input type="hidden" name="my-id" id="my-id" value="<?=$_SESSION["user_code"]?>"> -->
+<!-- <input type="hidden" name="my-id" id="my-id" value="<?= $_SESSION["user_code"] ?>"> -->
 <input type="hidden" name="my-id" id="my-id" value="1">
+<!-- Button trigger modal -->
+
 <div class="row">
     <div class="col-12">
         <div class="row">
             <div class="col-lg-6" align="left">
-                <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
-                    class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
+                <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal" class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#draft-modal">แบบร่าง</button>
             </div>
             <div class="col-lg-6" align="right">
                 <input type="hidden" name="hidden_date" id="hidden_date">
@@ -22,48 +24,45 @@
                         <select class="form-control form-white" name="time">
                             <option selected disabled>เวลา</option>
                             <?php
-foreach ($time as $val) {
-    if (!$val["START"]) {
-        $times = $val["END"];
-    } elseif (!$val["END"]) {
-        $times = $val["START"];
-    } else {
-        $times = $val["START"];
-    }
-    ?>
-                            <option value="<?=date('H:i', strtotime($times))?>"><?=date('H:i', strtotime($times))?>
-                            </option>
+                            foreach ($time as $val) {
+                                if (!$val["START"]) {
+                                    $times = $val["END"];
+                                } elseif (!$val["END"]) {
+                                    $times = $val["START"];
+                                } else {
+                                    $times = $val["START"];
+                                }
+                            ?>
+                                <option value="<?= date('H:i', strtotime($times)) ?>"><?= date('H:i', strtotime($times)) ?>
+                                </option>
                             <?php
-}
-?>
+                            }
+                            ?>
                         </select>
                     </div>
 
                     <div class="p-2">
-                        <select class="form-control form-white select2" data-toggle="select2" id="user_create"
-                            name="user_create">
+                        <select class="form-control form-white select2" data-toggle="select2" id="user_create" name="user_create">
                             <option>ผู้สร้าง</option>
                             <?php
-foreach ($staff as $data) {
-    ?>
-                            <option value="<?=$data->ID?>"><?=$data->NAME . " " . $data->LASTNAME?></option>
+                            foreach ($staff as $data) {
+                            ?>
+                                <option value="<?= $data->ID ?>"><?= $data->NAME . " " . $data->LASTNAME ?></option>
                             <?php
-}
-?>
+                            }
+                            ?>
                         </select>
                     </div>
 
                     <div class="p-2">
-                        <select class="form-control form-white" data-toggle="select2" id="status_complete"
-                            name="status_complete">
+                        <select class="form-control form-white" data-toggle="select2" id="status_complete" name="status_complete">
                             <option value="">สถานะ</option>
                             <option value="0">รอดำเนินการ</option>
                             <option value="1">นัดหมายสำเร็จ</option>
                             <option value="2">ยกเลิกการนัดหมาย</option>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-secondary search"><i class="fa fa-search"
-                            aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary search"><i class="fa fa-search" aria-hidden="true"></i></button>
                 </div>
             </div>
             <!-- end col-lg-10 -->
@@ -88,216 +87,171 @@ foreach ($staff as $data) {
 include "crud_modal.php";
 ?>
 <script>
-$(document).ready(function() {
-    let my_id = $('#my-id').val();
+    $(document).ready(function() {
+        let my_id = $('#my-id').val();
+        /**
+         * Button modal
+         *
+         * #
+         * # Properties Button
+         * 1. btn_insert = button insert
+         * 2. save_category = button save
+         * 3. approve_footer = button approve,button not approve
+         * 4. save_footer = button save,button close
+         * 5. btn_unloading = button save in #detail-modal
+         * 6. btn_loading = button save (spinner) in #detail-modal
+         * 7. btn_edit = button edit in #detail-modal
+         * 8. btn_delete = button delete in #detail-modal
+         *
+         *
+         */
 
-    /**
-     * Button modal
-     */
-    /**
-     * #
-     * # Properties Button
-     * 1. btn_insert = button insert
-     * 2. save_category = button save
-     * 3. approve_footer = button approve,button not approve
-     * 4. save_footer = button save,button close
-     * 5. btn_unloading = button save in #detail-modal
-     * 6. btn_loading = button save (spinner) in #detail-modal
-     * 7. btn_edit = button edit in #detail-modal
-     * 8. btn_delete = button delete in #detail-modal
-     *
-     *
-     */
+        let btn_insert = '.btn-save-insert'
+        let btn_update = '.btn-save-update'
+        /* let save_category = '.save-category'
+        let approve_footer = '.approve-footer'
+        let save_footer = '.save-footer'
+        let btn_edit = '.btn-edit'
+        let btn_delete = '.btn-delete'
+        let btn_unloading = '.unloading'
+        let btn_loading = '.loading' */
 
-    let btn_insert = '#btn-insert'
-    let save_category = '.save-category'
-    let approve_footer = '.approve-footer'
-    let save_footer = '.save-footer'
-    let btn_edit = '.btn-edit'
-    let btn_delete = '.btn-delete'
-    let btn_unloading = '.unloading'
-    let btn_loading = '.loading'
+        /**
+         * CRUD
+         *
+         * #
+         * # FUNCTION INSERT
+         *
+         *
+         */
+        $(btn_insert).click(function() {
+            let visitor = [],
+                data = new FormData(),
+                dataArray = $('#insert-meeting').serializeArray()
 
-    /**
-     * #
-     * #
-     */
-    // console.log($('select[name=select-visitor]'))
+            for (var i = 0; i < dataArray.length; i++) {
+                if (dataArray[i].name == "insert-visitor") {
+                    visitor.push(dataArray[i].value)
+                } else {
 
-    // select2
-    $('[data-toggle=select2]').select2({
-        theme: "bootstrap"
-    });
-
-    // inisialize datepicker
-    $('.datepicker-autoclose').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true,
-    });
-
-    /*
-    function createFullcalendar() {
-        get_data()
-            .then((data) => {
-                let dateDefault = [];
-                // console.log(data)
-                test()
-                async function test(userid) {
-                    let doing1 = await new Promise((resolve, reject) => {
-                        resolve(
-                            let setArray = [];
-
-                            setArray = {
-                                id: item.ID,
-                                sid: item.STAFF_ID,
-                                title_id: item.DESCRIPTION_ID,
-                                title: item.DESCRIPTION,
-                                start: item.DATESTART,
-                                end: item.DATE_END_FAKE,
-                                end_real: item.DATEEND,
-                                status: item.STATUS,
-                                total: item.TOTAL,
-                                name: item.NAME,
-                                lastname: item.LASTNAME,
-                                className: event_color,
-                                owner1: item.OWNER1,
-                                owner2: item.OWNER2,
-                                owner3: item.OWNER3,
-                                date1: item.DATE1,
-                                date2: item.DATE2,
-                                date3: item.DATE3,
-                                child: item.CHILD,
-                                approve: item.STATUS_APPROVE,
-                                status: item.STATUS,
-                                maxdate: item.MAXDATE,
-
-                                hrs: item.HRS,
-                                hre: item.HRE,
-                                mins: item.MINS,
-                                mine: item.MINE,
-                                period: item.PERIOD,
-                            }; dateDefault.push(setArray);
-                        )
-                    })
-                    let doing2 = await new Promise((resolve, reject) => {
-                        $('#calendar').fullCalendar({
-                            header: {
-                                left: 'prev,next today',
-                                center: 'title',
-                                right: 'month,agendaWeek,agendaDay'
-                            },
-                            editable: true,
-                            eventLimit: true, // allow "more" link when too many events
-                            events: dateDefault,
-                            timeFormat: "H:mm",
-                            droppable: true, // this allows things to be dropped onto the calendar !!!
-                            selectable: true,
-
-                            drop: function(date) {
-                                calendarDrop($(this), date);
-                            },
-                            select: function(start, end, allDay) {
-                                calendarSelect(start, end, allDay);
-                            },
-                            eventClick: function(calEvent, jsEvent, view) {
-                                calendarClick(calEvent, jsEvent, view);
-                            },
-                        });
-                    })
                 }
+                data.append(dataArray[i].name, dataArray[i].value)
+            }
+            data.append("visitor", visitor)
+            insert_meeting(data, "calendar")
+        })
 
-            });
-    } */
+        /**
+         * 
+         *
+         * #
+         * # FUNCTION UPDATE
+         *
+         *
+         */
 
-    createFullcalendar()
-    /**
-     * #
-     * function get data
-     * #
-     */
-    async function get_data() {
-        let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
-        const response = await fetch(url_calendar, {})
+        $(btn_update).click(function() {
+            let visitor = [],
+                data = new FormData(),
+                dataArray = $('#update-meeting').serializeArray()
 
-        return response.json()
-    }
-    /**
-     * #
-     * #
-     */
-    function createFullcalendar() {
-        get_data()
-            .then((data) => {
-                let setArray = [],
-                    dataDefault = [];
-                // console.log(data)
-                if (data.length) {
-                    data.forEach(function(item, index) {
-                        // console.log(item)
-                        // console.log(index)
-                        item.forEach(function(val, key) {
-                            // console.log(val)
-                            // console.log(key)
+            for (var i = 0; i < dataArray.length; i++) {
+                if (dataArray[i].name == "update-visitor") {
+                    visitor.push(dataArray[i].value)
+                } else {
 
-                            setArray = {
-                                id: val.ID,
-                                sid: val.STAFF_ID,
-                                title_id: val.TYPE_ID,
-                                title: val.TYPE_NAME,
-                                topic: val.EVENT_NAME,
-                                description: val.EVENT_DESCRIPTION,
-                                start: val.DATE_BEGIN,
-                                end: val.DATE_END,
-                                status: val.STATUS_COMPLETE,
-                                status_name: val.STATUS_COMPLETE_NAME,
-                                approve_date: val.APPROVE_DATE,
-                                disapprove_date: val.DISAPPROVE_DATE,
-                                cancle_date: val.CANCLE_DATE,
-                                action: val.USER_ACTION,
-                            };
-                            dataDefault.push(setArray);
-                        })
-                    })
                 }
-                $('#calendar').fullCalendar({
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
-                    },
-                    editable: true,
-                    eventLimit: true, // allow "more" link when too many events
-                    events: dataDefault,
-                    timeFormat: "H:mm",
-                    // droppable: true, // this allows things to be dropped onto the calendar !!!
-                    // selectable: true,
+                data.append(dataArray[i].name, dataArray[i].value)
+            }
+            data.append("visitor", visitor)
+            update_meeting(data, "calendar")
+        })
+        /**
+         * #
+         * #
+         */
 
-                    /* drop: function(date) {
-                        calendarDrop($(this), date);
-                    }, */
-                    /* select: function(start, end, allDay) {
-                        calendarSelect(start, end, allDay);
-                    }, */
-                    eventClick: function(calEvent, jsEvent, view) {
-                        calendarClick(calEvent, jsEvent, view);
-                    },
-                });
-            })
-    }
 
-    function calendarClick(calEvent, jsEvent, view) {
-        if (calEvent.title_id == 1) {
-            $("#detail-modal-meeting").modal("show")
+        /**
+         * 
+         *
+         * #
+         * # FIXED
+         *
+         *
+         */
 
-        } else {
-            $("#detail-modal-car").modal("show")
+        // select2
+        $('[data-toggle=select2]').select2({
+            theme: "bootstrap"
+        });
 
+        // inisialize datepicker
+        $('.datepicker-autoclose').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+        });
+
+        /**
+         * #
+         * #
+         */
+
+        /**
+         * #
+         * function get data
+         * #
+         */
+        createFullcalendar()
+
+        async function get_data() {
+            let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
+            const response = await fetch(url_calendar, {})
+
+            return response.json()
         }
-        console.log(calEvent)
-    }
 
-    /* function calendarSelect(start, end, allDay) {
-        $("#detail-modal").modal("show")
-    } */
-})
+        function createFullcalendar() {
+            get_data()
+                .then((data) => {
+                    let dataDefault = [];
+                    if (data.length) {
+                        data.forEach(function(item, index) {
+                            dataDefault.push(item);
+                        })
+                    }
+                    $('#calendar').fullCalendar({
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay'
+                        },
+                        editable: true,
+                        eventLimit: true, // allow "more" link when too many events
+                        events: dataDefault,
+                        timeFormat: "H:mm",
+                        // droppable: true, // this allows things to be dropped onto the calendar !!!
+                        // selectable: true,
+
+                        /* drop: function(date) {
+                            calendarDrop($(this), date);
+                        }, */
+                        /* select: function(start, end, allDay) {
+                            calendarSelect(start, end, allDay);
+                        }, */
+                        eventClick: function(calEvent, jsEvent, view) {
+                            detail_meeting(calEvent, jsEvent, view);
+                        },
+                    });
+                })
+        }
+
+        /**
+         * #
+         * #
+         */
+    })
 </script>
+<?php
+include APPPATH . "views/script/crud_modal.php";
+?>

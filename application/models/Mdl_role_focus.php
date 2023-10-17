@@ -26,13 +26,14 @@ class Mdl_role_focus extends CI_Model
      */
     public function get_data(int $id = null, array $optionnal = [])
     {
-        $sql = $this->db->select('*');
+        $sql = $this->db->from($this->table);
+        
+        if ($optionnal['join']) {
+            $sql->join('employee',$this->table.'.staff_child=employee.id','left');
+        }
+
         if ($id) {
             $sql->where('id', $id);
-        }else{
-            if($this->input->get('id')){
-                $sql->where('staff_owner', $this->input->get('id'));
-            }
         }
 
         if ($optionnal['select']) {
@@ -61,7 +62,7 @@ class Mdl_role_focus extends CI_Model
             $sql->limit($optionnal['limit']);
         }
 
-        $query = $sql->get($this->table);
+        $query = $sql->get();
 
         if($id){
             $query->row(); 

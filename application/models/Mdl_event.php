@@ -91,19 +91,26 @@ class Mdl_event extends CI_Model
     //  *
     public function insert_data()
     {
-
         $result = array(
             'error' => 1,
             'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (textShow($this->input->post('label_6'))) {
+        if (count($this->input->post())) {
             $data = array(
-                'code' => textShow($this->input->post('label_2')),
-                'name' => textShow($this->input->post('label_6')),
-                'workstatus' => $this->input->post('label_1'),
+                'type_id' => textShow($this->input->post('insert-type')),
+                'event_name' => textShow($this->input->post('insert-name')),
+                'staff_id' => textShow($this->input->post('insert-head')),
+                'event_description' => textShow($this->input->post('insert-description')),
+                'date_begin' => textShow($this->input->post('insert-dates')),
+                'date_end' => textShow($this->input->post('insert-datee')),
+                'time_begin' => textShow($this->input->post('insert-times')),
+                'time_end' => textShow($this->input->post('insert-timee')),
+                'status_complete' => 1,
+                'status_complete_name' => "รอดำเนินการ",
+                'status' => 1,
 
-                'user_starts' => $this->session->userdata('user_code'),
+                'user_start' => 0,
             );
 
             $this->db->insert($this->table, $data);
@@ -143,14 +150,18 @@ class Mdl_event extends CI_Model
             $ex = explode('-', $this->input->post('item_begin_date'));
             $begin_date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
         } */
-
         $data = array(
-            'code' => textShow($this->input->post('label_2')),
-            'name' => textShow($this->input->post('label_6')),
-            'workstatus' => $this->input->post('label_1'),
-
+            'type_id' => textShow($this->input->post('update-type')),
+            'event_name' => textShow($this->input->post('update-name')),
+            'staff_id' => textShow($this->input->post('update-head')),
+            'event_description' => textShow($this->input->post('update-description')),
+            'date_begin' => textShow($this->input->post('update-dates')),
+            'date_end' => textShow($this->input->post('update-datee')),
+            'time_begin' => textShow($this->input->post('update-times')),
+            'time_end' => textShow($this->input->post('update-timee')),
+            
             'date_update' => date('Y-m-d H:i:s'),
-            'user_update' => $this->session->userdata('user_code'),
+            'user_update' => 0,
         );
 
         $this->db->where('id', $item_id);
