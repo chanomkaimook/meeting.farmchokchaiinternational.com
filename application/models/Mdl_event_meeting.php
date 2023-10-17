@@ -1,10 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mdl_visitor extends CI_Model
-
+class Mdl_event_meeting extends CI_Model
 {
-    private $table = "event_visitor";
+    private $table = "event_meeting";
     private $fildstatus = "status";
 
     public function __construct()
@@ -21,7 +20,7 @@ class Mdl_visitor extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  * 
+    //  *
     //  * get data
     //  *
     /**
@@ -34,6 +33,7 @@ class Mdl_visitor extends CI_Model
      *                          orderby=array(a=>desc,b=asc),
      *                          groupby=array(a,b),
      *                          limit=0,10,
+     *                          join="meeting","car",
      *                           ]
      * @return void
      */
@@ -56,7 +56,7 @@ class Mdl_visitor extends CI_Model
         # code...
         $optionnal['select'] = 'count(' . $this->table . '.id) as total';
 
-        $data = (object) $this->get_dataShow($id, $optionnal,'row');
+        $data = (object) $this->get_dataShow($id, $optionnal, 'row');
         $num = $data->total;
 
         return $num;
@@ -65,14 +65,14 @@ class Mdl_visitor extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  * 
+    //  *
     //  * get data only for display (not data delete)
     //  *
     public function get_dataShow(int $id = null, array $optionnal = [], string $type = "result")
     {
         # code...
         $sql = (object) $this->get_sql($id, $optionnal, $type);
-        $sql->where($this->table . '.'.$this->fildstatus, 1);
+        $sql->where($this->table . '.' . $this->fildstatus, 1);
 
         $query = $sql->get();
 
@@ -86,7 +86,7 @@ class Mdl_visitor extends CI_Model
     //  *
     //  * CRUD
     //  * insert
-    //  * 
+    //  *
     //  * insert data
     //  *
     public function insert_data($data)
@@ -121,7 +121,7 @@ class Mdl_visitor extends CI_Model
     //  *
     //  * CRUD
     //  * update
-    //  * 
+    //  *
     //  * update data
     //  *
     public function update_data()
@@ -130,17 +130,21 @@ class Mdl_visitor extends CI_Model
 
         /* $begin_date = "";
         if ($this->input->post('item_begin_date')) {
-            $ex = explode('-', $this->input->post('item_begin_date'));
-            $begin_date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
+        $ex = explode('-', $this->input->post('item_begin_date'));
+        $begin_date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
         } */
-
         $data = array(
-            'code'  => textShow($this->input->post('label_2')),
-            'name'  => textShow($this->input->post('label_6')),
-            'workstatus'  => $this->input->post('label_1'),
+            'type_id' => textShow($this->input->post('update-type')),
+            'event_name' => textShow($this->input->post('update-name')),
+            'staff_id' => textShow($this->input->post('update-head')),
+            'event_description' => textShow($this->input->post('update-description')),
+            'date_begin' => textShow($this->input->post('update-dates')),
+            'date_end' => textShow($this->input->post('update-datee')),
+            'time_begin' => textShow($this->input->post('update-times')),
+            'time_end' => textShow($this->input->post('update-timee')),
 
-            'date_update'  => date('Y-m-d H:i:s'),
-            'user_update'  => $this->session->userdata('user_code'),
+            'date_update' => date('Y-m-d H:i:s'),
+            'user_update' => 0,
         );
 
         $this->db->where('id', $item_id);
@@ -150,11 +154,11 @@ class Mdl_visitor extends CI_Model
         log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
 
         $result = array(
-            'error'     => 0,
-            'txt'       => 'ทำรายการสำเร็จ',
-            'data'      => array(
-                'id'    => $item_id
-            )
+            'error' => 0,
+            'txt' => 'ทำรายการสำเร็จ',
+            'data' => array(
+                'id' => $item_id,
+            ),
         );
 
         return $result;
@@ -163,7 +167,7 @@ class Mdl_visitor extends CI_Model
     //  *
     //  * CRUD
     //  * delete
-    //  * 
+    //  *
     //  * delete data
     //  *
     public function delete_data()
@@ -173,7 +177,7 @@ class Mdl_visitor extends CI_Model
 
         $result = array(
             'error' => 1,
-            'txt'        => 'ไม่มีการทำรายการ'
+            'txt' => 'ไม่มีการทำรายการ',
         );
 
         if (!$item_id) {
@@ -181,10 +185,10 @@ class Mdl_visitor extends CI_Model
         }
 
         $data_array = array(
-            $this->fildstatus     => 0,
+            $this->fildstatus => 0,
 
-            'date_update'  => date('Y-m-d H:i:s'),
-            'user_update'  => $this->session->userdata('user_code'),
+            'date_update' => date('Y-m-d H:i:s'),
+            'user_update' => $this->session->userdata('user_code'),
         );
 
         if ($item_remark) {
@@ -197,8 +201,8 @@ class Mdl_visitor extends CI_Model
         log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
 
         $result = array(
-            'error'     => 0,
-            'txt'       => 'ทำรายการสำเร็จ'
+            'error' => 0,
+            'txt' => 'ทำรายการสำเร็จ',
         );
 
         return $result;
@@ -208,8 +212,6 @@ class Mdl_visitor extends CI_Model
     //  End CRUD
     //  =========================
     //  =========================
-
-
 
     //  =========================
     //  =========================
@@ -224,7 +226,7 @@ class Mdl_visitor extends CI_Model
      * @param string $type
      * @return void
      */
-    function get_sql(int $id = null, array $optionnal = [], string $type = 'result')
+    public function get_sql(int $id = null, array $optionnal = [], string $type = 'result')
     {
         $request = $_REQUEST;
 
@@ -232,6 +234,21 @@ class Mdl_visitor extends CI_Model
         $hidden_end = "";
 
         $sql = $this->db->from($this->table);
+
+        if ($optionnal['join']) {
+            switch ($optionnal['join']) {
+                case "meeting":
+                    $sql->join('event_meeting', 'event.id=event_meeting.event_id', 'inner');
+                    break;
+                case "car":
+                    $sql->join('event_car', 'event.id=event_car.event_id', 'inner');
+                    break;
+                default:
+                    $sql->join('event_meeting', 'event.id=event_meeting.event_id', 'left');
+                    $sql->join('event_car', 'event.id=event_car.event_id', 'left');
+                    break;
+            }
+        }
 
         if (textShow($request['hidden_datestart'])) {
             $hidden_start = textShow($request['hidden_datestart']);

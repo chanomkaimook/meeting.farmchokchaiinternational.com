@@ -1,35 +1,40 @@
 <script>
-function modal_check(modal_fogus, modal_hide) {
-    $(modal_hide).on('show.bs.modal', function() {
-        $(modal_fogus).modal('show').trigger('focus')
-        $('body').addClass('modal-open')
+$(document).ready(function() {
+    $('body').on('hidden.bs.modal', function() {
+        if ($('.modal[aria-hidden=true]').length > 0) {
+            $('body').addClass('modal-open');
+        }
     })
-    // $(modal_hide).modal('toggle')
-
-}
-
+})
+/* ********** EVENT CLICK ********** */
 $('.insert-car').click(function() {
-    modal_check("#insert-modal-car", "#insert-modal")
-    // $("#insert-modal").modal("hide")
+    $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
+    $("#insert-modal-car").modal("show")
+    $("#insert-modal").modal("hide")
 })
 
 $('.insert-meeting').click(function() {
-    // modal_check("#insert-modal-meeting", "#insert-modal")
-    // $("#insert-modal").modal("hide")
-    // $(".modal").modal("hide")
-    $("#insert-modal-meeting").modal("show").trigger('focus')
-    modal_check("#insert-modal-meeting", "#insert-modal")
+    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    $("#insert-modal-meeting").modal("show")
+    $("#insert-modal").modal("hide")
 })
 
 $('.update-meeting').click(function() {
-    $("#update-modal-meeting").modal("show").trigger('focus')
-    modal_check("#update-modal-meeting", "#detail-modal-meeting")
+    $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
+    $("#update-modal-meeting").modal("show")
     $("#detail-modal-meeting").modal("hide")
 })
 
-function detail_meeting(calEvent, jsEvent, view) {
-    // console.log(calEvent.VISITOR)
-    if (calEvent.TYPE_ID == 1) {
+/* ********** FUNCTION ********** */
+function detail(calEvent, jsEvent, view) {
+    let vis = '';
+    if (calEvent.VISITOR.length) {
+        for (let i = 0; i < calEvent.VISITOR.length; i++) {
+            vis = vis + calEvent.VISITOR[i] + ','
+        }
+    }
+    console.log(vis)
+    if (calEvent.TYPE_ID == 1 || calEvent.TYPE_ID == 3) {
         /* ************* DETAIL **************** */
         $("#detail-modal-meeting").modal("show")
         $('#detail-modal-meeting').find('[name=detail-type]').val('จองห้อง/นัดหมายการประชุม')
@@ -40,13 +45,14 @@ function detail_meeting(calEvent, jsEvent, view) {
         $('#detail-modal-meeting').find('[name=detail-datee]').val(calEvent.DATE_END)
         $('#detail-modal-meeting').find('[name=detail-times]').val(calEvent.TIME_BEGIN)
         $('#detail-modal-meeting').find('[name=detail-timee]').val(calEvent.TIME_END)
-        if (calEvent.VISITOR) {
-            $('#detail-modal-meeting').find('[name=detail-visitor]').val(calEvent.VISITOR)
+        if (vis) {
+            $('#detail-modal-meeting').find('[name=detail-visitor]').val(vis)
         }
 
         /* ************** UPDATE *************** */
-        $("#update-modal-meeting").modal("show")
+        // $("#update-modal-meeting").modal("show")
         $('#update-modal-meeting').find('[name=item_id]').val(calEvent.ID)
+        $('#update-modal-meeting').find('[name=code]').val(calEvent.CODE)
         $('#update-modal-meeting').find('select[name=update-type]').val(calEvent.TYPE_ID)
         $('#update-modal-meeting').find('[name=update-name]').val(calEvent.EVENT_NAME)
         $('#update-modal-meeting').find('[name=update-head]').val(calEvent.STAFF_ID)
@@ -55,11 +61,11 @@ function detail_meeting(calEvent, jsEvent, view) {
         $('#update-modal-meeting').find('[name=update-datee]').val(calEvent.DATE_END)
         $('#update-modal-meeting').find('select[name=update-times]').val(calEvent.TIME_BEGIN)
         $('#update-modal-meeting').find('select[name=update-timee]').val(calEvent.TIME_END)
-        if (calEvent.VISITOR) {
-            $('#update-modal-meeting').find('[name=update-visitor]').val(calEvent.VISITOR)
+        if (vis) {
+            $('#update-modal-meeting').find('[name=update-visitor]').val(vis)
         }
 
-    } else {
+    } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 4) {
         /* ************* DETAIL **************** */
         $("#detail-modal-car").modal("show")
         $('#detail-modal-car').find('[name=detail-type]').val('จองรถ')
@@ -70,14 +76,15 @@ function detail_meeting(calEvent, jsEvent, view) {
         $('#detail-modal-car').find('[name=detail-datee]').val(calEvent.DATE_END)
         $('#detail-modal-car').find('[name=detail-times]').val(calEvent.TIME_BEGIN)
         $('#detail-modal-car').find('[name=detail-timee]').val(calEvent.TIME_END)
-        if (calEvent.VISITOR) {
-            $('#detail-modal-car').find('[name=detail-visitor]').val(calEvent.VISITOR)
+        if (vis) {
+            $('#detail-modal-car').find('[name=detail-visitor]').val(vis)
         }
 
         /* ************** UPDATE *************** */
-        $("#update-modal-car").modal("show")
+        // $("#update-modal-car").modal("show")
         $('#update-modal-car').find('[name=item_id]').val(calEvent.ID)
         $('#update-modal-car').find('[name=update-type]').val('จองรถ')
+        $('#update-modal-car').find('[name=code]').val(calEvent.CODE)
         $('#update-modal-car').find('[name=update-name]').val(calEvent.EVENT_NAME)
         $('#update-modal-car').find('[name=update-head]').val(calEvent.STAFF_ID)
         $('#update-modal-car').find('[name=update-description]').val(calEvent.EVENT_DESCRIPTION)
@@ -85,8 +92,8 @@ function detail_meeting(calEvent, jsEvent, view) {
         $('#update-modal-car').find('[name=update-datee]').val(calEvent.DATE_END)
         $('#update-modal-car').find('[name=update-times]').val(calEvent.TIME_BEGIN)
         $('#update-modal-car').find('[name=update-timee]').val(calEvent.TIME_END)
-        if (calEvent.VISITOR) {
-            $('#update-modal-car').find('[name=update-visitor]').val(calEvent.VISITOR)
+        if (vis) {
+            $('#update-modal-car').find('[name=update-visitor]').val(vis)
         }
 
     }
@@ -108,10 +115,113 @@ function detail_meeting(calEvent, jsEvent, view) {
         $('.action-header').find('.text-success').removeClass('d-none')
         $('.action-header').find('.text-success').html(calEvent.STATUS_COMPLETE_NAME)
     }
-    // console.log(calEvent)
 }
 
-function update_meeting(update_data, ctl) {
+function detail_draft(data) {
+    // console.log(data)
+    let i = 0,
+        html_dom = []
+    data.forEach(function(item, index) {
+        i++
+        if (item.TYPE_ID == 3) {
+            html_dom[i] = `
+        <tr>
+            <th>${i}</th>
+            <td>${item.TYPE_NAME}</td>
+            <td>${item.EVENT_NAME}</td>
+            <td><li class="dropdown d-lg-block">
+                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                        <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                            <!-- item-->
+                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-detail-meeting" data-dismiss="modal">
+                                <span class="align-middle">รายละเอียด</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
+                                <span class="align-middle">แก้ไข</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
+                                <span class="align-middle">นำไปใช้</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-delete" >
+                                <span class="align-middle">ลบ</span>
+                            </a>
+                        </div>
+                </li>
+            </td>
+        </tr>
+        `
+        } else if (item.TYPE_ID == 4) {
+            html_dom[i] = `
+        <tr>
+            <th>${i}</th>
+            <td>${item.TYPE_NAME}</td>
+            <td>${item.EVENT_NAME}</td>
+            <td><li class="dropdown d-lg-block">
+                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                            <!-- item-->
+                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-detail-car">
+                                <span class="align-middle">รายละเอียด</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-update-car">
+                                <span class="align-middle">แก้ไข</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-update-car">
+                                <span class="align-middle">นำไปใช้</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-delete">
+                                <span class="align-middle">ลบ</span>
+                            </a>
+                        </div>
+                </li>
+            </td>
+        </tr>
+        `
+        }
+
+    })
+    $('table#modal_draft').find('tbody').html(html_dom)
+}
+
+function swal_alert(icon, title, text) {
+    Swal.fire(title, text, icon)
+    $('.modal').modal('hide')
+}
+
+/* ********** CRUD FUNCTION ********** */
+function insert_meeting(insert_data) {
+    let url = "insert_data"
+    fetch(url, {
+            method: 'post',
+            body: insert_data
+        })
+        .then(res => res.json())
+        .then((resp) => {
+            if (resp.error) {
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
+            } else {
+                swal_alert('success', 'สำเร็จ', '')
+            }
+        })
+}
+
+function update_meeting(update_data) {
     let url = "update_data"
     fetch(url, {
             method: 'post',
@@ -120,31 +230,25 @@ function update_meeting(update_data, ctl) {
         .then(res => res.json())
         .then((resp) => {
             if (resp.error) {
-                console.log(resp.message)
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
-                console.log(resp.message + '--' + resp.id)
+                swal_alert('success', 'สำเร็จ', '')
             }
         })
 }
 
-function insert_meeting(insert_data, ctl) {
-    // console.log(insert_data)
-    let url = "insert_data"
-    /* if (ctl == "calendar") {
-        url
-    } else if (ctl == "datatable") {
-        url = "insert_data"
-    } */
+function delete_meeting(delete_data) {
+    let url = "delete_data"
     fetch(url, {
             method: 'post',
-            body: insert_data
+            body: delete_data
         })
         .then(res => res.json())
         .then((resp) => {
             if (resp.error) {
-                console.log(resp.message)
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
-                console.log(resp.message + '--' + resp.id)
+                swal_alert('success', 'สำเร็จ', '')
             }
         })
 }

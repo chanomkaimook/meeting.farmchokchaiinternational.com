@@ -12,15 +12,17 @@
             <div class="modal-body pb-0">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="card text-center insert-car">
+                        <div class="card text-center insert-car" data-dismiss="modal">
                             <div class="card-body">
-                                <h2>จองรถ</h2>
+                                <h4>จองรถ</h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="card text-center insert-meeting">
-                            <h2>นัดหมาย/จองห้องประชุม</h2>
+                        <div class="card text-center insert-meeting" data-dismiss="modal">
+                            <div class="card-body">
+                                <h4>นัดหมาย/จองห้องประชุม</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,9 +47,11 @@
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <input class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
-                            name="insert-type" />
+                            name="insert-type-id" />
+                        <input class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
+                            name="insert-type-name" />
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
-                            <option value="2">จองรถ</option>
+                            <option value="1">จองรถ</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -120,7 +124,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
                 <button type="button"
-                    class="btn btn-warning waves-effect waves-light btn-save-draft">บันทึกเป็นแบบร่าง</button>
+                    class="btn btn-warning waves-effect waves-light btn-draft-insert">บันทึกเป็นแบบร่าง</button>
                 <button type="button" class="btn btn-success waves-effect waves-light btn-save-insert">บันทึก</button>
             </div>
         </div>
@@ -141,9 +145,13 @@
                 <form class="form" id="update-car">
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
-                        <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="update-type">
-                            <option selected value="กิจกรรม">กิจกรรม</option>
-                            <option value="ประชุม">ประชุม</option>
+
+                        <input class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
+                            name="update-type-id" />
+                        <input class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
+                            name="update-type-name" />
+                        <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
+                            <option selected>จองรถ</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -216,7 +224,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
                 <!-- <button type="button"
-                    class="btn btn-warning waves-effect waves-light btn-save-draft">บันทึกเป็นแบบร่าง</button> -->
+                    class="btn btn-warning waves-effect waves-light btn-draft-update">บันทึกเป็นแบบร่าง</button> -->
                 <button type="button" class="btn btn-success waves-effect waves-light btn-save-update">บันทึก</button>
             </div>
         </div>
@@ -364,7 +372,7 @@
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
-                            name="insert-type" />
+                            name="insert-type-id" />
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
                             <option value="1">นัดหมาย/จองห้องประชุม</option>
                         </select>
@@ -470,7 +478,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
                         <button type="button"
-                            class="btn btn-warning waves-effect waves-light btn-save-draft">บันทึกเป็นแบบร่าง</button>
+                            class="btn btn-warning waves-effect waves-light btn-draft-insert">บันทึกเป็นแบบร่าง</button>
                         <button type="button"
                             class="btn btn-success waves-effect waves-light btn-save-insert">บันทึก</button>
                     </div>
@@ -492,10 +500,16 @@
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="update-meeting">
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="item_id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                        name="item_id" />
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
-                        <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden" name="update-type" />
+                        <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
+                            name="update-type-id" />
+                        <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม"
+                            type="hidden" name="update-type-name" />
+                        <input class="form-control form-white" placeholder="Enter name" type="hidden" name="code" />
+
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
                             <option value="1">นัดหมาย/จองห้องประชุม</option>
                         </select>
@@ -601,7 +615,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
-                <!-- <button type="button" class="btn btn-warning waves-effect waves-light btn-save-draft">บันทึกเป็นแบบร่าง</button> -->
+                <!-- <button type="button" class="btn btn-warning waves-effect waves-light btn-draft-update">บันทึกเป็นแบบร่าง</button> -->
                 <button type="button" class="btn btn-success waves-effect waves-light btn-save-update">บันทึก</button>
             </div>
         </div>
@@ -632,14 +646,14 @@
                 <form class="form" id="detail-meeting">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="card text-center update-meeting">
+                            <div class="card text-center update-meeting" data-dismiss="modal">
                                 <div class="card-body">
                                     <h4>แก้ไข</h4>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="card text-center delete-meeting">
+                            <div class="card text-center delete-meeting" data-dismiss="modal">
                                 <h4>ลบ</h4>
                             </div>
                         </div>
@@ -709,3 +723,200 @@
     </div>
 </div>
 <!-- END READ Modal -meeting- -->
+
+<!-- READ Modal -draft meeting- -->
+<div class="modal fade none-border" id="draft-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="d-flex">
+                    <div>
+                        <h4 class="modal-title">แบบร่าง</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body pb-0">
+                <div class="table-responsive">
+
+                    <table class="table mb-0 table-sm" id="modal_draft">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ประเภท</th>
+                                <th>หัวข้อ</th>
+                                <th>action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
+                <!-- <button type="button" class="btn btn-warning waves-effect waves-light btn-use" data-event-id=""
+                    data-dismiss="modal">นำไปใช้</button> -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END READ Modal -meeting- -->
+
+<!-- READ Modal -draft meeting- -->
+<div class="modal fade none-border" id="detail-draft-meeting" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="d-flex">
+                    <div>
+                        <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body pb-0">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label">ประเภท</label>
+                        <input type="text" name="detail-draft-type" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">หัวข้อ</label>
+                        <input class="form-control form-white" placeholder="Enter topic" type="text"
+                            value="เก็บหิน สนง.ฟาร์ม" name="detail-draft-name" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">โดย</label>
+                        <input class="form-control form-white" placeholder="Enter name" type="text"
+                            value="เก็บหิน สนง.ฟาร์ม" name="detail-draft-head" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">เนื้อหาการประชุม</label>
+                        <textarea placeholder="Enter name" class="form-control form-white"
+                            name="detail-draft-description" cols="30" rows="5"
+                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                    </div>
+                    <div class="form-group mb-3 d-flex flex-row">
+                        <div class="col-md-6">
+                            <label class="control-label">ตั้งแต่</label>
+                            <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                                placeholder="yyyy-mm-dd" name="detail-draft-dates" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">ถึง</label>
+                            <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                                placeholder="yyyy-mm-dd" name="detail-draft-datee" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3 d-flex flex-row">
+                        <div class="col-md-6">
+                            <label class="control-label">ตั้งแต่</label>
+                            <input type="text" class="form-control" value="08:00" placeholder="08:00"
+                                name="detail-draft-times" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">ถึง</label>
+                            <input type="text" class="form-control" value="17:30" placeholder="17:30"
+                                name="detail-draft-timee" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">ผู้เข้าร่วม</label>
+                        <input type="text" value="" data-role="tagsinput" name="detail-draft-visitor" disabled />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
+                    <div class="approve-footer">
+                        <button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove"
+                            data-event-id="" data-dismiss="modal">ไม่เข้าร่วม</button>
+                        <button type="button" class="btn btn-success waves-effect waves-light btn-approve"
+                            data-event-id="" data-dismiss="modal">เข้าร่วม</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END READ Modal -draft meeting- -->
+
+<!-- READ Modal -draft meeting- -->
+<div class="modal fade none-border" id="update-draft-modal-meeting" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="d-flex">
+                    <div>
+                        <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body pb-0">
+                <form id="update-draft-meeting">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label">ประเภท</label>
+                            <input type="text" name="update-type" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">หัวข้อ</label>
+                            <input class="form-control form-white" placeholder="Enter topic" type="text"
+                                name="update-name" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">โดย</label>
+                            <input class="form-control form-white" placeholder="Enter name" type="text"
+                                name="update-head" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">เนื้อหาการประชุม</label>
+                            <textarea placeholder="Enter name" class="form-control form-white" name="update-description"
+                                cols="30" rows="5" disabled></textarea>
+                        </div>
+                        <div class="form-group mb-3 d-flex flex-row">
+                            <div class="col-md-6">
+                                <label class="control-label">ตั้งแต่</label>
+                                <input type="text" class="form-control datepicker-autoclose" placeholder="yyyy-mm-dd"
+                                    name="update-dates" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">ถึง</label>
+                                <input type="text" class="form-control datepicker-autoclose" placeholder="yyyy-mm-dd"
+                                    name="update-datee" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 d-flex flex-row">
+                            <div class="col-md-6">
+                                <label class="control-label">ตั้งแต่</label>
+                                <input type="text" class="form-control" placeholder="08:00" name="update-times"
+                                    disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">ถึง</label>
+                                <input type="text" class="form-control" placeholder="17:30" name="update-timee"
+                                    disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">ผู้เข้าร่วม</label>
+                            <input type="text" data-role="tagsinput" name="update-visitor" disabled />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END READ Modal -draft meeting- -->
