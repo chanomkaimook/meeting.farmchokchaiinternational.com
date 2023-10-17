@@ -6,6 +6,7 @@ $path_head_link = 'application/views/partials/e_head_link.php';
 $path_head_title = 'application/views/partials/e_head_title.php';
 $path_script_begin = 'application/views/partials/e_script_begin.php';
 $path_script_end = 'application/views/partials/e_script_end.php';
+$script_domain = 'application/views/partials/domain.php';
 ?>
 
 <!DOCTYPE html>
@@ -76,6 +77,9 @@ $path_script_end = 'application/views/partials/e_script_end.php';
     </div>
     <!-- END wrapper -->
 
+    <!-- Script domain -->
+    <?php include($script_domain); ?>
+    
     <!-- Script Begin -->
     <?php include($path_script_begin); ?>
 

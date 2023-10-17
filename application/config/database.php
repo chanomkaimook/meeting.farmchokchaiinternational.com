@@ -78,12 +78,11 @@ $db['default'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'db_datacenter',
+	'database' => 'db_booking',
 	
-	// 'hostname' => 'https://chokchaiinternational.com',
-	// 'username' => 'db_datacenter',
-	// 'password' => 'f62r20zD&',
-	// 'database' => 'db_datacenter',
+	// 'username' => 'db_booking',
+	// 'password' => 'r4Ca003e@',
+	// 'database' => 'db_booking',
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

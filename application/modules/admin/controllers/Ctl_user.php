@@ -9,12 +9,12 @@ class Ctl_user extends MY_Controller
     {
         parent::__construct();
 
-        $this->load->model('mdl_user');
+       /*  $this->load->model('mdl_user');
         $this->load->model('mdl_register');
         $this->load->model('mdl_staff');
         $this->load->model('mdl_role_focus');
 
-        $this->middleware();
+        $this->middleware(); */
     }
 
     public function index()

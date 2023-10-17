@@ -25,7 +25,11 @@
     
     // =======
     // =======
-    let domain = window.location.origin
+    let domain = window.location.protocol + '//' + window.location.hostname + '/'
+    if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+        domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[1] + '/'
+    }
+    
     let table_toolbar_name = 'toolbar'
     let table_toolbar = '#datatable_wrapper div.' + table_toolbar_name
     let datatable_dom = "<'row'<'col-sm-6 btn-sm'B><'col-sm-6 'f>>" +

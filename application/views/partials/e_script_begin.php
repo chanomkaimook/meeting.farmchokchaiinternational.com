@@ -8,6 +8,7 @@
 
 <script src="<?= base_url('') ?>asset/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 
+<script src="<?= base_url('') ?>asset/libs/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <!-- Boostrap select  -->
 <script src="<?= base_url('') ?>asset/libs/bootstrap-select/bootstrap-select.min.js"></script>
 

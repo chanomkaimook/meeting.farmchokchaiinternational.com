@@ -10,7 +10,7 @@ class Ctl_register extends MY_Controller
 
         $this->load->model('mdl_register');
 
-        $this->middleware();
+        // $this->middleware();
     }
 
     public function index()
