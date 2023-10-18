@@ -124,42 +124,35 @@ class Mdl_event_meeting extends CI_Model
     //  *
     //  * update data
     //  *
-    public function update_data()
+   
+    public function update_data($data,$where)
     {
-        $item_id = $this->input->post('item_id');
-
-        /* $begin_date = "";
-        if ($this->input->post('item_begin_date')) {
-        $ex = explode('-', $this->input->post('item_begin_date'));
-        $begin_date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
-        } */
-        $data = array(
-            'type_id' => textShow($this->input->post('update-type')),
-            'event_name' => textShow($this->input->post('update-name')),
-            'staff_id' => textShow($this->input->post('update-head')),
-            'event_description' => textShow($this->input->post('update-description')),
-            'date_begin' => textShow($this->input->post('update-dates')),
-            'date_end' => textShow($this->input->post('update-datee')),
-            'time_begin' => textShow($this->input->post('update-times')),
-            'time_end' => textShow($this->input->post('update-timee')),
-
-            'date_update' => date('Y-m-d H:i:s'),
-            'user_update' => 0,
-        );
-
-        $this->db->where('id', $item_id);
-        $this->db->update($this->table, $data);
-
-        // keep log
-        log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
-
         $result = array(
-            'error' => 0,
-            'txt' => 'ทำรายการสำเร็จ',
-            'data' => array(
-                'id' => $item_id,
-            ),
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
         );
+
+        if (count($data)) {
+            
+        if (count($where)) {
+            foreach ($where as $column => $value) {
+                $this->db->where($column, $value);
+            }
+        }
+        
+            $this->db->update($this->table, $data);
+
+            // keep log
+            log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
+
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+                'data' => array(
+                    'id' => $where['event_id'],
+                ),
+            );
+        }
 
         return $result;
     }
@@ -170,40 +163,34 @@ class Mdl_event_meeting extends CI_Model
     //  *
     //  * delete data
     //  *
-    public function delete_data()
+    public function delete_data($data,$where)
     {
-        $item_id = textShow($this->input->post('item_id'));
-        $item_remark = textShow($this->input->post('item_remark'));
-
         $result = array(
             'error' => 1,
             'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (!$item_id) {
-            return $result;
+        if (count($data)) {
+            
+        if (count($where)) {
+            foreach ($where as $column => $value) {
+                $this->db->where($column, $value);
+            }
         }
+        
+            $this->db->update($this->table, $data);
 
-        $data_array = array(
-            $this->fildstatus => 0,
+            // keep log
+            log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
 
-            'date_update' => date('Y-m-d H:i:s'),
-            'user_update' => $this->session->userdata('user_code'),
-        );
-
-        if ($item_remark) {
-            $data_array['remark_delete'] = $item_remark;
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+                'data' => array(
+                    'id' => $where['event_id'],
+                ),
+            );
         }
-
-        $this->db->update($this->table, $data_array, array('id' => $item_id));
-
-        // keep log
-        log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
-
-        $result = array(
-            'error' => 0,
-            'txt' => 'ทำรายการสำเร็จ',
-        );
 
         return $result;
     }

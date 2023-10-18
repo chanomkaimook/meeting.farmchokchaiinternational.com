@@ -181,36 +181,41 @@ class CRUD_Valid
 
             if (!$main['error']) {
                 if ($type_id == 1 || $type_id == 3) {
+
                     $SubDataArray = array(
-                        'code' => $code,
-                        'event_id' => $main['data']['id'],
                         'staff_id' => $staff_id,
                         'rooms_id' => $rooms_id,
                         'rooms_name' => $rooms_name,
-                        'date_start' => date('Y-m-d'),
-                        'status' => 1,
 
-                        'user_start' => 0,
+                        'user_update' => 0,
+                        'date_update' => date('Y-m-d H:i:s'),
                     );
 
-                    $ci->mdl_event_meeting->insert_data($SubDataArray);
+                    $whereArray = array(
+                        'event_code' => $code,
+                        'event_id' => $main['data']['id'],
+                    );
+
+                    $ci->mdl_event_meeting->update_data($SubDataArray, $whereArray);
 
                 } elseif ($type_id == 2 || $type_id == 4) {
                     $SubDataArray = array(
-                        'code' => $code,
-                        'event_id' => $main['data']['id'],
                         'staff_id' => $staff_id,
                         'car_id' => $car_id,
                         'car_name' => $car_name,
                         'driver_id' => $driver_id,
                         'driver_name' => $driver_name,
-                        'date_start' => date('Y-m-d'),
-                        'status' => 1,
 
-                        'user_start' => 0,
+                        'user_update' => 0,
+                        'date_update' => date('Y-m-d H:i:s'),
                     );
 
-                    // $ci->mdl_event_car->insert_data($SubDataArray);
+                    $whereArray = array(
+                        'event_code' => $code,
+                        'event_id' => $main['data']['id'],
+                    );
+
+                    // $ci->mdl_event_car->insert_data($SubDataArray, $whereArray);
                 }
 
                 if ($visitor) {
@@ -246,8 +251,204 @@ class CRUD_Valid
         return $return;
     }
 
-    public function delete_data()
+    public function delete_data($data = [])
     {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
 
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+
+            $dataArray = array(
+                'status' => 0,
+                'user_update' => 0,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'id' => $item_id,
+                'code' => $item_code,
+            );
+
+            $main = $ci->mdl_event->delete_data($dataArray, $whereArray);
+
+            if (!$main['error']) {
+
+                $SubwhereArray = array(
+                    'event_id' => $item_id,
+                    'event_code' => $item_code,
+                );
+
+                $SubDataArray = array(
+                    'status' => 0,
+                    'user_update' => 0,
+                    'date_update' => date('Y-m-d H:i:s'),
+                );
+
+                $ci->mdl_event_meeting->delete_data($SubDataArray, $SubwhereArray);
+
+                $VisitorArray = array(
+                    'status' => 0,
+                    'user_update' => 0,
+                    'date_update' => date('Y-m-d H:i:s'),
+                );
+                $vis = $ci->mdl_visitor->delete_data($VisitorArray, $SubwhereArray);
+
+                $return = $main;
+            }
+
+        }
+        return $return;
+    }
+
+    public function approval($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+            $item_data = $data['item_data'];
+
+            if ($item_data == 2) {
+                $item_field = 'approve_date';
+            } elseif ($item_data == 3) {
+                $item_field = 'disapprove_date';
+            }
+
+            $dataArray = array(
+                $item_field => date('Y-m-d H:i:s'),
+                'user_update' => 0,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'id' => $item_id,
+                'code' => $item_code,
+            );
+
+            $main = $ci->mdl_event->approval($dataArray, $whereArray);
+
+            if (!$main['error']) {
+
+                $return = $main;
+            }
+
+        }
+        return $return;
+    }
+
+    public function invitation($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+            $item_data = $data['item_data'];
+
+            if ($item_data == 2) {
+                $remark = 'ตอบรับ';
+            } elseif ($item_data == 3) {
+                $remark = 'ปฏิเสธ';
+            }
+
+            $dataArray = array(
+                'status_complete' => $item_data,
+                'status_remark' => $remark,
+                'user_update' => 0,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'event_id' => $item_id,
+                'event_code' => $item_code,
+            );
+
+            $main = $ci->mdl_visitor->invitation($dataArray, $whereArray);
+
+            if (!$main['error']) {
+
+                $return = $main;
+            }
+
+        }
+        return $return;
+    }
+
+    public function processing($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+            $item_data = $data['item_data'];
+
+            if ($item_data == 2) {
+                $item_field = 'date_update';
+                $complete_name = 'ดำเนินการสำเร็จ';
+                $user_action = null;
+            } elseif ($item_data == 3) {
+                $complete_name = 'ยกเลิก';
+                $item_field = 'cancle_date';
+                $user_action = 0;
+            }
+
+            $dataArray = array(
+                $item_field => date('Y-m-d H:i:s'),
+                'status_complete' => $item_data,
+                'status_complete_name' => $complete_name,
+                'user_action' => $user_action,
+                'user_update' => 0,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'id' => $item_id,
+                'code' => $item_code,
+            );
+
+            $main = $ci->mdl_event->processing($dataArray, $whereArray);
+
+            if (!$main['error']) {
+
+                $return = $main;
+            }
+
+        }
+        return $return;
     }
 }

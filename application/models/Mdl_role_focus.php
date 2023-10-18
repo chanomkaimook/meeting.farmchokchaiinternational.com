@@ -29,7 +29,7 @@ class Mdl_role_focus extends CI_Model
         $sql = $this->db->from($this->table);
         
         if ($optionnal['join']) {
-            $sql->join('employee',$this->table.'.staff_child=employee.id','left');
+            $sql->join('employee',$this->table.'.staff_child=employee.id','right');
         }
 
         if ($id) {

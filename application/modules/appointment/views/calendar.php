@@ -1,5 +1,46 @@
+<style>
+.bg-pending-soft {
+    background-color: rgba(255, 176, 4, .5) !important;
+}
+
+.bg-pending {
+    background-color: rgba(255, 176, 4, 1) !important;
+}
+
+.bg-success-soft {
+    background-color: rgba(0, 194, 40, .1) !important
+}
+
+.bg-success {
+    background-color: rgba(0, 194, 40, .5) !important
+}
+
+.bg-failure-soft {
+    background-color: rgba(192, 10, 0, .1) !important;
+}
+
+.bg-failure {
+    background-color: rgba(192, 10, 0, .5) !important;
+}
+
+.bg-other {
+    background-color: rgba(135, 16, 214, .5) !important;
+}
+
+.bg-process {
+    background-color: rgba(214, 106, 16, .5) !important;
+}
+
+.bg-cancle {
+    background-color: rgba(115, 115, 115, .5) !important;
+}
+
+.gap {
+    gap: 0.5rem;
+}
+</style>
 <!-- <input type="hidden" name="my-id" id="my-id" value="<?= $_SESSION["user_code"] ?>"> -->
-<input type="hidden" name="my-id" id="my-id" value="1">
+<input type="hidden" name="my-id" id="my-id" value="0">
 <!-- Button trigger modal -->
 
 <div class="row">
@@ -139,7 +180,13 @@ $(document).ready(function() {
     let btn_update = '.btn-save-update'
     let btn_draft_insert = '.btn-draft-insert'
     let btn_draft_update = '.btn-draft-update'
-    let btn_delete = '.btn-delete'
+    let btn_delete = '.delete-meeting'
+    let btn_approve = '.btn-approve'
+    let btn_disapprove = '.btn-disapprove'
+    let btn_accept = '.btn-accept'
+    let btn_refuse = '.btn-refuse'
+    let btn_success = '.btn-success'
+    let btn_cancle = '.btn-cancle'
     /* let save_category = '.save-category'
     let approve_footer = '.approve-footer'
     let save_footer = '.save-footer'
@@ -238,21 +285,161 @@ $(document).ready(function() {
      */
 
     $(btn_delete).click(function() {
-        let visitor = [],
-            data = new FormData(),
-            dataArray = $('#update-meeting').serializeArray()
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code')
 
-        for (var i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].name == "update-visitor") {
-                visitor.push(dataArray[i].value)
-            } else {
+        data.append('item_id', id)
+        data.append('item_code', code)
 
-            }
-            data.append(dataArray[i].name, dataArray[i].value)
-        }
-        data.append("visitor", visitor)
-        update_meeting(data, "calendar")
+        swal_delete(data)
+        // $("#detail-modal-meeting").modal("hide")
     })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION APPROVE
+     *
+     *
+     */
+
+    $(document).on('click', btn_approve, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "อนุมัติ",
+            func = "approval",
+            color = '#04d66a'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '2')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION DISAPPROVE
+     *
+     *
+     */
+
+    $(document).on('click', btn_disapprove, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "ไม่อนุมัติ",
+            func = "approval",
+            color = '#d33'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '3')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION ACCEPT
+     *
+     *
+     */
+
+    $(document).on('click', btn_accept, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "ตอบรับ",
+            func = "invitation",
+            color = '#04d66a'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '2')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION REFUSE
+     *
+     *
+     */
+
+    $(document).on('click', btn_refuse, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "ปฏิเสธ",
+            func = "invitation",
+            color = '#d33'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '3')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION SUCCESS
+     *
+     *
+     */
+
+    $(document).on('click', btn_success, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "สิ้นสุดกระบวนการ",
+            func = "processing",
+            color = '#04d66a'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '2')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     * 
+     *
+     * #
+     * # FUNCTION CANCLE
+     *
+     *
+     */
+
+    $(document).on('click', btn_cancle, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "ยกเลิก",
+            func = "processing",
+            color = '#d33'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '3')
+
+        swal_confirm(text, color, func, data)
+    })
+
     /**
      * #
      * #

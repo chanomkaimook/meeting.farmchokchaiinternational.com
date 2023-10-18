@@ -210,11 +210,11 @@
                         <!-- <input type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option selected value="1">นาย A</option>
-                            <option selected value="2">นาย B</option>
+                            <option value="1">นาย A</option>
+                            <option value="2">นาย B</option>
                             <option value="3">นาย C</option>
                             <option value="4">นาย D</option>
-                            <option selected value="5">นาย E</option>
+                            <option value="5">นาย E</option>
                             <option value="6">นาย F</option>
                             <option value="7">นาย G</option>
                         </select>
@@ -316,9 +316,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none" data-visitor="true">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <input type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"
+                        <input type="text" value="" data-role="tagsinput" name="detail-visitor"
                             disabled />
                         <!-- <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
@@ -335,12 +335,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
-                <div class="approve-footer">
+                <!-- <div class="approve-footer">
                     <button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove"
                         data-event-id="" data-dismiss="modal">ไม่เข้าร่วม</button>
                     <button type="button" class="btn btn-success waves-effect waves-light btn-approve" data-event-id=""
                         data-dismiss="modal">เข้าร่วม</button>
-                </div>
+                </div> -->
                 <!-- <div class="save-footer">
                     <button type="button"
                         class="btn btn-success save-event waves-effect waves-light unloading">บันทึก</button>
@@ -350,6 +350,9 @@
                         กำลังบันทึก
                     </button>
                 </div> -->
+                <div class="action-footer">
+
+                    </div>
             </div>
 
         </div>
@@ -382,19 +385,35 @@
                         <input class="form-control form-white" placeholder="Enter name" type="text"
                             name="insert-name" />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">โดย</label>
+                    <div class="form-group mb-3 d-flex flex-row">
+                        <div class="col-md-6"><label class="control-label">โดย</label>
 
-                        <select class="form-control form-white" name="insert-head">
-                            <option disabled selected>กรุณาเลือก...</option>
-                            <?php
-                            foreach ($staff as $val) {
-                            ?>
-                            <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?></option>
-                            <?php
-                            }
-                            ?>
-                        </select>
+                            <select class="form-control form-white" name="insert-head">
+                                <option disabled selected>กรุณาเลือก...</option>
+                                <?php
+                                    foreach ($staff as $val) {
+                                    ?>
+                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>      
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">ห้องประชุม</label>
+                            <select class="form-control form-white" name="insert-room">
+                                <option selected disabled>กรุณาเลือก...</option>
+                                <?php
+                                foreach ($room as $value) {
+                                ?>
+                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
+                                    <?= $value->ROOMS ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
@@ -519,18 +538,36 @@
                         <input class="form-control form-white" placeholder="Enter name" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="update-name" />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">โดย</label>
-                        <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="update-head">
-                            <option disabled selected>กรุณาเลือก...</option>
-                            <?php
-                            foreach ($staff as $val) {
-                            ?>
-                            <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?></option>
-                            <?php
-                            }
-                            ?>
-                        </select>
+                    
+                    <div class="form-group mb-3 d-flex flex-row">
+                        <div class="col-md-6"><label class="control-label">โดย</label>
+
+                            <select class="form-control form-white" name="update-head">
+                                <option disabled selected>กรุณาเลือก...</option>
+                                <?php
+                                    foreach ($staff as $val) {
+                                    ?>
+                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>      
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">ห้องประชุม</label>
+                            <select class="form-control form-white" name="update-room">
+                                <option selected disabled>กรุณาเลือก...</option>
+                                <?php
+                                foreach ($room as $value) {
+                                ?>
+                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
+                                    <?= $value->ROOMS ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
@@ -602,13 +639,13 @@
                         <!-- <input type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option selected value="1">นาย A</option>
-                            <option selected value="2">นาย B</option>
-                            <option value="3">นาย C</option>
-                            <option value="4">นาย D</option>
-                            <option selected value="5">นาย E</option>
-                            <option value="6">นาย F</option>
-                            <option value="7">นาย G</option>
+                            <option value="1" data-value="1">นาย A</option>
+                            <option value="2" data-value="2">นาย B</option>
+                            <option value="3" data-value="3">นาย C</option>
+                            <option value="4" data-value="4">นาย D</option>
+                            <option value="5" data-value="5">นาย E</option>
+                            <option value="6" data-value="6">นาย F</option>
+                            <option value="7" data-value="7">นาย G</option>
                         </select>
                     </div>
                 </form>
@@ -668,10 +705,35 @@
                         <input class="form-control form-white" placeholder="Enter topic" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="detail-name" disabled />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">โดย</label>
-                        <input class="form-control form-white" placeholder="Enter name" type="text"
-                            value="เก็บหิน สนง.ฟาร์ม" name="detail-head" disabled />
+                    <div class="form-group mb-3 d-flex flex-row">
+                        <div class="col-md-6"><label class="control-label">โดย</label>
+
+                            <select class="form-control form-white" name="detail-head" disabled>
+                                <option disabled selected>กรุณาเลือก...</option>
+                                <?php
+                                    foreach ($staff as $val) {
+                                    ?>
+                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
+                                        </option>
+                                        <?php
+                                    }
+                                    ?>      
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="control-label">ห้องประชุม</label>
+                            <select class="form-control form-white" name="detail-room" disabled>
+                                <option selected disabled>กรุณาเลือก...</option>
+                                <?php
+                                foreach ($room as $value) {
+                                ?>
+                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
+                                    <?= $value->ROOMS ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
@@ -703,20 +765,25 @@
                                 name="detail-timee" disabled>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none" data-visitor="true">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <input type="text" value="" data-role="tagsinput" name="detail-visitor" disabled />
+                        <p class="visitor-name">
+
+                        </p>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
-                <div class="approve-footer">
+                <div class="action-footer">
+
+                </div>
+                <!-- <div class="approve-footer">
                     <button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove"
                         data-event-id="" data-dismiss="modal">ไม่เข้าร่วม</button>
                     <button type="button" class="btn btn-success waves-effect waves-light btn-approve" data-event-id=""
                         data-dismiss="modal">เข้าร่วม</button>
-                </div>
+                </div> -->
             </div>
 
         </div>
@@ -826,19 +893,20 @@
                                 name="detail-draft-timee" disabled>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none" data-visitor="true">
                         <label class="control-label">ผู้เข้าร่วม</label>
                         <input type="text" value="" data-role="tagsinput" name="detail-draft-visitor" disabled />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
-                    <div class="approve-footer">
+                    <!-- <div class="approve-footer">
                         <button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove"
                             data-event-id="" data-dismiss="modal">ไม่เข้าร่วม</button>
                         <button type="button" class="btn btn-success waves-effect waves-light btn-approve"
                             data-event-id="" data-dismiss="modal">เข้าร่วม</button>
-                    </div>
+                    </div> -->
+                    
                 </div>
 
             </div>
@@ -906,7 +974,7 @@
                                     disabled>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group d-none" data-visitor="true">
                             <label class="control-label">ผู้เข้าร่วม</label>
                             <input type="text" data-role="tagsinput" name="update-visitor" disabled />
                         </div>

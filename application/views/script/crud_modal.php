@@ -26,95 +26,146 @@ $('.update-meeting').click(function() {
 })
 
 /* ********** FUNCTION ********** */
-function detail(calEvent, jsEvent, view) {
-    let vis = '';
-    if (calEvent.VISITOR.length) {
-        for (let i = 0; i < calEvent.VISITOR.length; i++) {
-            vis = vis + calEvent.VISITOR[i] + ','
+function modalShow(modal, obj, val) {
+    let length = 0;
+    if (modal && obj.length && val.length) {
+        if (obj.length == val.length) {
+            length = obj.length
+        }
+        for (let i = 0; i < length; i++) {
+            $(modal).find(obj[i]).val(val[i])
         }
     }
-    console.log(vis)
+}
+
+function actionFooter(modal, entitled, status, event_id, event_code) {
+    let html = ''
+
+    if (modal && entitled) {
+        if (status == 1) {
+            if (entitled == 'other') {
+                html = ``
+            } else if (entitled == 'vis') {
+                html =
+                    `<button type="button" class="btn btn-danger waves-effect waves-light btn-refuse" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ไม่เข้าร่วม</button>
+                    <button type="button" class="btn btn-success waves-effect waves-light btn-accept" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">เข้าร่วม</button>`
+            } else if (entitled == 'child') {
+                html =
+                    `<button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ไม่อนุมัติ</button>
+                    <button type="button" class="btn btn-success waves-effect waves-light btn-approve" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">อนุมัติ</button>`
+            }
+        } else if (status != 1 && entitled) {
+            html = ``
+        }
+    } else {
+        html =
+            `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-success waves-effect waves-light btn-success" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
+    }
+    $(modal).find('.action-footer').html(html)
+}
+
+function detail(calEvent, jsEvent, view) {
+    let vis = '',
+        vis_html = '',
+        btn_html = '',
+        modal_detail, obj_detail = [],
+        val_detail = [],
+        modal_update, obj_update = [],
+        val_update = [],
+        entitled = '',
+        status = '';
+
+
+    $('#detail-modal-car').find('[data-visitor=true]').addClass('d-none')
+    $('#detail-modal-meeting').find('[data-visitor=true]').addClass('d-none')
+
     if (calEvent.TYPE_ID == 1 || calEvent.TYPE_ID == 3) {
         /* ************* DETAIL **************** */
-        $("#detail-modal-meeting").modal("show")
-        $('#detail-modal-meeting').find('[name=detail-type]').val('จองห้อง/นัดหมายการประชุม')
-        $('#detail-modal-meeting').find('[name=detail-name]').val(calEvent.EVENT_NAME)
-        $('#detail-modal-meeting').find('[name=detail-head]').val(calEvent.STAFF_ID)
-        $('#detail-modal-meeting').find('[name=detail-description]').val(calEvent.EVENT_DESCRIPTION)
-        $('#detail-modal-meeting').find('[name=detail-dates]').val(calEvent.DATE_BEGIN)
-        $('#detail-modal-meeting').find('[name=detail-datee]').val(calEvent.DATE_END)
-        $('#detail-modal-meeting').find('[name=detail-times]').val(calEvent.TIME_BEGIN)
-        $('#detail-modal-meeting').find('[name=detail-timee]').val(calEvent.TIME_END)
-        if (vis) {
-            $('#detail-modal-meeting').find('[name=detail-visitor]').val(vis)
-        }
+        modal_detail = '#detail-modal-meeting'
 
         /* ************** UPDATE *************** */
-        // $("#update-modal-meeting").modal("show")
-        $('#update-modal-meeting').find('[name=item_id]').val(calEvent.ID)
-        $('#update-modal-meeting').find('[name=code]').val(calEvent.CODE)
-        $('#update-modal-meeting').find('select[name=update-type]').val(calEvent.TYPE_ID)
-        $('#update-modal-meeting').find('[name=update-name]').val(calEvent.EVENT_NAME)
-        $('#update-modal-meeting').find('[name=update-head]').val(calEvent.STAFF_ID)
-        $('#update-modal-meeting').find('[name=update-description]').val(calEvent.EVENT_DESCRIPTION)
-        $('#update-modal-meeting').find('[name=update-dates]').val(calEvent.DATE_BEGIN)
-        $('#update-modal-meeting').find('[name=update-datee]').val(calEvent.DATE_END)
-        $('#update-modal-meeting').find('select[name=update-times]').val(calEvent.TIME_BEGIN)
-        $('#update-modal-meeting').find('select[name=update-timee]').val(calEvent.TIME_END)
-        if (vis) {
-            $('#update-modal-meeting').find('[name=update-visitor]').val(vis)
-        }
+        modal_update = '#update-modal-meeting';
+
 
     } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 4) {
         /* ************* DETAIL **************** */
-        $("#detail-modal-car").modal("show")
-        $('#detail-modal-car').find('[name=detail-type]').val('จองรถ')
-        $('#detail-modal-car').find('[name=detail-name]').val(calEvent.EVENT_NAME)
-        $('#detail-modal-car').find('[name=detail-head]').val(calEvent.STAFF_ID)
-        $('#detail-modal-car').find('[name=detail-description]').val(calEvent.EVENT_DESCRIPTION)
-        $('#detail-modal-car').find('[name=detail-dates]').val(calEvent.DATE_BEGIN)
-        $('#detail-modal-car').find('[name=detail-datee]').val(calEvent.DATE_END)
-        $('#detail-modal-car').find('[name=detail-times]').val(calEvent.TIME_BEGIN)
-        $('#detail-modal-car').find('[name=detail-timee]').val(calEvent.TIME_END)
-        if (vis) {
-            $('#detail-modal-car').find('[name=detail-visitor]').val(vis)
-        }
+        modal_detail = '#detail-modal-car'
 
         /* ************** UPDATE *************** */
-        // $("#update-modal-car").modal("show")
-        $('#update-modal-car').find('[name=item_id]').val(calEvent.ID)
-        $('#update-modal-car').find('[name=update-type]').val('จองรถ')
-        $('#update-modal-car').find('[name=code]').val(calEvent.CODE)
-        $('#update-modal-car').find('[name=update-name]').val(calEvent.EVENT_NAME)
-        $('#update-modal-car').find('[name=update-head]').val(calEvent.STAFF_ID)
-        $('#update-modal-car').find('[name=update-description]').val(calEvent.EVENT_DESCRIPTION)
-        $('#update-modal-car').find('[name=update-dates]').val(calEvent.DATE_BEGIN)
-        $('#update-modal-car').find('[name=update-datee]').val(calEvent.DATE_END)
-        $('#update-modal-car').find('[name=update-times]').val(calEvent.TIME_BEGIN)
-        $('#update-modal-car').find('[name=update-timee]').val(calEvent.TIME_END)
-        if (vis) {
-            $('#update-modal-car').find('[name=update-visitor]').val(vis)
+        modal_update = '#update-modal-car'
+
+    }
+
+    $(modal_detail).modal("show")
+
+    /* ************* DETAIL **************** */
+    obj_detail.push('[name=detail-type]', '[name=detail-name]', '[name=detail-head]', '[name=detail-description]',
+        '[name=detail-dates]', '[name=detail-datee]', '[name=detail-times]', '[name=detail-timee]')
+
+    val_detail.push(calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent.STAFF_ID, calEvent.EVENT_DESCRIPTION,
+        calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END)
+
+    modalShow(modal_detail, obj_detail, val_detail)
+    /* ************* END DETAIL **************** */
+
+    /* ************** UPDATE *************** */
+    obj_update.push('[name=item_id]', '[name=code]', 'select[name=update-type]', '[name=update-name]',
+        '[name=update-head]', '[name=update-description]', '[name=update-dates]', '[name=update-datee]',
+        'select[name=update-times]', 'select[name=update-timee]')
+
+    val_update.push(calEvent.ID, calEvent.CODE, calEvent.TYPE_ID, calEvent.EVENT_NAME, calEvent.STAFF_ID, calEvent
+        .EVENT_DESCRIPTION, calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END)
+
+    modalShow(modal_update, obj_update, val_update)
+    /* ************** END UPDATE *************** */
+
+    /* ************** ADD VISITOR *************** */
+
+    if (calEvent.VISITOR) {
+        for (let i = 0; i < calEvent.VISITOR.length; i++) {
+            vis_html = vis_html + calEvent.VISITOR[i].VNAME + ' ' + calEvent.VISITOR[i].VLNAME + ' ' + calEvent.VISITOR[
+                i].VSTATUS + '<br>'
+            $('select[name=update-visitor]').find('option[data-value=' + calEvent.VISITOR[i].VID + ']').attr('selected')
+            // console.log($('select[name=update-visitor]'))
         }
 
+        $(modal_detail).find('[data-visitor=true]').removeClass('d-none')
+        $(modal_detail).find('p.visitor-name').html(vis_html)
+
+
+        $(modal_update).find('[data-visitor=true]').removeClass('d-none')
+    }
+    /* ************** END ADD VISITOR *************** */
+
+    /* ************** ACTION FOOTER *************** */
+    entitled = calEvent.class
+    status = calEvent.STATUS_COMPLETE
+    event_id = calEvent.ID
+    event_code = calEvent.CODE
+    // console.log(entitled, status, event_id)
+    actionFooter(modal_detail, entitled, status, event_id, event_code)
+    if (!calEvent.class) {
+        if (!calEvent.CANCLE_DATE, !calEvent.APPROVE_DATE, !calEvent.DISAPPROVE_DATE) {
+            $('.modal-footer').find('.approve-footer').removeClass('d-none')
+            $('.action-header').find('.text-warning').removeClass('d-none')
+            $('.action-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+        } else if (calEvent.APPROVE_DATE) {
+            $('.modal-footer').find('.approve-footer').addClass('d-none')
+            $('.action-header').find('.text-warning').removeClass('d-none')
+            $('.action-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+        } else if (calEvent.DISAPPROVE_DATE) {
+            $('.modal-footer').find('.approve-footer').addClass('d-none')
+            $('.action-header').find('.text-danger').removeClass('d-none')
+            $('.action-header').find('.text-danger').html(calEvent.STATUS_SHOW)
+        } else if (calEvent.CANCLE_DATE) {
+            $('.modal-footer').find('.approve-footer').addClass('d-none')
+            $('.action-header').find('.text-success').removeClass('d-none')
+            $('.action-header').find('.text-success').html(calEvent.STATUS_SHOW)
+        }
     }
 
-    if (!calEvent.CANCLE_DATE, !calEvent.APPROVE_DATE, !calEvent.DISAPPROVE_DATE) {
-        $('.modal-footer').find('.approve-footer').removeClass('d-none')
-        $('.action-header').find('.text-warning').removeClass('d-none')
-        $('.action-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
-    } else if (calEvent.APPROVE_DATE) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.action-header').find('.text-warning').removeClass('d-none')
-        $('.action-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
-    } else if (calEvent.DISAPPROVE_DATE) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.action-header').find('.text-danger').removeClass('d-none')
-        $('.action-header').find('.text-danger').html(calEvent.STATUS_COMPLETE_NAME)
-    } else if (calEvent.CANCLE_DATE) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.action-header').find('.text-success').removeClass('d-none')
-        $('.action-header').find('.text-success').html(calEvent.STATUS_COMPLETE_NAME)
-    }
+    /* ************** END ACTION FOOTER *************** */
 }
 
 function detail_draft(data) {
@@ -204,6 +255,48 @@ function swal_alert(icon, title, text) {
     $('.modal').modal('hide')
 }
 
+function swal_delete(data) {
+    Swal.fire({
+        title: 'โปรดยืนยัน',
+        text: "คุณต้องการลบข้อมูลนี้?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'ใช่ ต้องการลบ',
+        cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            delete_meeting(data)
+        }
+    })
+    $('.modal').modal('hide')
+}
+
+function swal_confirm(text, color, func, data) {
+    Swal.fire({
+        title: 'โปรดยืนยัน',
+        text: "คุณต้องการ" + text + "ข้อมูลนี้?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: color,
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'ใช่ ' + text,
+        cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (func == "approval") {
+                approval(data)
+            } else if (func == "invitation") {
+                invitation(data)
+            } else if (func == "processing") {
+                processing(data)
+            }
+        }
+    })
+    $('.modal').modal('hide')
+}
+
 /* ********** CRUD FUNCTION ********** */
 function insert_meeting(insert_data) {
     let url = "insert_data"
@@ -242,6 +335,54 @@ function delete_meeting(delete_data) {
     fetch(url, {
             method: 'post',
             body: delete_data
+        })
+        .then(res => res.json())
+        .then((resp) => {
+            if (resp.error) {
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
+            } else {
+                swal_alert('success', 'สำเร็จ', '')
+            }
+        })
+}
+
+function approval(data) {
+    let url = "approval"
+    fetch(url, {
+            method: 'post',
+            body: data
+        })
+        .then(res => res.json())
+        .then((resp) => {
+            if (resp.error) {
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
+            } else {
+                swal_alert('success', 'สำเร็จ', '')
+            }
+        })
+}
+
+function invitation(data) {
+    let url = "invitation"
+    fetch(url, {
+            method: 'post',
+            body: data
+        })
+        .then(res => res.json())
+        .then((resp) => {
+            if (resp.error) {
+                swal_alert('error', 'ไม่สำเร็จ', resp.txt)
+            } else {
+                swal_alert('success', 'สำเร็จ', '')
+            }
+        })
+}
+
+function processing(data) {
+    let url = "processing"
+    fetch(url, {
+            method: 'post',
+            body: data
         })
         .then(res => res.json())
         .then((resp) => {

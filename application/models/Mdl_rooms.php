@@ -1,9 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mdl_event extends CI_Model
+class Mdl_rooms extends CI_Model
+
 {
-    private $table = "event";
+    private $table = "rooms";
     private $fildstatus = "status";
 
     public function __construct()
@@ -20,7 +21,7 @@ class Mdl_event extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  *
+    //  * 
     //  * get data
     //  *
     /**
@@ -33,7 +34,6 @@ class Mdl_event extends CI_Model
      *                          orderby=array(a=>desc,b=asc),
      *                          groupby=array(a,b),
      *                          limit=0,10,
-     *                          join="meeting","car",
      *                           ]
      * @return void
      */
@@ -56,7 +56,7 @@ class Mdl_event extends CI_Model
         # code...
         $optionnal['select'] = 'count(' . $this->table . '.id) as total';
 
-        $data = (object) $this->get_dataShow($id, $optionnal, 'row');
+        $data = (object) $this->get_dataShow($id, $optionnal,'row');
         $num = $data->total;
 
         return $num;
@@ -65,14 +65,14 @@ class Mdl_event extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  *
+    //  * 
     //  * get data only for display (not data delete)
     //  *
     public function get_dataShow(int $id = null, array $optionnal = [], string $type = "result")
     {
         # code...
         $sql = (object) $this->get_sql($id, $optionnal, $type);
-        $sql->where($this->table . '.' . $this->fildstatus, 1);
+        $sql->where($this->table . '.'.$this->fildstatus, 1);
 
         $query = $sql->get();
 
@@ -86,7 +86,7 @@ class Mdl_event extends CI_Model
     //  *
     //  * CRUD
     //  * insert
-    //  *
+    //  * 
     //  * insert data
     //  *
     public function insert_data($data)
@@ -101,7 +101,7 @@ class Mdl_event extends CI_Model
             $new_id = $this->db->insert_id();
 
             // keep log
-            log_data(array('insert ' . $this->table .' ID = '.$new_id, 'insert', $this->db->last_query()));
+            log_data(array('insert ' . $this->table, 'insert', $this->db->last_query()));
 
             if ($new_id) {
 
@@ -121,31 +121,41 @@ class Mdl_event extends CI_Model
     //  *
     //  * CRUD
     //  * update
-    //  *
+    //  * 
     //  * update data
     //  *
-    public function update_data($data, $id)
+    public function update_data()
     {
-        $result = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
+        $item_id = $this->input->post('item_id');
+
+        /* $begin_date = "";
+        if ($this->input->post('item_begin_date')) {
+            $ex = explode('-', $this->input->post('item_begin_date'));
+            $begin_date = $ex[2] . "-" . $ex[1] . "-" . $ex[0];
+        } */
+
+        $data = array(
+            'code'  => textShow($this->input->post('label_2')),
+            'name'  => textShow($this->input->post('label_6')),
+            'workstatus'  => $this->input->post('label_1'),
+
+            'date_update'  => date('Y-m-d H:i:s'),
+            'user_update'  => $this->session->userdata('user_code'),
         );
 
-        if (count($data)) {
-            $this->db->where('id', $id);
-            $this->db->update($this->table, $data);
+        $this->db->where('id', $item_id);
+        $this->db->update($this->table, $data);
 
-            // keep log
-            log_data(array('update ' . $this->table .' ID = '.$id, 'update', $this->db->last_query()));
+        // keep log
+        log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
 
-            $result = array(
-                'error' => 0,
-                'txt' => 'ทำรายการสำเร็จ',
-                'data' => array(
-                    'id' => $id,
-                ),
-            );
-        }
+        $result = array(
+            'error'     => 0,
+            'txt'       => 'ทำรายการสำเร็จ',
+            'data'      => array(
+                'id'    => $item_id
+            )
+        );
 
         return $result;
     }
@@ -153,7 +163,7 @@ class Mdl_event extends CI_Model
     //  *
     //  * CRUD
     //  * delete
-    //  *
+    //  * 
     //  * delete data
     //  *
     public function delete_data($data,$where)
@@ -174,87 +184,7 @@ class Mdl_event extends CI_Model
             $this->db->update($this->table, $data);
 
             // keep log
-            log_data(array('delete ' . $this->table .' ID = '.$where['id'], 'update', $this->db->last_query()));
-
-            $result = array(
-                'error' => 0,
-                'txt' => 'ทำรายการสำเร็จ',
-                'data' => array(
-                    'id' => $where['id'],
-                ),
-            );
-        }
-
-        return $result;
-    }
-    
-    //  *
-    //  * 
-    //  * order approval
-    //  * 
-    //  *
-    public function approval($data,$where)
-    {
-        $result = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
-
-        if (count($data)) {
-
-            if ($data['approve_date']) {
-                $remark = 'อนุมัติ ';
-            } elseif ($data['disapprove_date']) {
-                $remark = 'ไม่อนุมัติ ';
-            }
-
-        if (count($where)) {
-            foreach ($where as $column => $value) {
-                $this->db->where($column, $value);
-            }
-        }
-        
-            $this->db->update($this->table, $data);
-
-            // keep log
-            log_data(array($remark.' event ID = '.$where['id'], 'update', $this->db->last_query()));
-
-            $result = array(
-                'error' => 0,
-                'txt' => 'ทำรายการสำเร็จ',
-                'data' => array(
-                    'id' => $where['id'],
-                ),
-            );
-        }
-
-        return $result;
-    }
-
-    //  *
-    //  * 
-    //  * event work process
-    //  * 
-    //  *
-    public function processing($data,$where)
-    {
-        $result = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
-
-        if (count($data)) {
-            
-        if (count($where)) {
-            foreach ($where as $column => $value) {
-                $this->db->where($column, $value);
-            }
-        }
-        
-            $this->db->update($this->table, $data);
-
-            // keep log
-            log_data(array($data['status_complete_name'].' ID = '.$where['id'], 'update', $this->db->last_query()));
+            log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
 
             $result = array(
                 'error' => 0,
@@ -273,6 +203,8 @@ class Mdl_event extends CI_Model
     //  =========================
     //  =========================
 
+
+
     //  =========================
     //  =========================
     //  Query
@@ -286,7 +218,7 @@ class Mdl_event extends CI_Model
      * @param string $type
      * @return void
      */
-    public function get_sql(int $id = null, array $optionnal = [], string $type = 'result')
+    function get_sql(int $id = null, array $optionnal = [], string $type = 'result')
     {
         $request = $_REQUEST;
 
@@ -296,18 +228,7 @@ class Mdl_event extends CI_Model
         $sql = $this->db->from($this->table);
 
         if ($optionnal['join']) {
-            switch ($optionnal['join']) {
-                case "meeting":
-                    $sql->join('event_meeting', 'event.id=event_meeting.event_id', 'inner');
-                    break;
-                case "car":
-                    $sql->join('event_car', 'event.id=event_car.event_id', 'inner');
-                    break;
-                default:
-                    $sql->join('event_meeting', 'event.id=event_meeting.event_id', 'left');
-                    $sql->join('event_car', 'event.id=event_car.event_id', 'left');
-                    break;
-            }
+            $sql->join('employee',$this->table.'.event_visitor=employee.id','left');
         }
 
         if (textShow($request['hidden_datestart'])) {

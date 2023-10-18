@@ -166,40 +166,71 @@ class Mdl_visitor extends CI_Model
     //  * 
     //  * delete data
     //  *
-    public function delete_data()
+    public function delete_data($data,$where)
     {
-        $item_id = textShow($this->input->post('item_id'));
-        $item_remark = textShow($this->input->post('item_remark'));
-
         $result = array(
             'error' => 1,
-            'txt'        => 'ไม่มีการทำรายการ'
+            'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (!$item_id) {
-            return $result;
+        if (count($data)) {
+            
+        if (count($where)) {
+            foreach ($where as $column => $value) {
+                $this->db->where($column, $value);
+            }
+        }
+        
+            $this->db->update($this->table, $data);
+
+            // keep log
+            log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
+
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+                'data' => array(
+                    'id' => $where['event_id'],
+                ),
+            );
         }
 
-        $data_array = array(
-            $this->fildstatus     => 0,
+        return $result;
+    }
 
-            'date_update'  => date('Y-m-d H:i:s'),
-            'user_update'  => $this->session->userdata('user_code'),
-        );
-
-        if ($item_remark) {
-            $data_array['remark_delete'] = $item_remark;
-        }
-
-        $this->db->update($this->table, $data_array, array('id' => $item_id));
-
-        // keep log
-        log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
-
+    //  *
+    //  * 
+    //  * accepting an invitation
+    //  * 
+    //  *
+    public function invitation($data,$where)
+    {
         $result = array(
-            'error'     => 0,
-            'txt'       => 'ทำรายการสำเร็จ'
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
         );
+
+        if (count($data)) {
+            
+        if (count($where)) {
+            foreach ($where as $column => $value) {
+                $this->db->where($column, $value);
+            }
+        }
+        
+            $this->db->update($this->table, $data);
+
+            // keep log
+            log_data(array($data['remark'].'การเข้าร่วม', 'update', $this->db->last_query()));
+
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+                'data' => array(
+                    'id' => $where['event_id'],
+                ),
+            );
+        }
 
         return $result;
     }
@@ -232,6 +263,10 @@ class Mdl_visitor extends CI_Model
         $hidden_end = "";
 
         $sql = $this->db->from($this->table);
+
+        if ($optionnal['join']) {
+            $sql->join('employee',$this->table.'.event_visitor=employee.id','left');
+        }
 
         if (textShow($request['hidden_datestart'])) {
             $hidden_start = textShow($request['hidden_datestart']);
