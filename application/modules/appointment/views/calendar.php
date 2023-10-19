@@ -8,19 +8,19 @@
 }
 
 .bg-success-soft {
-    background-color: rgba(0, 194, 40, .1) !important
-}
-
-.bg-success {
     background-color: rgba(0, 194, 40, .5) !important
 }
 
+.bg-success {
+    background-color: rgba(0, 194, 40, 1) !important
+}
+
 .bg-failure-soft {
-    background-color: rgba(192, 10, 0, .1) !important;
+    background-color: rgba(192, 10, 0, .5) !important;
 }
 
 .bg-failure {
-    background-color: rgba(192, 10, 0, .5) !important;
+    background-color: rgba(192, 10, 0, 1) !important;
 }
 
 .bg-other {
@@ -28,16 +28,13 @@
 }
 
 .bg-process {
-    background-color: rgba(214, 106, 16, .5) !important;
+    background-color: rgba(214, 106, 16, 1) !important;
 }
 
 .bg-cancle {
     background-color: rgba(115, 115, 115, .5) !important;
 }
 
-.gap {
-    gap: 0.5rem;
-}
 </style>
 <!-- <input type="hidden" name="my-id" id="my-id" value="<?= $_SESSION["user_code"] ?>"> -->
 <input type="hidden" name="my-id" id="my-id" value="0">
@@ -185,8 +182,9 @@ $(document).ready(function() {
     let btn_disapprove = '.btn-disapprove'
     let btn_accept = '.btn-accept'
     let btn_refuse = '.btn-refuse'
-    let btn_success = '.btn-success'
+    let btn_success = '.btn-finish'
     let btn_cancle = '.btn-cancle'
+    let btn_defer = '.defer'
     /* let save_category = '.save-category'
     let approve_footer = '.approve-footer'
     let save_footer = '.save-footer'
@@ -357,6 +355,7 @@ $(document).ready(function() {
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
+            vid = $(this).attr('data-id'),
             text = "ตอบรับ",
             func = "invitation",
             color = '#04d66a'
@@ -364,6 +363,23 @@ $(document).ready(function() {
         data.append('item_id', id)
         data.append('item_code', code)
         data.append('item_data', '2')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    $(document).on('click', btn_defer, function() {
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            vid = $(this).attr('data-id'),
+            text = "ตอบรับ",
+            func = "invitation",
+            color = '#04d66a'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '2')
+        data.append('vid', vid)
 
         swal_confirm(text, color, func, data)
     })
@@ -435,7 +451,7 @@ $(document).ready(function() {
 
         data.append('item_id', id)
         data.append('item_code', code)
-        data.append('item_data', '3')
+        data.append('item_data', '4')
 
         swal_confirm(text, color, func, data)
     })

@@ -10,23 +10,21 @@
                 </button>
             </div>
             <div class="modal-body pb-0">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card text-center insert-car" data-dismiss="modal">
-                            <div class="card-body">
-                                <h4>จองรถ</h4>
+            <div class="row">
+                        <div class="col-6">
+                            <div class="card text-center">
+                                <button type="button"
+                                    class="btn btn-dark btn-rounded btn-lg width-md waves-effect waves-light insert-car" data-dismiss="modal">จองรถ</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card text-center insert-meeting" data-dismiss="modal">
-                            <div class="card-body">
-                                <h4>นัดหมาย/จองห้องประชุม</h4>
+                        <div class="col-6">
+                            <div class="card text-center">
+                                <button type="button"
+                                    class="btn btn-dark btn-rounded btn-lg width-md waves-effect waves-light insert-meeting" data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
                             </div>
                         </div>
-                    </div>
-                </div>
 
+                    </div>
             </div>
         </div>
     </div>
@@ -64,12 +62,12 @@
                         <select class="form-control form-white" name="insert-head">
                             <option disabled selected>กรุณาเลือก...</option>
                             <?php
-                            foreach ($staff as $val) {
-                            ?>
-                            <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?></option>
+foreach ($staff as $val) {
+    ?>
+                            <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?></option>
                             <?php
-                            }
-                            ?>
+}
+?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -88,20 +86,20 @@
                             <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="insert-time">
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                     </div>
@@ -109,14 +107,11 @@
                         <label class="control-label">ผู้เข้าร่วม</label>
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="insert-visitor">
-                            <!--  data-role="tagsinput" multiple -->
-                            <option value="1">นาย A</option>
-                            <option value="2">นาย B</option>
-                            <option value="3">นาย C</option>
-                            <option value="4">นาย D</option>
-                            <option value="5">นาย E</option>
-                            <option value="6">นาย F</option>
-                            <option value="7">นาย G</option>
+                            <?php foreach ($employee as $emp) {
+    ?>
+                            <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                            <?php
+}?>
                         </select>
                     </div>
                 </form>
@@ -188,20 +183,20 @@
                             <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="update-time">
                                 <!-- <option selected disabled>กรุณาเลือก...</option> -->
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option selected value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option selected value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                     </div>
@@ -210,13 +205,11 @@
                         <!-- <input type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option value="1">นาย A</option>
-                            <option value="2">นาย B</option>
-                            <option value="3">นาย C</option>
-                            <option value="4">นาย D</option>
-                            <option value="5">นาย E</option>
-                            <option value="6">นาย F</option>
-                            <option value="7">นาย G</option>
+                            <?php foreach ($employee as $emp) {
+    ?>
+                            <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                            <?php
+}?>
                         </select>
                     </div>
                 </form>
@@ -299,27 +292,26 @@
                                 disabled>
                                 <!-- <option selected disabled>กรุณาเลือก...</option> -->
                                 <?php
-                                // foreach ($time as $value) {
-                                //     if (!$value["START"]) {
-                                //         $times = $value["END"];
-                                //     } elseif (!$value["END"]) {
-                                //         $times = $value["START"];
-                                //     } else {
-                                //         $times = $value["START"];
-                                //     }
-                                ?>
-                                <option selected value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime("7.00")) ?></option>
+// foreach ($time as $value) {
+//     if (!$value["START"]) {
+//         $times = $value["END"];
+//     } elseif (!$value["END"]) {
+//         $times = $value["START"];
+//     } else {
+//         $times = $value["START"];
+//     }
+?>
+                                <option selected value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime("7.00"))?></option>
                                 <?php
-                                // }
-                                ?>
+// }
+?>
                             </select>
                         </div>
                     </div>
                     <div class="form-group d-none" data-visitor="true">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <input type="text" value="" data-role="tagsinput" name="detail-visitor"
-                            disabled />
+                        <input type="text" value="" data-role="tagsinput" name="detail-visitor" disabled />
                         <!-- <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
                             <option value="1">นาย A</option>
@@ -352,7 +344,7 @@
                 </div> -->
                 <div class="action-footer">
 
-                    </div>
+                </div>
             </div>
 
         </div>
@@ -367,19 +359,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Booking</h4>
+                <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="insert-meeting">
 
-                    <div class="form-group">
+                <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden" name="insert-type-id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม" type="hidden" name="insert-type-name" />
+                    <!-- <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
                             name="insert-type-id" />
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
                             <option value="1">นัดหมาย/จองห้องประชุม</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
                         <input class="form-control form-white" placeholder="Enter name" type="text"
@@ -391,28 +385,30 @@
                             <select class="form-control form-white" name="insert-head">
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-                                    foreach ($staff as $val) {
-                                    ?>
-                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
-                                        </option>
-                                        <?php
-                                    }
-                                    ?>      
+foreach ($staff as $val) {
+    ?>
+                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                </option>
+                                <?php
+}
+?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="insert-room">
+                            <select class="form-control form-white" name="insert-rooms-id">
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($room as $value) {
-                                ?>
-                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
-                                    <?= $value->ROOMS ?></option>
+foreach ($room as $value) {
+    ?>
+                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                    data-rooms-branch="<?=$value->BRANCH?>">
+                                    <?=$value->ROOMS?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
+                            <input type="hidden" name="insert-rooms-name">
                         </div>
                     </div>
                     <div class="form-group">
@@ -442,20 +438,20 @@
                             <select class="form-control form-white" name="insert-times">
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -463,20 +459,20 @@
                             <select class="form-control form-white" name="insert-timee">
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                     </div>
@@ -484,14 +480,11 @@
                         <label class="control-label">ผู้เข้าร่วม</label>
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="insert-visitor">
-                            <!--  data-role="tagsinput" multiple -->
-                            <option value="1">นาย A</option>
-                            <option value="2">นาย B</option>
-                            <option value="3">นาย C</option>
-                            <option value="4">นาย D</option>
-                            <option value="5">นาย E</option>
-                            <option value="6">นาย F</option>
-                            <option value="7">นาย G</option>
+                            <?php foreach ($employee as $emp) {
+    ?>
+                            <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                            <?php
+}?>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -515,58 +508,51 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Booking</h4>
+                <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="update-meeting">
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
-                        name="item_id" />
-                    <div class="form-group">
-                        <label class="control-label">ประเภท</label>
-                        <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
-                            name="update-type-id" />
-                        <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม"
-                            type="hidden" name="update-type-name" />
-                        <input class="form-control form-white" placeholder="Enter name" type="hidden" name="code" />
-
-                        <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
-                            <option value="1">นัดหมาย/จองห้องประชุม</option>
-                        </select>
-                    </div>
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="item_id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="code" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-name" />
+                    
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
                         <input class="form-control form-white" placeholder="Enter name" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="update-name" />
                     </div>
-                    
+
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6"><label class="control-label">โดย</label>
 
                             <select class="form-control form-white" name="update-head">
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-                                    foreach ($staff as $val) {
-                                    ?>
-                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
-                                        </option>
-                                        <?php
-                                    }
-                                    ?>      
+foreach ($staff as $val) {
+    ?>
+                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                </option>
+                                <?php
+}
+?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="update-room">
+                            <select class="form-control form-white" name="update-rooms-id">
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($room as $value) {
-                                ?>
-                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
-                                    <?= $value->ROOMS ?></option>
+foreach ($room as $value) {
+    ?>
+                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                    data-rooms-branch="<?=$value->BRANCH?>">
+                                    <?=$value->ROOMS?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
+                            <input type="hidden" name="update-rooms-name">
                         </div>
                     </div>
                     <div class="form-group">
@@ -595,20 +581,20 @@
                                 name="update-times">
                                 <!-- <option selected disabled>กรุณาเลือก...</option> -->
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option selected value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option selected value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -617,20 +603,20 @@
                                 name="update-timee">
                                 <!-- <option selected disabled>กรุณาเลือก...</option> -->
                                 <?php
-                                foreach ($time as $value) {
-                                    if (!$value["START"]) {
-                                        $times = $value["END"];
-                                    } elseif (!$value["END"]) {
-                                        $times = $value["START"];
-                                    } else {
-                                        $times = $value["START"];
-                                    }
-                                ?>
-                                <option selected value="<?= date('H:i', strtotime($times)) ?>">
-                                    <?= date('H:i', strtotime($times)) ?></option>
+foreach ($time as $value) {
+    if (!$value["START"]) {
+        $times = $value["END"];
+    } elseif (!$value["END"]) {
+        $times = $value["START"];
+    } else {
+        $times = $value["START"];
+    }
+    ?>
+                                <option selected value="<?=date('H:i', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                     </div>
@@ -639,13 +625,11 @@
                         <!-- <input type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option value="1" data-value="1">นาย A</option>
-                            <option value="2" data-value="2">นาย B</option>
-                            <option value="3" data-value="3">นาย C</option>
-                            <option value="4" data-value="4">นาย D</option>
-                            <option value="5" data-value="5">นาย E</option>
-                            <option value="6" data-value="6">นาย F</option>
-                            <option value="7" data-value="7">นาย G</option>
+                            <?php foreach ($employee as $emp) {
+    ?>
+                            <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                            <?php
+}?>
                         </select>
                     </div>
                 </form>
@@ -667,35 +651,36 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <div class="d-flex">
-                    <div>
+                <!-- <div class="d-flex"> -->
+                <!-- <div>
                         <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
-                    </div>
-                    <div class="pl-4 action-header">
-                        <h4 class="modal-title-status text-warning d-none"></h4>
-                        <h4 class="modal-title-status text-danger d-none"></h4>
-                        <h4 class="modal-title-status text-success d-none"></h4>
-                    </div>
-                </div>
+                    </div> -->
+                <!-- <div class="pl-4 action-header"> -->
+                <h4 class="modal-title-status text-warning d-none"></h4>
+                <h4 class="modal-title-status text-danger d-none"></h4>
+                <h4 class="modal-title-status text-success d-none"></h4>
+                <h4 class="modal-title-status text-secondary d-none"></h4>
+                <!-- </div> -->
+                <!-- </div> -->
             </div>
 
             <div class="modal-body pb-0">
                 <form class="form" id="detail-meeting">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card text-center update-meeting" data-dismiss="modal">
-                                <div class="card-body">
-                                    <h4>แก้ไข</h4>
-                                </div>
+                        <div class="col-6">
+                            <div class="card text-center">
+                                <button type="button"
+                                    class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting" data-dismiss="modal">แก้ไข</button>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="card text-center delete-meeting" data-dismiss="modal">
-                                <h4>ลบ</h4>
+                        <div class="col-6">
+                            <div class="card text-center">
+                                <button type="button"
+                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light delete-meeting" data-dismiss="modal">ลบ</button>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <input type="text" name="detail-type" class="form-control" disabled>
@@ -711,27 +696,28 @@
                             <select class="form-control form-white" name="detail-head" disabled>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-                                    foreach ($staff as $val) {
-                                    ?>
-                                        <option value="<?= $val->STAFF_CHILD; ?>"><?= $val->NAME . " " . $val->LASTNAME; ?>
-                                        </option>
-                                        <?php
-                                    }
-                                    ?>      
+foreach ($staff as $val) {
+    ?>
+                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                </option>
+                                <?php
+}
+?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="detail-room" disabled>
+                            <select class="form-control form-white" name="detail-rooms" disabled>
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($room as $value) {
-                                ?>
-                                <option value="<?= $value->ID ?>" data-room-name="<?= $value->ROOMS ?>" data-room-branch="<?= $value->BRANCH ?>">
-                                    <?= $value->ROOMS ?></option>
+foreach ($room as $value) {
+    ?>
+                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                    data-rooms-branch="<?=$value->BRANCH?>">
+                                    <?=$value->ROOMS?></option>
                                 <?php
-                                }
-                                ?>
+}
+?>
                             </select>
                         </div>
                     </div>
@@ -906,7 +892,7 @@
                         <button type="button" class="btn btn-success waves-effect waves-light btn-approve"
                             data-event-id="" data-dismiss="modal">เข้าร่วม</button>
                     </div> -->
-                    
+
                 </div>
 
             </div>
@@ -976,7 +962,14 @@
                         </div>
                         <div class="form-group d-none" data-visitor="true">
                             <label class="control-label">ผู้เข้าร่วม</label>
-                            <input type="text" data-role="tagsinput" name="update-visitor" disabled />
+                            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
+                                name="update-visitor">
+                                <?php foreach ($employee as $emp) {
+    ?>
+                                <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                                <?php
+}?>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">

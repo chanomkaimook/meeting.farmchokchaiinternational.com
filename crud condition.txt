@@ -1,0 +1,34 @@
+/**
+ * CREATE
+ * employee.id = me
+ * roles_focus.staff_owner = me
+ * 
+ * READ
+ * event.staff_id = me
+ * roles_focus.staff_owner = me
+ * event_visitor.event_visitor = me
+ * 
+ * UPDATE
+ * event.staff_id = me
+ * event.user_start = me
+ * 
+ * DELETE
+ * event.staff_id = me
+ * event.user_start = me
+ * 
+ * STATUS ACTION
+ * - APPROVAL
+ *      event.staff_id = me & event.user_start != me
+ *      event.user_start = me
+ * 
+ * - INVITATION
+ *      event_visitor = me
+ *      event.approve_date != null
+ *      event.user_start = me
+ * 
+ * - Processing
+ *      event.user_start = me
+ * 
+ * - RESTORE
+ *      event.user_start = me
+ */

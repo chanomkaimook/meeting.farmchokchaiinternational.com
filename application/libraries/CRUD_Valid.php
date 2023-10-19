@@ -69,7 +69,7 @@ class CRUD_Valid
                 'status_complete' => 1,
                 'status_complete_name' => "รอดำเนินการ",
                 'status' => 1,
-                'date_start' => date('Y-m-d'),
+                'date_start' => date('Y-m-d H:i:s'),
                 'user_start' => 0,
             );
 
@@ -78,12 +78,12 @@ class CRUD_Valid
             if (!$main['error']) {
                 if ($type_id == 1 || $type_id == 3) {
                     $SubDataArray = array(
-                        'code' => $code,
+                        'event_code' => $code,
                         'event_id' => $main['data']['id'],
                         'staff_id' => $staff_id,
                         'rooms_id' => $rooms_id,
                         'rooms_name' => $rooms_name,
-                        'date_start' => date('Y-m-d'),
+                        'date_start' => date('Y-m-d H:i:s'),
                         'status' => 1,
 
                         'user_start' => 0,
@@ -100,7 +100,7 @@ class CRUD_Valid
                         'car_name' => $car_name,
                         'driver_id' => $driver_id,
                         'driver_name' => $driver_name,
-                        'date_start' => date('Y-m-d'),
+                        'date_start' => date('Y-m-d H:i:s'),
                         'status' => 1,
 
                         'user_start' => 0,
@@ -119,11 +119,25 @@ class CRUD_Valid
                             'event_visitor' => $sid,
                             'status_complete' => 1,
                             'status' => 1,
-                            'date_start' => date('Y-m-d'),
+                            'date_start' => date('Y-m-d H:i:s'),
                             'user_start' => 0,
                         );
                         $vis = $ci->mdl_visitor->insert_data($VisitorArray);
                     }
+                }
+
+                if ($dataArray['staff_id'] == $dataArray['user_start']) {
+                    $item = [];
+                    $item['item_id'] = $main['data']['id'];
+                    $item['item_code'] = $code;
+                    $item['item_data'] = 2;
+                    /* $item = array(
+                        'item_id' => ,
+                        'item_code' => ,
+                        'item_data' => '2',
+                    ); */;
+
+                    $this->approval($item);
                 }
                 $return = $main;
             }
@@ -223,7 +237,7 @@ class CRUD_Valid
                     $VisitorArray = '';
                     foreach ($visArray as $sid) {
 
-                        $optionnal['select'] = 'event_visitor';
+                        $optionnal['select'] = 'count(event_visitor) as total';
                         $optionnal['where'] = array(
                             'event_visitor' => $sid,
                             'event_code' => $code,
@@ -231,14 +245,15 @@ class CRUD_Valid
                         );
 
                         $dataVis = $ci->mdl_visitor->get_dataShow(null, $optionnal);
-                        if (!$dataVis->event_visitor) {
+                        // print_r($dataVis);
+                        if (!$dataVis[0]->total) {
                             $VisitorArray = array(
                                 'event_code' => $code,
                                 'event_id' => $main['data']['id'],
                                 'event_visitor' => $sid,
                                 'status_complete' => 1,
                                 'status' => 1,
-                                'date_start' => date('Y-m-d'),
+                                'date_start' => date('Y-m-d H:i:s'),
                                 'user_start' => 0,
                             );
                             $vis = $ci->mdl_visitor->insert_data($VisitorArray);
@@ -309,7 +324,7 @@ class CRUD_Valid
         return $return;
     }
 
-    public function approval($data = [])
+    public function approval($apv = [])
     {
         //=     call database    =//
         $ci = &get_instance();
@@ -321,10 +336,11 @@ class CRUD_Valid
             'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (count($data)) {
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $item_data = $data['item_data'];
+        if (count($apv)) {
+                    
+            $item_id = $apv['item_id'];
+            $item_code = $apv['item_code'];
+            $item_data = $apv['item_data'];
 
             if ($item_data == 2) {
                 $item_field = 'approve_date';
@@ -334,6 +350,9 @@ class CRUD_Valid
 
             $dataArray = array(
                 $item_field => date('Y-m-d H:i:s'),
+                'user_action' => 0,
+                'status_complete' => 5,
+                'status_complete_name' => "กำลังดำเนินการ",
                 'user_update' => 0,
                 'date_update' => date('Y-m-d H:i:s'),
             );
@@ -342,7 +361,6 @@ class CRUD_Valid
                 'id' => $item_id,
                 'code' => $item_code,
             );
-
             $main = $ci->mdl_event->approval($dataArray, $whereArray);
 
             if (!$main['error']) {
@@ -367,6 +385,7 @@ class CRUD_Valid
         );
 
         if (count($data)) {
+            $vid = $data['vid'];
             $item_id = $data['item_id'];
             $item_code = $data['item_code'];
             $item_data = $data['item_data'];
@@ -385,6 +404,7 @@ class CRUD_Valid
             );
 
             $whereArray = array(
+                'id' => $vid,
                 'event_id' => $item_id,
                 'event_code' => $item_code,
             );
@@ -421,7 +441,7 @@ class CRUD_Valid
                 $item_field = 'date_update';
                 $complete_name = 'ดำเนินการสำเร็จ';
                 $user_action = null;
-            } elseif ($item_data == 3) {
+            } elseif ($item_data == 4) {
                 $complete_name = 'ยกเลิก';
                 $item_field = 'cancle_date';
                 $user_action = 0;
@@ -440,6 +460,7 @@ class CRUD_Valid
                 'id' => $item_id,
                 'code' => $item_code,
             );
+            print_r($dataArray);
 
             $main = $ci->mdl_event->processing($dataArray, $whereArray);
 

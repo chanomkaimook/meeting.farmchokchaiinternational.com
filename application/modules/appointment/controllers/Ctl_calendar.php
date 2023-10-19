@@ -10,7 +10,7 @@ class Ctl_calendar extends MY_Controller
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
-        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms'));
+        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid'));
 
     }
@@ -30,6 +30,7 @@ class Ctl_calendar extends MY_Controller
             'branch' => "สำนักงานรังสิต",
         );
         $data['room'] = $this->mdl_rooms->get_data(null, $optionnalr);
+        $data['employee'] = $this->mdl_employee->get_dataShow();
 
         $this->template->set_layout('lay_calendar');
         $this->template->title($this->_title);
@@ -79,28 +80,28 @@ class Ctl_calendar extends MY_Controller
             $status = "ยกเลิก";
             $status_vis = "ยกเลิก";
             $status_child = "ยกเลิก";
-        } else {
+        } else if ($status_complete == 5) {
             $color = $status_process;
             $color_child = $status_process;
             $status = "กำลังดำเนินการ";
-            $status_vis = "";
-            $status_child = "";
+            $status_vis = "กำลังดำเนินการ";
+            $status_child = "กำลังดำเนินการ";
         }
 
         //
         // ตรวจสอบ สถานะ
-        if ($child == "other") {
-            $event_color = $status_other;
-            $event_status = "";
-        } else if ($child == "vis") {
+        if ($child == "my" || $child == "owner") {
+            $event_color = $color;
+            $event_status = $status;
+        } else if ($child == "other") {
             $event_color = $color_child;
-            $event_status = $status_vis;
+            $event_status = $status;
         } else if ($child == "child") {
             $event_color = $color_child;
             $event_status = $status_child;
-        } else {
-            $event_color = $color;
-            $event_status = $status;
+        } else if ($child == "vis") {
+            $event_color = $color_child;
+            $event_status = $status_vis;
         }
         $return = array(
             'status' => $event_status,
@@ -108,6 +109,66 @@ class Ctl_calendar extends MY_Controller
         );
 
         return $return;
+    }
+
+    public function foreach_loop($dataShow)
+    {
+        $i = 0;
+        foreach ($dataShow as $key => $val) {
+            foreach ($val as $sub_key => $value) {
+                $dataVal = (array) $value;
+                if ($dataVal['STAFF_ID'] == 0 && $dataVal['USER_START'] == 0) {
+                    $state = "my";
+                } else if ($dataVal['STAFF_ID'] != 0 && $dataVal['USER_START'] != 0) {
+                    $state = 'other';
+                } else if ($dataVal['STAFF_ID'] != 0 && $dataVal['USER_START'] == 0) {
+                    $state = 'owner';
+                } else if ($dataVal['STAFF_ID'] == 0 && $dataVal['USER_START'] != 0) {
+                    $state = 'child';
+                } else if ($dataVal['VIS_STATUS_COMPLETE']) {
+                    $state = 'vis';
+                }
+
+                if ($dataVal['VIS_STATUS_COMPLETE']) {
+                    $attr = $this->status_color($dataVal["VIS_STATUS_COMPLETE"], $state);
+                } else {
+                    $attr = $this->status_color($dataVal["STATUS_COMPLETE"], $state);
+                }
+
+                $Calendar[$i] = $dataVal;
+                $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
+                $Calendar[$i]['end'] = $dataVal["DATE_END"];
+                $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
+                $Calendar[$i]['className'] = $attr['color'];
+                $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
+                $Calendar[$i]['class'] = $state;
+
+                $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                $optionnals['join'] = true;
+                $optionnals['where'] = array(
+                    'event_visitor.event_code' => $dataVal["CODE"],
+                );
+                $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
+                // echo $this->db->last_query();
+                if (count($visitor)) {
+                    $j = 0;
+                    foreach ($visitor as $vis_val) {
+                        $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
+                        $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
+                        $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
+                        $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                        $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
+                        $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
+
+                        $j++;
+                    }
+                }
+                $i++;
+            }
+            // echo "<pre>";
+            // print_r($dataVal);
+        }
+        return $Calendar;
     }
 
     public function get_data()
@@ -130,6 +191,7 @@ class Ctl_calendar extends MY_Controller
         $optionnal_child['where'] = array(
             'staff_owner' => 0,
         );
+
         $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
         $optionnal_child['join'] = true;
         $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
@@ -146,14 +208,16 @@ class Ctl_calendar extends MY_Controller
             }
         }
 
-        $optionnal_vis['select'] = "event_visitor.EVENT_CODE";
+        $optionnal_vis['select'] = "event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
         $optionnal_vis['where'] = array(
             "event_visitor.event_visitor" => 0,
         );
         $optionnal_vis['join'] = true;
         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
-// echo $this->db->last_query();
+
         if (count($vis)) {
+            $i = 0;
+            // print_r($vis);
             foreach ($vis as $sid) {
                 $optionnal['where'] = array(
                     'event.code' => $sid->EVENT_CODE,
@@ -161,58 +225,16 @@ class Ctl_calendar extends MY_Controller
                 );
                 $optionnal['join'] = "all";
 
-                $dataShow['vis'][] = $this->mdl_event->get_dataShow(null, $optionnal, 'row');
+                $dataShow['vis'][$i] = (array) $this->mdl_event->get_dataShow(null, $optionnal, 'row');
+                $dataShow['vis'][$i]['VIS_STATUS_COMPLETE'] = $sid->STATUS_COMPLETE;
+                $dataShow['vis'][$i]['VIS_STATUS_REMARK'] = $sid->STATUS_REMARK;
+
+                $i++;
             }
         }
 
         if (count($dataShow)) {
-            $i = 0;
-            foreach ($dataShow as $key => $val) {
-                foreach ($val as $sub_key => $value) {
-                    $dataVal = (array) $value;
-                    if ($dataVal['STAFF_ID'] == 0) {
-                        $child = null;
-                    } else if ($dataVal['STAFF_ID'] != 0 && $dataVal['USER_START'] == 0) {
-                        $child = 'child';
-                    } else if ($dataVal['STAFF_ID'] != 0 && $dataVal['USER_START'] != 0 && $key != 'vis') {
-                        $child = 'other';
-                    } else if ($key == "vis") {
-                        $child = 'vis';
-                    }
-
-                    $attr = $this->status_color($dataVal["STATUS_COMPLETE"], $child);
-
-                    $Calendar[$i] = $dataVal;
-                    $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-                    $Calendar[$i]['end'] = $dataVal["DATE_END"];
-                    $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
-                    $Calendar[$i]['className'] = $attr['color'];
-                    $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
-                    $Calendar[$i]['class'] = $child;
-
-                    $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                    $optionnals['join'] = true;
-                    $optionnals['where'] = array(
-                        'event_visitor.event_code' => $dataVal["CODE"],
-                    );
-                    $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
-                    // echo $this->db->last_query();
-                    if (count($visitor)) {
-                        $j = 0;
-                        foreach ($visitor as $vis_val) {
-                            $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                            $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                            $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
-                            $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
-                            $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
-
-                            $j++;
-                        }
-                    }
-                    $i++;
-                }
-                // print_r($key);
-            }
+            $Calendar = $this->foreach_loop($dataShow);
             echo json_encode($Calendar);
         }
     }
@@ -281,30 +303,11 @@ class Ctl_calendar extends MY_Controller
                     $dataShow[] = $this->mdl_event->get_dataShow(null, $optionnal);
                 }
             }
+        }
 
-            if (count($dataShow)) {
-                $i = 0;
-                foreach ($dataShow as $index => $item) {
-                    foreach ($item as $key => $value) {
-                        $dataVal = (array) $value;
-                        $Calendar[$i] = $dataVal;
-                        $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-                        $Calendar[$i]['end'] = $dataVal["DATE_END"];
-                        $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
-
-                        $optionnals['where'] = array(
-                            'event_visitor.event_code' => $dataVal["CODE"],
-                        );
-                        $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
-                        if (count($visitor)) {
-                            foreach ($visitor as $vis_val) {
-                                $Calendar[$i]['VISITOR'][] = $vis_val->EVENT_VISITOR;
-                            }
-                        }
-                        $i++;
-                    }
-                }
-            }
+        $Calendar = [];
+        if (count($dataShow)) {
+            $Calendar = $this->foreach_loop($dataShow);
         }
         // echo $this->db->last_query();
         echo json_encode($Calendar);
@@ -341,7 +344,7 @@ class Ctl_calendar extends MY_Controller
             $data = $this->input->post();
 
             $returns = $this->crud_valid->delete_data($data);
-            echo $returns;
+            echo json_encode($returns);
         } else {
             echo "no";
         }
@@ -376,7 +379,7 @@ class Ctl_calendar extends MY_Controller
             $data = $this->input->post();
 
             $returns = $this->crud_valid->processing($data);
-            echo $returns;
+            echo json_encode($returns);
         } else {
             echo "no";
         }
