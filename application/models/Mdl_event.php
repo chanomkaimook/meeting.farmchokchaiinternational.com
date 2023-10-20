@@ -77,9 +77,9 @@ class Mdl_event extends CI_Model
         $query = $sql->get();
 
         if ($type == "row") {
-            return $query->row();
+            return (array) $query->row();
         } else {
-            return $query->result();
+            return (array) $query->result();
         }
     }
 

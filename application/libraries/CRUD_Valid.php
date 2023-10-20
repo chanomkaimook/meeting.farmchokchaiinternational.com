@@ -70,7 +70,7 @@ class CRUD_Valid
                 'status_complete_name' => "รอดำเนินการ",
                 'status' => 1,
                 'date_start' => date('Y-m-d H:i:s'),
-                'user_start' => 0,
+                'user_start' => 1,
             );
 
             $main = $ci->mdl_event->insert_data($dataArray);
@@ -86,7 +86,7 @@ class CRUD_Valid
                         'date_start' => date('Y-m-d H:i:s'),
                         'status' => 1,
 
-                        'user_start' => 0,
+                        'user_start' => 1,
                     );
 
                     $ci->mdl_event_meeting->insert_data($SubDataArray);
@@ -103,7 +103,7 @@ class CRUD_Valid
                         'date_start' => date('Y-m-d H:i:s'),
                         'status' => 1,
 
-                        'user_start' => 0,
+                        'user_start' => 1,
                     );
 
                     // $ci->mdl_event_car->insert_data($SubDataArray);
@@ -120,7 +120,7 @@ class CRUD_Valid
                             'status_complete' => 1,
                             'status' => 1,
                             'date_start' => date('Y-m-d H:i:s'),
-                            'user_start' => 0,
+                            'user_start' => 1,
                         );
                         $vis = $ci->mdl_visitor->insert_data($VisitorArray);
                     }
@@ -188,7 +188,7 @@ class CRUD_Valid
                 'time_begin' => $time_begin,
                 'time_end' => $time_end,
                 'date_update' => date('Y-m-d'),
-                'user_update' => 0,
+                'user_update' => 1,
             );
 
             $main = $ci->mdl_event->update_data($dataArray, $item_id);
@@ -201,7 +201,7 @@ class CRUD_Valid
                         'rooms_id' => $rooms_id,
                         'rooms_name' => $rooms_name,
 
-                        'user_update' => 0,
+                        'user_update' => 1,
                         'date_update' => date('Y-m-d H:i:s'),
                     );
 
@@ -220,7 +220,7 @@ class CRUD_Valid
                         'driver_id' => $driver_id,
                         'driver_name' => $driver_name,
 
-                        'user_update' => 0,
+                        'user_update' => 1,
                         'date_update' => date('Y-m-d H:i:s'),
                     );
 
@@ -254,7 +254,7 @@ class CRUD_Valid
                                 'status_complete' => 1,
                                 'status' => 1,
                                 'date_start' => date('Y-m-d H:i:s'),
-                                'user_start' => 0,
+                                'user_start' => 1,
                             );
                             $vis = $ci->mdl_visitor->insert_data($VisitorArray);
                         }
@@ -284,7 +284,7 @@ class CRUD_Valid
 
             $dataArray = array(
                 'status' => 0,
-                'user_update' => 0,
+                'user_update' => 1,
                 'date_update' => date('Y-m-d H:i:s'),
             );
 
@@ -304,7 +304,7 @@ class CRUD_Valid
 
                 $SubDataArray = array(
                     'status' => 0,
-                    'user_update' => 0,
+                    'user_update' => 1,
                     'date_update' => date('Y-m-d H:i:s'),
                 );
 
@@ -312,10 +312,50 @@ class CRUD_Valid
 
                 $VisitorArray = array(
                     'status' => 0,
-                    'user_update' => 0,
+                    'user_update' => 1,
                     'date_update' => date('Y-m-d H:i:s'),
                 );
                 $vis = $ci->mdl_visitor->delete_data($VisitorArray, $SubwhereArray);
+
+                $return = $main;
+            }
+
+        }
+        return $return;
+    }
+
+    public function reject_visitor($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+            $vid = $data['vid'];
+
+            $dataArray = array(
+                'status' => 0,
+                'user_update' => 1,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'id' => $vid,
+                'event_id' => $item_id,
+                'event_code' => $item_code,
+            );
+
+            $main = $ci->mdl_visitor->delete_data($dataArray, $whereArray);
+
+            if (!$main['error']) {
 
                 $return = $main;
             }
@@ -350,10 +390,10 @@ class CRUD_Valid
 
             $dataArray = array(
                 $item_field => date('Y-m-d H:i:s'),
-                'user_action' => 0,
+                'user_action' => 1,
                 'status_complete' => 5,
                 'status_complete_name' => "กำลังดำเนินการ",
-                'user_update' => 0,
+                'user_update' => 1,
                 'date_update' => date('Y-m-d H:i:s'),
             );
 
@@ -399,7 +439,7 @@ class CRUD_Valid
             $dataArray = array(
                 'status_complete' => $item_data,
                 'status_remark' => $remark,
-                'user_update' => 0,
+                'user_update' => 1,
                 'date_update' => date('Y-m-d H:i:s'),
             );
 
@@ -440,11 +480,11 @@ class CRUD_Valid
             if ($item_data == 2) {
                 $item_field = 'date_update';
                 $complete_name = 'ดำเนินการสำเร็จ';
-                $user_action = null;
+                $user_action = 1;
             } elseif ($item_data == 4) {
                 $complete_name = 'ยกเลิก';
                 $item_field = 'cancle_date';
-                $user_action = 0;
+                $user_action = 1;
             }
 
             $dataArray = array(
@@ -452,7 +492,7 @@ class CRUD_Valid
                 'status_complete' => $item_data,
                 'status_complete_name' => $complete_name,
                 'user_action' => $user_action,
-                'user_update' => 0,
+                'user_update' => 1,
                 'date_update' => date('Y-m-d H:i:s'),
             );
 
@@ -460,7 +500,7 @@ class CRUD_Valid
                 'id' => $item_id,
                 'code' => $item_code,
             );
-            print_r($dataArray);
+            // print_r($dataArray);
 
             $main = $ci->mdl_event->processing($dataArray, $whereArray);
 

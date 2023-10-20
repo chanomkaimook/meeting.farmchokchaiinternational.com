@@ -14,13 +14,13 @@
                         <div class="col-6">
                             <div class="card text-center">
                                 <button type="button"
-                                    class="btn btn-dark btn-rounded btn-lg width-md waves-effect waves-light insert-car" data-dismiss="modal">จองรถ</button>
+                                    class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car" data-dismiss="modal">จองรถ</button>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="card text-center">
                                 <button type="button"
-                                    class="btn btn-dark btn-rounded btn-lg width-md waves-effect waves-light insert-meeting" data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
+                                    class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting" data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
                             </div>
                         </div>
 
@@ -58,7 +58,7 @@
                             name="insert-name" />
                     </div>
                     <div class="form-group">
-                        <label class="control-label">โดย</label>
+                        <label class="control-label">นำโดย</label>
                         <select class="form-control form-white" name="insert-head">
                             <option disabled selected>กรุณาเลือก...</option>
                             <?php
@@ -155,7 +155,7 @@ foreach ($time as $value) {
                             value="เก็บหิน สนง.ฟาร์ม" name="update-name" />
                     </div>
                     <div class="form-group">
-                        <label class="control-label">โดย</label>
+                        <label class="control-label">นำโดย</label>
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="update-head">
                             <option value="1">นาย A</option>
                             <option value="2">นาย B</option>
@@ -170,7 +170,7 @@ foreach ($time as $value) {
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <textarea placeholder="Enter name" class="form-control form-white" name="update-description"
                             cols="30"
-                            rows="5">กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                            rows="5">กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
@@ -262,7 +262,7 @@ foreach ($time as $value) {
                             value="เก็บหิน สนง.ฟาร์ม" name="detail-name" disabled />
                     </div>
                     <div class="form-group">
-                        <label class="control-label">โดย</label>
+                        <label class="control-label">นำโดย</label>
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." name="detail-head"
                             disabled>
                             <option value="1">นาย A</option>
@@ -278,7 +278,7 @@ foreach ($time as $value) {
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <textarea placeholder="Enter name" class="form-control form-white" name="detail-description"
                             cols="30" rows="5"
-                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
@@ -364,8 +364,8 @@ foreach ($time as $value) {
             <div class="modal-body pb-0">
                 <form class="form" id="insert-meeting">
 
-                <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden" name="insert-type-id" />
-                    <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม" type="hidden" name="insert-type-name" />
+                <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden" name="insert-type" />
+                    <!-- <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม" type="hidden" name="insert-type-name" /> -->
                     <!-- <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
@@ -380,7 +380,7 @@ foreach ($time as $value) {
                             name="insert-name" />
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
-                        <div class="col-md-6"><label class="control-label">โดย</label>
+                        <div class="col-md-6"><label class="control-label">นำโดย</label>
 
                             <select class="form-control form-white" name="insert-head">
                                 <option disabled selected>กรุณาเลือก...</option>
@@ -516,7 +516,7 @@ foreach ($time as $value) {
                     <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="code" />
                     <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-id" />
                     <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-name" />
-                    
+
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
                         <input class="form-control form-white" placeholder="Enter name" type="text"
@@ -524,7 +524,7 @@ foreach ($time as $value) {
                     </div>
 
                     <div class="form-group mb-3 d-flex flex-row">
-                        <div class="col-md-6"><label class="control-label">โดย</label>
+                        <div class="col-md-6"><label class="control-label">นำโดย</label>
 
                             <select class="form-control form-white" name="update-head">
                                 <option disabled selected>กรุณาเลือก...</option>
@@ -559,7 +559,7 @@ foreach ($room as $value) {
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <textarea placeholder="Enter name" class="form-control form-white" name="update-description"
                             cols="30"
-                            rows="5">กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                            rows="5">กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
@@ -660,6 +660,7 @@ foreach ($time as $value) {
                 <h4 class="modal-title-status text-danger d-none"></h4>
                 <h4 class="modal-title-status text-success d-none"></h4>
                 <h4 class="modal-title-status text-secondary d-none"></h4>
+                <h4 class="modal-title-status text-orange d-none"></h4>
                 <!-- </div> -->
                 <!-- </div> -->
             </div>
@@ -683,17 +684,21 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
-                        <input type="text" name="detail-type" class="form-control" disabled>
+                        <p class="detail-type"></p>
+                        <!-- <input type="text" name="detail-type" class="form-control" disabled> -->
                     </div>
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
-                        <input class="form-control form-white" placeholder="Enter topic" type="text"
-                            value="เก็บหิน สนง.ฟาร์ม" name="detail-name" disabled />
+                        <p class="detail-name"></p>
+                        <!-- <input class="form-control form-white" placeholder="Enter topic" type="text"
+                        value="เก็บหิน สนง.ฟาร์ม" name="detail-name" disabled /> -->
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
-                        <div class="col-md-6"><label class="control-label">โดย</label>
+                        <div class="col-md-6">
+                            <label class="control-label">นำโดย</label>
+                        <p class="detail-head"></p>
 
-                            <select class="form-control form-white" name="detail-head" disabled>
+                            <!-- <select class="form-control form-white" name="detail-head" disabled>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
 foreach ($staff as $val) {
@@ -703,11 +708,12 @@ foreach ($staff as $val) {
                                 <?php
 }
 ?>
-                            </select>
+                            </select> -->
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="detail-rooms" disabled>
+                        <p class="detail-rooms"></p>
+                            <!-- <select class="form-control form-white" name="detail-rooms" disabled>
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
 foreach ($room as $value) {
@@ -718,44 +724,55 @@ foreach ($room as $value) {
                                 <?php
 }
 ?>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea placeholder="Enter name" class="form-control form-white" name="detail-description"
+                        <p class="detail-description"></p>
+                        <!-- <textarea placeholder="Enter name" class="form-control form-white" name="detail-description"
                             cols="30" rows="5"
-                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea> -->
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
-                            <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
-                                placeholder="yyyy-mm-dd" name="detail-dates" disabled>
+                        <p class="detail-dates"></p>
+                            <!-- <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                                placeholder="yyyy-mm-dd" name="detail-dates" disabled> -->
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
-                            <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
-                                placeholder="yyyy-mm-dd" name="detail-datee" disabled>
+                        <p class="detail-datee"></p>
+                            <!-- <input type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                                placeholder="yyyy-mm-dd" name="detail-datee" disabled> -->
                         </div>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
-                            <input type="text" class="form-control" value="08:00" placeholder="08:00"
-                                name="detail-times" disabled>
+                        <p class="detail-times"></p>
+                            <!-- <input type="text" class="form-control" value="08:00" placeholder="08:00"
+                                name="detail-times" disabled> -->
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
-                            <input type="text" class="form-control" value="17:30" placeholder="17:30"
-                                name="detail-timee" disabled>
+                        <p class="detail-timee"></p>
+                            <!-- <input type="text" class="form-control" value="17:30" placeholder="17:30"
+                                name="detail-timee" disabled> -->
                         </div>
                     </div>
                     <div class="form-group d-none" data-visitor="true">
-                        <label class="control-label">ผู้เข้าร่วม</label>
-                        <p class="visitor-name">
+                        <h5 class="control-h5">ผู้เข้าร่วม</h5>
+                        <h5 class="visitor-name">
 
-                        </p>
+                        </h5>
+                    </div>
+                    <div class="form-group" data-user-start="true">
+                        <label class="control-label">ผู้สร้างการนัดหมาย/ผู้จองห้องประชุม</label>
+                            <p class="user-start-name">
+
+                            </p>
                     </div>
                 </form>
             </div>
@@ -845,7 +862,7 @@ foreach ($room as $value) {
                             value="เก็บหิน สนง.ฟาร์ม" name="detail-draft-name" disabled />
                     </div>
                     <div class="form-group">
-                        <label class="control-label">โดย</label>
+                        <label class="control-label">นำโดย</label>
                         <input class="form-control form-white" placeholder="Enter name" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="detail-draft-head" disabled />
                     </div>
@@ -853,7 +870,7 @@ foreach ($room as $value) {
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <textarea placeholder="Enter name" class="form-control form-white"
                             name="detail-draft-description" cols="30" rows="5"
-                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมโดย นาย G</textarea>
+                            disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
@@ -927,7 +944,7 @@ foreach ($room as $value) {
                                 name="update-name" disabled />
                         </div>
                         <div class="form-group">
-                            <label class="control-label">โดย</label>
+                            <label class="control-label">นำโดย</label>
                             <input class="form-control form-white" placeholder="Enter name" type="text"
                                 name="update-head" disabled />
                         </div>

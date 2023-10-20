@@ -8,12 +8,14 @@ $(document).ready(function() {
 })
 /* ********** EVENT CLICK ********** */
 $('.insert-car').click(function() {
+    $("#insert-modal-car").find("#insert-car").trigger("reset")
     $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-car").modal("show")
     $("#insert-modal").modal("hide")
 })
 
 $('.insert-meeting').click(function() {
+    $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
     $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-meeting").modal("show")
     $("#insert-modal").modal("hide")
@@ -38,14 +40,21 @@ $('select[name=update-rooms-id]').change(function() {
 })
 
 /* ********** FUNCTION ********** */
-function modalShow(modal, obj, val) {
+function modalShow(modal, obj, val, type) {
     let length = 0;
     if (modal && obj.length && val.length) {
         if (obj.length == val.length) {
             length = obj.length
         }
-        for (let i = 0; i < length; i++) {
-            $(modal).find(obj[i]).val(val[i])
+        if (type == "detail") {
+            for (let i = 0; i < length; i++) {
+                $(modal).find(obj[i]).html(val[i])
+            }
+        }
+        if (type == "update") {
+            for (let i = 0; i < length; i++) {
+                $(modal).find(obj[i]).val(val[i])
+            }
         }
     }
 }
@@ -125,64 +134,84 @@ function detail(calEvent, jsEvent, view) {
     $(modal_detail).find(".delete-meeting").attr("data-event-code", calEvent.CODE)
 
     /* ************* DETAIL **************** */
-    obj_detail.push('[name=detail-type]', '[name=detail-name]', '[name=detail-head]', '[name=detail-description]',
-        '[name=detail-dates]', '[name=detail-datee]', '[name=detail-times]', '[name=detail-timee]',
-        '[name=detail-rooms]')
+    // obj_detail.push('[name=detail-type]', '[name=detail-name]', '[name=detail-head]', '[name=detail-description]',
+    //     '[name=detail-dates]', '[name=detail-datee]', '[name=detail-times]', '[name=detail-timee]',
+    //     '[name=detail-rooms]')
+    obj_detail.push('.detail-type', '.detail-name', '.detail-head', '.detail-description',
+        '.detail-dates', '.detail-datee', '.detail-times', '.detail-timee',
+        '.detail-rooms')
 
     val_detail.push(calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent.STAFF_ID, calEvent.EVENT_DESCRIPTION,
         calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END, calEvent.ROOMS_ID)
 
-    modalShow(modal_detail, obj_detail, val_detail)
+    modalShow(modal_detail, obj_detail, val_detail, "detail")
     /* ************* END DETAIL **************** */
 
     /* ************** UPDATE *************** */
-    obj_update.push('[name=item_id]', '[name=code]', '[name=update-type-id]', '[name=update-type-name]', '[name=update-name]',
+    obj_update.push('[name=item_id]', '[name=code]', '[name=update-type-id]', '[name=update-type-name]',
+        '[name=update-name]',
         '[name=update-head]', '[name=update-description]', '[name=update-dates]', '[name=update-datee]',
         'select[name=update-times]', 'select[name=update-timee]', '[name=update-rooms-id]')
 
-    val_update.push(calEvent.ID, calEvent.CODE, calEvent.TYPE_ID, calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent.STAFF_ID, calEvent
+    val_update.push(calEvent.ID, calEvent.CODE, calEvent.TYPE_ID, calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent
+        .STAFF_ID, calEvent
         .EVENT_DESCRIPTION, calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END, calEvent
         .ROOMS_ID)
 
-    modalShow(modal_update, obj_update, val_update)
+    modalShow(modal_update, obj_update, val_update, "update")
     /* ************** END UPDATE *************** */
 
     /* ************** ADD VISITOR *************** */
 
     if (calEvent.VISITOR) {
-        let status_vis = "";
+        let status_vis = "",
+            vis_btn = "";
         for (let i = 0; i < calEvent.VISITOR.length; i++) {
             if (calEvent.VISITOR[i].VSTATUS == 1) {
-                status_vis = "<span class='defer' data-id=" + calEvent.VISITOR[i].EID + " data-event-id=" + calEvent
-                    .ID +
-                    " data-event-code=" + calEvent.CODE +
-                    " >รอตอบรับ</span>"
+                status_vis =
+                    `<span class='status_vis'>รอตอบรับ
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
+                    </span>`
             } else if (calEvent.VISITOR[i].VSTATUS == 2) {
-                status_vis = "ตอบรับ"
+                status_vis =
+                    `<span class='status_vis'>เข้าร่วม
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
+                    </span>`
             } else if (calEvent.VISITOR[i].VSTATUS == 3) {
-                status_vis = "ปฏิเสธ"
+                status_vis =
+                    `<span class='status_vis'>ปฏิเสธ
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
+                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
+                    </span>`
             }
             vis_html = vis_html + calEvent.VISITOR[i].VNAME + ' ' + calEvent.VISITOR[i].VLNAME + ' ' + status_vis +
                 '<br>'
-            // $('select[name=update-visitor]').find('option[data-value=' + calEvent.VISITOR[i].VID + ']').attr('selected')
-            // $('select[name=update-visitor]').val(calEvent.VISITOR[i].VID).trigger('change')
-            // console.log($('select[name=update-visitor]'))
+
             vid = calEvent.VISITOR[i].EID
+            // vis_btn = ""
         }
 
         user_visitor = calEvent.VISITOR.map((item, index) => {
-                    // console.log(item,index)
-                    return item.VID
-                })
+            // console.log(item,index)
+            return item.VID
+        })
         $('select[name=update-visitor]').val(user_visitor).trigger('change')
 
         $(modal_detail).find('[data-visitor=true]').removeClass('d-none')
-        $(modal_detail).find('p.visitor-name').html(vis_html)
+        $(modal_detail).find('h5.visitor-name').html(vis_html)
+        // $('p.visitor-name').find('span.status_vis').html(vis_btn)
 
 
         $(modal_update).find('[data-visitor=true]').removeClass('d-none')
     }
     /* ************** END ADD VISITOR *************** */
+    user_start = calEvent.USER_START_NAME + " " + calEvent.USER_START_LNAME
+    $(modal_detail).find('p.user-start-name').html(user_start)
 
     /* ************** ACTION FOOTER *************** */
     entitled = calEvent.class
@@ -190,35 +219,48 @@ function detail(calEvent, jsEvent, view) {
     event_id = calEvent.ID
     event_code = calEvent.CODE
     actionFooter(modal_detail, entitled, status, event_id, event_code, vid)
-// console.log(calEvent.STATUS_SHOW)
-        $('.modal-header').find('h4.modal-title-status').text(calEvent.STATUS_SHOW)
+    // console.log(calEvent)
+    $('.modal-header').find('h4.modal-title-status').text(calEvent.STATUS_SHOW)
     // if (!calEvent.class) {
-    if (!calEvent.CANCLE_DATE, !calEvent.APPROVE_DATE, !calEvent.DISAPPROVE_DATE) {
+    if (calEvent.STATUS_COMPLETE == 1) {
         $('.modal-footer').find('.approve-footer').removeClass('d-none')
         $('.modal-header').find('.text-warning').removeClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
         $('.modal-header').find('.text-danger').addClass('d-none')
-    } else if (calEvent.APPROVE_DATE) {
+        $('.modal-header').find('.text-orange').addClass('d-none')
+        $('.modal-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+    } else if (calEvent.STATUS_COMPLETE == 2) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
         $('.modal-header').find('.text-success').removeClass('d-none')
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
         $('.modal-header').find('.text-warning').html(calEvent.STATUS_SHOW)
-    } else if (calEvent.DISAPPROVE_DATE) {
+    } else if (calEvent.STATUS_COMPLETE == 3) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
         $('.modal-header').find('.text-danger').removeClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
         $('.modal-header').find('.text-danger').html(calEvent.STATUS_SHOW)
-    } else if (calEvent.CANCLE_DATE) {
+    } else if (calEvent.STATUS_COMPLETE == 4) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').removeClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
         $('.modal-header').find('.text-secondary').html(calEvent.STATUS_SHOW)
+    } else if (calEvent.STATUS_COMPLETE == 5) {
+        $('.modal-footer').find('.approve-footer').addClass('d-none')
+        $('.modal-header').find('.text-warning').addClass('d-none')
+        $('.modal-header').find('.text-success').addClass('d-none')
+        $('.modal-header').find('.text-danger').addClass('d-none')
+        $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').removeClass('d-none')
+        $('.modal-header').find('.text-orange').html(calEvent.STATUS_SHOW)
     }
     // }
 
@@ -237,32 +279,34 @@ function detail_draft(data) {
             <th>${i}</th>
             <td>${item.TYPE_NAME}</td>
             <td>${item.EVENT_NAME}</td>
-            <td><li class="dropdown d-lg-block">
-                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+            <td>
+                <div class="btn-group dropdown">
+                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="mdi mdi-dots-vertical"></i>
                     </a>
-                        <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-detail-meeting" data-dismiss="modal">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-detail-meeting" data-dismiss="modal">
                                 <span class="align-middle">รายละเอียด</span>
                             </a>
 
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
                                 <span class="align-middle">แก้ไข</span>
                             </a>
 
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-update-meeting" data-toggle="modal" data-target="#update-modal-meeting" data-dismiss="modal">
                                 <span class="align-middle">นำไปใช้</span>
                             </a>
 
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item notify-item btn-delete" >
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-delete" >
                                 <span class="align-middle">ลบ</span>
                             </a>
                         </div>
-                </li>
+
+                </div>
             </td>
         </tr>
         `
@@ -272,33 +316,33 @@ function detail_draft(data) {
             <th>${i}</th>
             <td>${item.TYPE_NAME}</td>
             <td>${item.EVENT_NAME}</td>
-            <td><li class="dropdown d-lg-block">
-                    <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+
+            <div class="btn-group dropdown">
+                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="mdi mdi-dots-vertical"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-detail-car">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-detail-car" data-dismiss="modal">
                                 <span class="align-middle">รายละเอียด</span>
                             </a>
 
                             <!-- item-->
-                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-update-car">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-update-car" data-toggle="modal" data-target="#update-modal-car" data-dismiss="modal">
                                 <span class="align-middle">แก้ไข</span>
                             </a>
 
                             <!-- item-->
-                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-update-car">
-                                <span class="align-middle">นำไปใช้</span>
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-update-car" data-toggle="modal" data-target="#update-modal-car" data-dismiss="modal">3
                             </a>
 
                             <!-- item-->
-                            <a href="#" data-id="${item.ID}" class="dropdown-item notify-item btn-delete">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-delete" >
                                 <span class="align-middle">ลบ</span>
                             </a>
                         </div>
-                </li>
-            </td>
+
+                </div>
         </tr>
         `
         }
@@ -312,7 +356,7 @@ function swal_alert(icon, title, text) {
     Swal.fire(title, text, icon).then((result) => {
         if (result.isConfirmed) {
             // delete_meeting(data)
-    location.reload();
+            location.reload();
         }
     })
 
@@ -331,6 +375,10 @@ function swal_delete(data) {
     }).then((result) => {
         if (result.isConfirmed) {
             delete_meeting(data)
+            // if (data.vid) {
+            //     reject_visitor(data)
+            // } else {
+            // }
         }
     })
     $('.modal').modal('hide')
