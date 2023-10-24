@@ -51,47 +51,36 @@ div.table-responsive {
 <div class="row">
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-6" align="left">
+            <div class="col-lg-2">
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
                 <button type="button" class="btn btn-secondary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
             </div>
-            <div class="col-lg-6" align="right">
-                <input type="hidden" name="hidden_date" id="hidden_date">
-                <input type="hidden" name="hidden_time" id="hidden_time">
-                <input type="hidden" name="hidden_visitor" id="hidden_visitor">
-                <input type="hidden" name="hidden_status" id="hidden_permit">
+            <div class="col-lg-10">
+                <input type="hidden" name="hidden_dates" id="hidden_dates">
+                <input type="hidden" name="hidden_datee" id="hidden_datee">
+                <input type="hidden" name="hidden_times" id="hidden_times">
+                <input type="hidden" name="hidden_timee" id="hidden_timee">
+                <input type="hidden" name="hidden_user" id="hidden_user">
+                <input type="hidden" name="hidden_permit" id="hidden_permit">
+                <input type="hidden" name="hidden_status" id="hidden_status">
+                <input type="hidden" name="hidden_type" id="hidden_type">
 
-                <div class="d-flex flex-row">
-                    <div class="p-2">
-                        <input type="text" class="form-control datepicker-autoclose" name="date" placeholder="วันที่">
-                    </div>
-
-                    <div class="p-2">
-                        <select class="form-control form-white" name="time">
-                            <option selected disabled>เวลา</option>
-                            <?php
-foreach ($time as $val) {
-    if (!$val["START"]) {
-        $times = $val["END"];
-    } elseif (!$val["END"]) {
-        $times = $val["START"];
-    } else {
-        $times = $val["START"];
-    }
-    ?>
-                            <option value="<?=date('H:i', strtotime($times))?>"><?=date('H:i', strtotime($times))?>
-                            </option>
-                            <?php
-}
-?>
+                <div class="d-flex flex-row justify-content-end">
+                    <div class="pl-1">
+                        <select class="form-control form-white select2" data-toggle="select2" name="type">
+                            <option>ประเภท</option>
+                            <option value="1">นัดหมาย/จองห้องประชุม</option>
+                            <option value="2">จองรถ</option>
+                            <!-- <option value="3">แบบร่างการนัดหมาย/จองห้องประชุม</option>
+                                <option value="4">แบบร่างการจองรถ</option> -->
                         </select>
                     </div>
 
-                    <div class="p-2">
-                        <select class="form-control form-white select2" data-toggle="select2" id="user" name="user">
-                            <option>ผู้สร้าง</option>
+                    <div class="pl-1">
+                        <select class="form-control form-white select2" data-toggle="select2" name="user">
+                            <option>จัดการ</option>
                             <?php
 foreach ($staff as $data) {
     ?>
@@ -102,34 +91,97 @@ foreach ($staff as $data) {
                         </select>
                     </div>
 
-                    <div class="p-2">
-                        <select class="form-control form-white" data-toggle="select2" id="permit" name="permit">
+                    <div class="pl-1">
+                        <select class="form-control form-white" data-toggle="select2" name="status">
                             <option value="">สถานะ</option>
-                            <option value="0">รอดำเนินการ</option>
-                            <option value="1">นัดหมายสำเร็จ</option>
-                            <option value="2">ยกเลิกการนัดหมาย</option>
+                            <option value="1">รออนุมัติ,รอตอบรับ,รอดำเนินการ</option>
+                            <option value="2">อนุมัติ,เข้าร่วม,ดำเนินการสำเร็จ</option>
+                            <option value="3">ไม่อนุมัติ,ปฏิเสธมดำเนินการไม่สำเร็จ</option>
+                            <option value="4">ยกเลิก</option>
+                            <option value="5">กำลังดำเนินการ</option>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-secondary search"><i class="fa fa-search"
-                            aria-hidden="true"></i></button>
-                </div>
-            </div>
-            <!-- end col-lg-10 -->
-        </div>
-        <div class="card">
-            <div class="card-body">
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div id="calendar"></div>
+                    <div class="pl-1">
+                        <select class="form-control form-white" data-toggle="select2" name="permit">
+                            <option value="0">ทั้งหมด</option>
+                            <option value="1">เฉพาะที่มีสิทธิ์จัดการ</option>
+                        </select>
                     </div>
-                    <!-- end col -->
                 </div>
-                <!-- end row -->
+                <div class="d-flex flex-row justify-content-end">
+                    <div class="pl-1">
+                        <input type="text" class="form-control datepicker-autoclose" name="dates"
+                            placeholder="ตั้งแต่วันที่">
+                    </div>
+                    <div class="pl-1">
+                        <input type="text" class="form-control datepicker-autoclose" name="datee"
+                            placeholder="ถึงวันที่">
+                    </div>
+                </div>
+                <div class="d-flex flex-row justify-content-end">
+                    <div class="pl-1">
+                        <select class="form-control form-white" name="times">
+                            <option selected disabled>ตั้งแต่เวลา</option>
+                            <?php
+foreach ($time as $val) {
+    if (!$val["START"]) {
+        $times = $val["END"];
+    } elseif (!$val["END"]) {
+        $times = $val["START"];
+    } else {
+        $times = $val["START"];
+    }
+    ?>
+                            <option value="<?=date('H:i:s', strtotime($times))?>">
+                                <?=date('H:i', strtotime($times))?>
+                            </option>
+                            <?php
+}
+?>
+                        </select>
+                    </div>
+                    <div class="pl-1">
+                        <select class="form-control form-white" name="timee">
+                            <option selected disabled>ถึงเวลา</option>
+                            <?php
+foreach ($time as $val) {
+    if (!$val["START"]) {
+        $times = $val["END"];
+    } elseif (!$val["END"]) {
+        $times = $val["START"];
+    } else {
+        $times = $val["START"];
+    }
+    ?>
+                            <option value="<?=date('H:i:s', strtotime($times))?>">
+                                <?=date('H:i', strtotime($times))?>
+                            </option>
+                            <?php
+}
+?>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
+                        aria-hidden="true"></i></button>
             </div>
-
         </div>
+        <!-- end col-lg-10 -->
     </div>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="calendar"></div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+
+    </div>
+</div>
 </div>
 
 <?php
@@ -138,47 +190,6 @@ include "crud_modal.php";
 <script>
 $(document).ready(function() {
     let my_id = $('#my-id').val();
-    /**
-     *
-     * EVENT CLICK
-     *
-     */
-
-    $(document).on('click', 'a.btn-detail-meeting', function() {
-        let id = $(this).attr('data-id')
-        get_data_draft(id)
-            .then((data) => {
-                let dataDefault;
-                if (data.length) {
-                    data.forEach(function(item, index) {
-                        dataDefault = item
-                    })
-                    detail(dataDefault, '', '')
-                }
-            })
-    })
-
-    /**
-     *
-     * EVENT CHANGE
-     *
-     */
-
-    $('#user').change(function() {
-        let id = $(this).val()
-        console.log(id)
-    })
-
-    /* $(document).on('change', '[name=sid_create]', function() {
-            let sid = $('[name=sid_create]').val()
-            $('#modal_create').find('[name=period_create]').attr('data-sid', sid)
-            $('#modal_create').find('[name=sid]').val(sid)
-            get_data_hld_dom(sid)
-        }) */
-
-    /**
-     *
-     */
 
     /**
      * Button modal
@@ -211,13 +222,152 @@ $(document).ready(function() {
     let btn_defer = '.defer'
     let btn_deny = '.deny'
     let btn_reject = '.reject'
-    /* let save_category = '.save-category'
-    let approve_footer = '.approve-footer'
-    let save_footer = '.save-footer'
-    let btn_edit = '.btn-edit'
-    let btn_delete = '.btn-delete'
-    let btn_unloading = '.unloading'
-    let btn_loading = '.loading' */
+    let btn_restore = '.btn-restore'
+    let btn_search = '.btn-search'
+
+    /**
+     *
+     * EVENT CHANGE
+     *
+     */
+
+    $('[name=dates]').change(function() {
+        let data = $(this).val()
+        $('#hidden_dates').val(data)
+        // console.log($('#hidden_dates').val())
+    })
+
+    $('[name=datee]').change(function() {
+        let data = $(this).val()
+        $('#hidden_datee').val(data)
+        // console.log($('#hidden_datee').val())
+    })
+
+    $('[name=times]').change(function() {
+        let data = $(this).val()
+        $('#hidden_times').val(data)
+        // console.log($('#hidden_times').val())
+    })
+
+    $('[name=timee]').change(function() {
+        let data = $(this).val()
+        $('#hidden_timee').val(data)
+        // console.log($('#hidden_timee').val())
+    })
+
+    $('[name=user]').change(function() {
+        let data = $(this).val()
+        $('#hidden_user').val(data)
+        // console.log($('#hidden_user').val())
+    })
+
+    $('[name=permit]').change(function() {
+        let data = $(this).val()
+        $('#hidden_permit').val(data)
+        // console.log($('#hidden_permit').val())
+    })
+
+    $('[name=status]').change(function() {
+        let data = $(this).val()
+        $('#hidden_status').val(data)
+        // console.log($('#hidden_status').val())
+    })
+
+    $('[name=type]').change(function() {
+        let data = $(this).val()
+        $('#hidden_type').val(data)
+        // console.log($('#hidden_type').val())
+    })
+
+    /**
+     *
+     * EVENT CLICK
+     *
+     */
+
+    $(btn_search).click(function() {
+        $('#calendar').fullCalendar('destroy');
+        $('#calendar').empty();
+
+        let data = new FormData()
+
+        data.append('dates', $('#hidden_dates').val())
+        data.append('datee', $('#hidden_datee').val())
+        data.append('times', $('#hidden_times').val())
+        data.append('timee', $('#hidden_timee').val())
+        data.append('user', $('#hidden_user').val())
+        data.append('permit', $('#hidden_permit').val())
+        data.append('status', $('#hidden_status').val())
+        data.append('type', $('#hidden_type').val())
+
+        createFullcalendar(data)
+    })
+
+    $(document).on('click', 'a.btn-detail-meeting', function() {
+        let id = $(this).attr('data-id')
+        get_data_draft(id)
+            .then((data) => {
+                let dataDefault;
+                if (data.length) {
+                    data.forEach(function(item, index) {
+                        dataDefault = item
+                    })
+                    detail(dataDefault, '', '')
+                }
+            })
+    })
+
+    $(document).on('click', 'a.btn-draft-meeting', function() {
+        let id = $(this).attr('data-id')
+        get_data_draft(id)
+            .then((data) => {
+                // console.log(data)
+                let dataDefault;
+                if (data.length) {
+                    data.forEach(function(item, index) {
+                        dataDefault = item
+                    })
+                    detail(dataDefault, '', '')
+                }
+            })
+    })
+
+    $(document).on('click', 'a.btn-update-meeting', function() {
+        let id = $(this).attr('data-id')
+        get_data_draft(id)
+            .then((data) => {
+                // console.log(data)
+                let dataDefault;
+                if (data.length) {
+                    data.forEach(function(item, index) {
+                        dataDefault = item
+                    })
+                    draft_to_use(dataDefault)
+                }
+            })
+    })
+
+    /**
+     *
+     * EVENT CHANGE
+     *
+     */
+
+    $('#user').change(function() {
+        let id = $(this).val()
+        // console.log(id)
+    })
+
+    /* $(document).on('change', '[name=sid_create]', function() {
+            let sid = $('[name=sid_create]').val()
+            $('#modal_create').find('[name=period_create]').attr('data-sid', sid)
+            $('#modal_create').find('[name=sid]').val(sid)
+            get_data_hld_dom(sid)
+        }) */
+
+    /**
+     *
+     */
 
     /**
      * CRUD
@@ -227,7 +377,8 @@ $(document).ready(function() {
      *
      *
      */
-    $(btn_insert).click(function() {
+    $(btn_insert).click(function(e) {
+        e.preventDefault()
         let visitor = [],
             data = new FormData(),
             dataArray = $('#insert-meeting').serializeArray()
@@ -255,7 +406,8 @@ $(document).ready(function() {
      *
      *
      */
-    $(btn_draft_insert).click(function() {
+    $(btn_draft_insert).click(function(e) {
+        e.preventDefault()
         let visitor = [],
             data = new FormData(),
             dataArray = $('#insert-meeting').serializeArray()
@@ -272,6 +424,7 @@ $(document).ready(function() {
             }
         }
         data.append("visitor", visitor)
+        // console.log(data)
         insert_meeting(data, "calendar")
     })
 
@@ -284,7 +437,8 @@ $(document).ready(function() {
      *
      */
 
-    $(btn_update).click(function() {
+    $(btn_update).click(function(e) {
+        e.preventDefault()
         let visitor = [],
             data = new FormData(),
             dataArray = $('#update-meeting').serializeArray()
@@ -310,7 +464,8 @@ $(document).ready(function() {
      *
      */
 
-    $(btn_delete).click(function() {
+    $(btn_delete).click(function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code')
@@ -322,7 +477,8 @@ $(document).ready(function() {
         // $("#detail-modal-meeting").modal("hide")
     })
 
-    $(document).on('click', btn_reject, function() {
+    $(document).on('click', btn_reject, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -345,7 +501,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_approve, function() {
+    $(document).on('click', btn_approve, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -369,7 +526,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_disapprove, function() {
+    $(document).on('click', btn_disapprove, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -393,7 +551,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_accept, function() {
+    $(document).on('click', btn_accept, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -405,11 +564,13 @@ $(document).ready(function() {
         data.append('item_id', id)
         data.append('item_code', code)
         data.append('item_data', '2')
+        data.append('vid', vid)
 
         swal_confirm(text, color, func, data)
     })
 
-    $(document).on('click', btn_defer, function() {
+    $(document).on('click', btn_defer, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -435,7 +596,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_refuse, function() {
+    $(document).on('click', btn_refuse, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -452,7 +614,8 @@ $(document).ready(function() {
         swal_confirm(text, color, func, data)
     })
 
-    $(document).on('click', btn_deny, function() {
+    $(document).on('click', btn_deny, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -478,7 +641,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_success, function() {
+    $(document).on('click', btn_success, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -502,7 +666,8 @@ $(document).ready(function() {
      *
      */
 
-    $(document).on('click', btn_cancle, function() {
+    $(document).on('click', btn_cancle, function(e) {
+        e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code'),
@@ -513,6 +678,31 @@ $(document).ready(function() {
         data.append('item_id', id)
         data.append('item_code', code)
         data.append('item_data', '4')
+
+        swal_confirm(text, color, func, data)
+    })
+
+    /**
+     *
+     *
+     * #
+     * # FUNCTION RESTORE
+     *
+     *
+     */
+
+    $(document).on('click', btn_restore, function(e) {
+        e.preventDefault()
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code'),
+            text = "กู้คืน",
+            func = "restore",
+            color = '#04d66a'
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        data.append('item_data', '1')
 
         swal_confirm(text, color, func, data)
     })
@@ -557,9 +747,12 @@ $(document).ready(function() {
     createFullcalendar()
     createDraftModal()
 
-    async function get_data() {
+    async function get_data(array = []) {
         let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
-        let response = await fetch(url_calendar, {})
+        let response = await fetch(url_calendar, {
+            method: 'post',
+            body: array
+        })
 
         return response.json()
     }
@@ -577,7 +770,7 @@ $(document).ready(function() {
         get_data_draft(id)
             .then((data) => {
                 let dataDefault = [];
-                if (data.length) {
+                if (data) {
                     data.forEach(function(item, index) {
                         dataDefault.push(item);
                     })
@@ -586,11 +779,12 @@ $(document).ready(function() {
             })
     }
 
-    function createFullcalendar() {
-        get_data()
+    function createFullcalendar(array = []) {
+        get_data(array)
             .then((data) => {
+                console.log(data)
                 let dataDefault = [];
-                if (data.length) {
+                if (data) {
                     data.forEach(function(item, index) {
                         dataDefault.push(item);
                     })

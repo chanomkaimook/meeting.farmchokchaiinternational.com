@@ -132,9 +132,9 @@ class CRUD_Valid
                     $item['item_code'] = $code;
                     $item['item_data'] = 2;
                     /* $item = array(
-                        'item_id' => ,
-                        'item_code' => ,
-                        'item_data' => '2',
+                    'item_id' => ,
+                    'item_code' => ,
+                    'item_data' => '2',
                     ); */;
 
                     $this->approval($item);
@@ -377,22 +377,26 @@ class CRUD_Valid
         );
 
         if (count($apv)) {
-                    
+
             $item_id = $apv['item_id'];
             $item_code = $apv['item_code'];
             $item_data = $apv['item_data'];
 
             if ($item_data == 2) {
                 $item_field = 'approve_date';
+                $status_complete = 5;
+                $status_complete_name = "กำลังดำเนินการ";
             } elseif ($item_data == 3) {
                 $item_field = 'disapprove_date';
+                $status_complete = 3;
+                $status_complete_name = "ไม่สำเร็จ";
             }
 
             $dataArray = array(
                 $item_field => date('Y-m-d H:i:s'),
                 'user_action' => 1,
-                'status_complete' => 5,
-                'status_complete_name' => "กำลังดำเนินการ",
+                'status_complete' => $status_complete,
+                'status_complete_name' => $status_complete_name,
                 'user_update' => 1,
                 'date_update' => date('Y-m-d H:i:s'),
             );
@@ -509,6 +513,50 @@ class CRUD_Valid
                 $return = $main;
             }
 
+        }
+        return $return;
+    }
+
+    public function restore($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+
+        $return = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            $item_id = $data['item_id'];
+            $item_code = $data['item_code'];
+            $item_data = $data['item_data'];
+
+            $dataArray = array(
+                'approve_date' => null,
+                'disapprove_date' => null,
+                'approve_date' => null,
+                'status_complete' => $item_data,
+                'status_complete_name' => "รอดำเนินการ",
+                'user_action' => 1,
+                'user_update' => 1,
+                'date_update' => date('Y-m-d H:i:s'),
+            );
+
+            $whereArray = array(
+                'id' => $item_id,
+                'code' => $item_code,
+            );
+            // print_r($dataArray);
+
+            $main = $ci->mdl_event->restore($dataArray, $whereArray);
+
+            if (!$main['error']) {
+
+                $return = $main;
+            }
         }
         return $return;
     }

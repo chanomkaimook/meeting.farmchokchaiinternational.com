@@ -37,6 +37,19 @@ class Ctl_calendar extends MY_Controller
         $this->template->build('calendar', $data);
     }
 
+    public function filter($array = [])
+    {
+        print_r($array);
+        $dates = $array['dates'];
+        $datee = $array['datee'];
+        $times = $array['times'];
+        $timee = $array['timee'];
+        $user = $array['user'];
+        $permit = $array['permit'];
+        $status = $array['status'];
+        $type = $array['type'];
+    }
+
     public function status_color($status_complete, $child = null)
     {
         $status_pending_soft = "bg-pending-soft";
@@ -118,7 +131,9 @@ class Ctl_calendar extends MY_Controller
         foreach ($dataShow as $key => $val) {
             foreach ($val as $sub_key => $value) {
                 $dataVal = (array) $value;
-                if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
+                if ($dataVal['VIS_STATUS_COMPLETE']) {
+                    $state = 'vis';
+                } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
                     $state = "my";
                 } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
                     $state = 'other';
@@ -126,8 +141,6 @@ class Ctl_calendar extends MY_Controller
                     $state = 'owner';
                 } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
                     $state = 'child';
-                } else if ($dataVal['VIS_STATUS_COMPLETE']) {
-                    $state = 'vis';
                 }
 
                 if ($dataVal['VIS_STATUS_COMPLETE']) {
@@ -181,13 +194,49 @@ class Ctl_calendar extends MY_Controller
     public function get_data()
     {
         $Calendar = [];
-        // $dataVal = [];
         $dataShow = [];
+        $array = $this->input->post();
 
-        $optionnal['where'] = array(
-            'event.staff_id' => 1,
-            'event.type_id <' => 3,
-        );
+        if (count($array)) {
+            $dates = $array['dates'];
+            $datee = $array['datee'];
+            $times = $array['times'];
+            $timee = $array['timee'];
+            $user = $array['user'];
+            $permit = $array['permit'];
+            $status = $array['status'];
+            $type = $array['type'];
+
+            if ($dates) {
+                $optionnal['where']['event.date_begin'] = $dates;
+            }
+            if ($datee) {
+                $optionnal['where']['event.date_end'] = $datee;
+            }
+            if ($times) {
+                $optionnal['where']['event.time_begin'] = $times;
+            }
+            if ($timee) {
+                $optionnal['where']['event.time_end'] = $timee;
+            }
+            if ($user) {
+                $optionnal['where']['event.staff_id'] = $user;
+            }
+            if ($permit) {
+                $optionnal['where']['event.user_start'] = $permit;
+            }
+            if ($status) {
+                $optionnal['where']['event.status_complete'] = $status;
+            }
+            if ($type) {
+                $optionnal['where']['event.type_id'] = $type;
+            }
+
+        } else {
+            $optionnal['where']['event.staff_id'] = 1;
+        }
+// print_r($optionnal);
+        $optionnal['where']['event.type_id <'] = 3;
         $optionnal['join'] = "all";
         $optionnal['select'] = "event.*
         ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
@@ -207,10 +256,7 @@ class Ctl_calendar extends MY_Controller
         if (count($child)) {
             $c = 0;
             foreach ($child as $sid) {
-                $optionnal['where'] = array(
-                    'event.staff_id' => $sid->STAFF_CHILD,
-                    'event.type_id <' => 3,
-                );
+                $optionnal['where']['event.staff_id'] = $sid->STAFF_CHILD;
                 $optionnal['join'] = "all";
 
                 $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal);
@@ -237,10 +283,7 @@ class Ctl_calendar extends MY_Controller
             $v = 0;
             // print_r($vis);
             foreach ($vis as $sid) {
-                $optionnal['where'] = array(
-                    'event.code' => $sid->EVENT_CODE,
-                    'event.type_id <' => 3,
-                );
+                $optionnal['where']['event.code'] = $sid->EVENT_CODE;
                 $optionnal['join'] = "all";
 
                 $dataVis = (array) $this->mdl_event->get_dataShow(null, $optionnal);
@@ -260,7 +303,107 @@ class Ctl_calendar extends MY_Controller
             $Calendar = $this->foreach_loop($dataShow);
             echo json_encode($Calendar);
         }
+        // print_r($Calendar);
     }
+
+    // public function get_data()
+    // {
+    //     $Calendar = [];
+    //     $dataShow = [];
+
+    //     if (count($this->input->post())) {
+    //         $array = $this->input->post();
+
+    //         $Calendar = $this->filter($array);
+    //         /* $dates = $array['dates'];
+    //         $datee = $array['datee'];
+    //         $times = $array['times'];
+    //         $timee = $array['timee'];
+    //         $user = $array['user'];
+    //         $permit = $array['permit'];
+    //         $status = $array['status'];
+    //         $type = $array['type']; */
+    //         // print_r($array);
+    //     } else {
+    //         $optionnal['where'] = array(
+    //             'event.staff_id' => 1,
+    //             'event.type_id <' => 3,
+    //         );
+    //         $optionnal['join'] = "all";
+    //         $optionnal['select'] = "event.*
+    //     ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
+    //     ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
+
+    //         $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal);
+
+    //         $optionnal_child['where'] = array(
+    //             'staff_owner' => 1,
+    //         );
+
+    //         $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
+    //         $optionnal_child['join'] = true;
+    //         $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
+
+    //         $dataChild = [];
+    //         if (count($child)) {
+    //             $c = 0;
+    //             foreach ($child as $sid) {
+    //                 $optionnal['where'] = array(
+    //                     'event.staff_id' => $sid->STAFF_CHILD,
+    //                     'event.type_id <' => 3,
+    //                 );
+    //                 $optionnal['join'] = "all";
+
+    //                 $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal);
+    //                 if (count($dataChild)) {
+    //                     $dataShow['child'] = $dataChild;
+    //                 }
+    //                 // $aiai = $this->mdl_event->get_dataShow(null, $optionnal, 'row');
+    //                 // echo $this->db->last_query();
+    //                 $c++;
+    //             }
+    //         }
+
+    //         $optionnal_vis['select'] = "event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
+    //         $optionnal_vis['where'] = array(
+    //             "event_visitor.event_visitor" => 1,
+    //         );
+    //         $optionnal_vis['join'] = true;
+    //         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
+    //         // echo $this->db->last_query();
+
+    //         $dataVis = [];
+    //         $data_visitor = [];
+    //         if (count($vis)) {
+    //             $v = 0;
+    //             // print_r($vis);
+    //             foreach ($vis as $sid) {
+    //                 $optionnal['where'] = array(
+    //                     'event.code' => $sid->EVENT_CODE,
+    //                     'event.type_id <' => 3,
+    //                 );
+    //                 $optionnal['join'] = "all";
+
+    //                 $dataVis = (array) $this->mdl_event->get_dataShow(null, $optionnal);
+    //                 if (count($dataVis)) {
+    //                     foreach ($dataVis as $key => $array) {
+    //                         $data_visitor[$v] = (array) $array;
+    //                         $data_visitor[$v]['VIS_STATUS_COMPLETE'] = $sid->STATUS_COMPLETE;
+    //                         $data_visitor[$v]['VIS_STATUS_REMARK'] = $sid->STATUS_REMARK;
+    //                         $v++;
+    //                     }
+    //                     $dataShow['vis'] = $data_visitor;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     if (count($dataShow)) {
+    //         $Calendar = $this->foreach_loop($dataShow);
+    //         echo json_encode($Calendar);
+    //     }
+    //     // print_r($Calendar);
+    // }
 
     public function get_data_draft()
     {
@@ -278,22 +421,36 @@ class Ctl_calendar extends MY_Controller
             $dataShow[] = $this->mdl_event->get_dataShow($this->input->get('event_id'), $optionnal, "row");
 
             if (count($dataShow)) {
-                $i = 0;
-                foreach ($dataShow as $key => $value) {
-                    $dataVal = (array) $value;
-                    $Calendar[$i] = $dataVal;
+                // $i = 0;
+                $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                $emp = $this->mdl_employee->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp);
 
-                    $optionnals['where'] = array(
-                        'event_visitor.event_code' => $dataVal["CODE"],
-                    );
-                    $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
-                    if (count($visitor)) {
-                        foreach ($visitor as $vis_val) {
-                            $Calendar[$i]['VISITOR'][] = $vis_val->EVENT_VISITOR;
-                        }
+                // print_r($emp);
+                $Calendar = $dataShow;
+                $Calendar[0]['USER_START_NAME'] = $emp[0]->NAME;
+                $Calendar[0]['USER_START_LNAME'] = $emp[0]->LASTNAME;
+                $Calendar[0]['class'] = "draft";
+                $Calendar[0]['STATUS_SHOW'] = "แบบร่าง";
+
+                $optionnals['where'] = array(
+                    'event_visitor.event_code' => $dataShow[0]["CODE"],
+                );
+                $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
+                if (count($visitor)) {
+                    $j = 0;
+                    foreach ($visitor as $vis_val) {
+                        $Calendar[0]['VISITOR'][$j]['EID'] = $vis_val->ID;
+                        $Calendar[0]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
+                        $Calendar[0]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
+                        $Calendar[0]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                        $Calendar[0]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
+                        $Calendar[0]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
+
+                        $j++;
                     }
-                    $i++;
                 }
+
+                // print_r($Calendar);
             }
         } else {
 
@@ -333,13 +490,12 @@ class Ctl_calendar extends MY_Controller
                     }
                 }
             }
-        }
-        // print_r($dataShow);
 
-        $Calendar = [];
-        if (count($dataShow)) {
-            $Calendar = $this->foreach_loop($dataShow);
+            if (count($dataShow)) {
+                $Calendar = $this->foreach_loop($dataShow);
+            }
         }
+
         // echo $this->db->last_query();
         echo json_encode($Calendar);
     }
@@ -414,6 +570,17 @@ class Ctl_calendar extends MY_Controller
             $data = $this->input->post();
 
             $returns = $this->crud_valid->processing($data);
+            echo json_encode($returns);
+        }
+    }
+
+    public function restore()
+    {
+        # code...
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $data = $this->input->post();
+
+            $returns = $this->crud_valid->restore($data);
             echo json_encode($returns);
         }
     }

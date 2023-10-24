@@ -267,6 +267,43 @@ class Mdl_event extends CI_Model
 
         return $result;
     }
+
+    //  *
+    //  * 
+    //  * event restore
+    //  * 
+    //  *
+    public function restore($data,$where)
+    {
+        $result = array(
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
+        );
+
+        if (count($data)) {
+            
+        if (count($where)) {
+            foreach ($where as $column => $value) {
+                $this->db->where($column, $value);
+            }
+        }
+        
+            $this->db->update($this->table, $data);
+
+            // keep log
+            log_data(array('restore ID = '.$where['id'], 'update', $this->db->last_query()));
+
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+                'data' => array(
+                    'id' => $where['id'],
+                ),
+            );
+        }
+
+        return $result;
+    }
     //  =========================
     //  =========================
     //  End CRUD
