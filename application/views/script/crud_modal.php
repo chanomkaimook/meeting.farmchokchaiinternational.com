@@ -59,7 +59,7 @@ function button_action(modal, entitled, status, event_id, event_code, vid) {
     $(modal).find('.action-header').removeClass('d-none')
     if (modal && entitled) {
         if (status == 1) {
-            if (entitled == 'my' || entitled == 'owner') {
+            if (entitled == 'me' || entitled == 'owner') {
                 html =
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
@@ -78,15 +78,15 @@ function button_action(modal, entitled, status, event_id, event_code, vid) {
                     <button type="button" class="btn btn-success waves-effect waves-light btn-approve" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">อนุมัติ</button>`
             }
         } else if (status == 2) {
-                $(modal).find('.action-header').addClass('d-none')
+            $(modal).find('.action-header').addClass('d-none')
             html = ``
         } else if (status == 3 || status == 4) {
-            if (entitled == 'my' || entitled == 'owner') {
+            if (entitled == 'me' || entitled == 'owner') {
                 html =
                     `<button type="button" class="btn btn-success waves-effect waves-light btn-restore" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">นำกลับมาใช้</button>`;
             }
         } else if (status == 5) {
-            if (entitled == 'my' || entitled == 'owner') {
+            if (entitled == 'me' || entitled == 'owner') {
                 html =
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
@@ -99,7 +99,7 @@ function button_action(modal, entitled, status, event_id, event_code, vid) {
     $(modal).find('.action-footer').html(html)
 }
 
-function draft_to_use(data) {
+function draft_to_use(data, type) {
     let vis = '',
         vis_html = '',
         btn_html = '',
@@ -115,14 +115,27 @@ function draft_to_use(data) {
 
     if (data.TYPE_ID == 3) {
         modal = '#update-modal-meeting';
+        if (type == "use") {
+            $(modal).find("[name=update-type-id]").val(1)
+            $(modal).find("[name=update-type-name]").val("นัดหมาย/จองห้องประชุม")
 
-        $(modal).find("[name=update-type-id]").val(1)
-        $(modal).find("[name=update-type-name]").val("นัดหมาย/จองห้องประชุม")
+        } else {
+            $(modal).find("[name=update-type-id]").val(3)
+            $(modal).find("[name=update-type-name]").val("แบบร่างนัดหมาย/จองห้องประชุม")
+
+        }
 
     } else if (data.TYPE_ID == 4) {
         modal = '#update-modal-car'
-        $(modal).find("[name=update-type-id]").val(2)
-        $(modal).find("[name=update-type-name]").val("จองรถ")
+        if (type == "use") {
+            $(modal).find("[name=update-type-id]").val(2)
+            $(modal).find("[name=update-type-name]").val("จองรถ")
+
+        } else {
+            $(modal).find("[name=update-type-id]").val(4)
+            $(modal).find("[name=update-type-name]").val("แบบร่างจองรถ")
+
+        }
     }
 
     $(modal).modal("show")
@@ -159,15 +172,8 @@ function draft_to_use(data) {
     user_start = data.USER_START_NAME + " " + data.USER_START_LNAME
     $(modal).find('p.user-start-name').html(user_start)
 
-    /* ************** ACTION FOOTER *************** */
-    entitled = data.class
-    status = data.STATUS_COMPLETE
-    event_id = data.ID
-    event_code = data.CODE
-    button_action(modal, entitled, status, event_id, event_code, vid)
-    // console.log(data)
+    /* ************** ACTION HEADER *************** */
     $('.modal-header').find('h4.modal-title-status').text(data.STATUS_SHOW)
-    // if (!data.class) {
     if (data.class == "draft") {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
@@ -217,9 +223,7 @@ function draft_to_use(data) {
         $('.modal-header').find('.text-orange').removeClass('d-none')
         $('.modal-header').find('.text-orange').html(data.STATUS_SHOW)
     }
-    // }
-
-    /* ************** END ACTION FOOTER *************** */
+    /* ************** END ACTION HEADER *************** */
 }
 
 function detail(calEvent, jsEvent, view) {
@@ -288,54 +292,47 @@ function detail(calEvent, jsEvent, view) {
     /* ************** END UPDATE *************** */
 
     /* ************** ADD VISITOR *************** */
-
     if (calEvent.VISITOR) {
         let status_vis = "",
             vis_btn = "";
         for (let i = 0; i < calEvent.VISITOR.length; i++) {
+            btn_vis_action = `
+            <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
+            <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
+            <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
+`
             if (calEvent.VISITOR[i].VSTATUS == 1) {
                 status_vis =
-                    `<span class='status_vis'>รอตอบรับ
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
-                    </span>`
+                    `<span class='status_vis'>รอตอบรับ</span>`
             } else if (calEvent.VISITOR[i].VSTATUS == 2) {
                 status_vis =
-                    `<span class='status_vis'>เข้าร่วม
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
-                    </span>`
+                    `<span class='status_vis'>เข้าร่วม</span>`
             } else if (calEvent.VISITOR[i].VSTATUS == 3) {
                 status_vis =
-                    `<span class='status_vis'>ปฏิเสธ
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fa fa-trash-alt'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny' data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-times'></i> </button>
-                    <button type='button' class='btn btn-icon waves-effect btn-success defer'  data-id='${calEvent.VISITOR[i].EID}' data-event-id='${calEvent.ID}' data-event-code='${calEvent.CODE}'> <i class='fas fa-check'></i> </button>
-                    </span>`
+                    `<span class='status_vis'>ปฏิเสธ</span>`
             }
+            if (calEvent.USER_START == 1 && calEvent.VISITOR[i].VSTATUS == 1) {
+                status_vis = status_vis + btn_vis_action
+            }
+
             vis_html = vis_html + calEvent.VISITOR[i].VNAME + ' ' + calEvent.VISITOR[i].VLNAME + ' ' + status_vis +
                 '<br>'
 
             vid = calEvent.VISITOR[i].EID
-            // vis_btn = ""
         }
 
         user_visitor = calEvent.VISITOR.map((item, index) => {
-            // console.log(item,index)
             return item.VID
         })
         $('select[name=update-visitor]').val(user_visitor).trigger('change')
 
         $(modal_detail).find('[data-visitor=true]').removeClass('d-none')
         $(modal_detail).find('h5.visitor-name').html(vis_html)
-        // $('p.visitor-name').find('span.status_vis').html(vis_btn)
-
 
         $(modal_update).find('[data-visitor=true]').removeClass('d-none')
     }
     /* ************** END ADD VISITOR *************** */
+
     user_start = calEvent.USER_START_NAME + " " + calEvent.USER_START_LNAME
     $(modal_detail).find('p.user-start-name').html(user_start)
 
@@ -345,10 +342,12 @@ function detail(calEvent, jsEvent, view) {
     event_id = calEvent.ID
     event_code = calEvent.CODE
     button_action(modal_detail, entitled, status, event_id, event_code, vid)
+    /* ************** END ACTION FOOTER *************** */
+
+    /* ************** ACTION HEADER *************** */
     // console.log(calEvent)
     $('.modal-header').find('h4.modal-title-status').text(calEvent.STATUS_SHOW)
-    // if (!calEvent.class) {
-        if (calEvent.class == "draft") {
+    if (calEvent.class == "draft") {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
@@ -397,9 +396,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-orange').removeClass('d-none')
         $('.modal-header').find('.text-orange').html(calEvent.STATUS_SHOW)
     }
-    // }
-
-    /* ************** END ACTION FOOTER *************** */
+    /* ************** END ACTION HEADER *************** */
 }
 
 function detail_draft(data) {

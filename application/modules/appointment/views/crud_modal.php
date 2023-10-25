@@ -1,3 +1,23 @@
+<style>
+.cardbox {
+    height: 4rem;
+}
+
+.item-cardbox {
+    height: 3rem;
+    width: 13rem;
+}
+
+.filter-card {
+    height: 100%;
+    width: 100% !important; 
+    /* background-color: #000; */
+}
+
+.filter-lg-list {
+    width: 250px !important; 
+}
+</style>
 <!-- CREATE Modal -insert- -->
 <div class="modal fade" id="insert-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -10,21 +30,23 @@
                 </button>
             </div>
             <div class="modal-body pb-0">
-            <div class="row">
-                        <div class="col-6">
-                            <div class="card text-center">
-                                <button type="button"
-                                    class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car" data-dismiss="modal">จองรถ</button>
-                            </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="cardbox text-center">
+                            <button type="button"
+                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-cardbox"
+                                data-dismiss="modal">จองรถ</button>
                         </div>
-                        <div class="col-6">
-                            <div class="card text-center">
-                                <button type="button"
-                                    class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting" data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
-                            </div>
-                        </div>
-
                     </div>
+                    <div class="col-6">
+                        <div class="cardbox text-center">
+                            <button type="button"
+                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-cardbox"
+                                data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -300,7 +322,7 @@ foreach ($time as $value) {
     } else {
         $times = $value["START"];
     }
-?>
+    ?>
                                 <option selected value="<?=date('H:i:s', strtotime($times))?>">
                                     <?=date('H:i', strtotime("7.00"))?></option>
                                 <?php
@@ -364,7 +386,8 @@ foreach ($time as $value) {
             <div class="modal-body pb-0">
                 <form class="form" id="insert-meeting">
 
-                <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden" name="insert-type" />
+                    <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
+                        name="insert-type" />
                     <!-- <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม" type="hidden" name="insert-type-name" /> -->
                     <!-- <div class="form-group">
                         <label class="control-label">ประเภท</label>
@@ -376,8 +399,8 @@ foreach ($time as $value) {
                     </div> -->
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
-                        <input class="form-control form-white" placeholder="Enter name" type="text"
-                            name="insert-name" required/>
+                        <input class="form-control form-white" placeholder="Enter name" type="text" name="insert-name"
+                            required />
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6"><label class="control-label">นำโดย</label>
@@ -512,15 +535,19 @@ foreach ($time as $value) {
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="update-meeting">
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="item_id" />
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="code" />
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-id" />
-                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden" name="update-type-name" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                        name="item_id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                        name="code" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                        name="update-type-id" />
+                    <input class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                        name="update-type-name" />
 
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
-                        <input class="form-control form-white" placeholder="Enter name" type="text"
-                            value="" name="update-name" required/>
+                        <input class="form-control form-white" placeholder="Enter name" type="text" value=""
+                            name="update-name" required />
                     </div>
 
                     <div class="form-group mb-3 d-flex flex-row">
@@ -558,8 +585,7 @@ foreach ($room as $value) {
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <textarea placeholder="Enter name" class="form-control form-white" name="update-description"
-                            cols="30"
-                            rows="5"></textarea>
+                            cols="30" rows="5"></textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
@@ -669,15 +695,17 @@ foreach ($time as $value) {
                 <form class="form" id="detail-meeting">
                     <div class="row action-header">
                         <div class="col-6">
-                            <div class="card text-center">
+                            <div class="cardbox text-center">
                                 <button type="button"
-                                    class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting" data-dismiss="modal">แก้ไข</button>
+                                    class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting item-cardbox"
+                                    data-dismiss="modal">แก้ไข</button>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="card text-center">
+                            <div class="cardbox text-center">
                                 <button type="button"
-                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light delete-meeting" data-dismiss="modal">ลบ</button>
+                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light delete-meeting item-cardbox"
+                                    data-dismiss="modal">ลบ</button>
                             </div>
                         </div>
 
@@ -690,20 +718,21 @@ foreach ($time as $value) {
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
                         <!-- <p class="detail-name"></p> -->
-                        <input class="form-control form-white" placeholder="Enter topic" type="text"
-                        value="" name="detail-name" disabled />
+                        <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
+                            name="detail-name" disabled />
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">นำโดย</label>
-                        <!-- <p class="detail-head"></p> -->
+                            <!-- <p class="detail-head"></p> -->
 
                             <select class="form-control form-white" name="detail-head" disabled>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-foreach ($staff as $val) {
+// print_r($employee);
+foreach ($employee as $val) {
     ?>
-                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                <option value="<?=$val->ID;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
                                 </option>
                                 <?php
 }
@@ -712,7 +741,7 @@ foreach ($staff as $val) {
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ห้องประชุม</label>
-                        <!-- <p class="detail-rooms"></p> -->
+                            <!-- <p class="detail-rooms"></p> -->
                             <select class="form-control form-white" name="detail-rooms" disabled>
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
@@ -731,19 +760,18 @@ foreach ($room as $value) {
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <!-- <p class="detail-description"></p> -->
                         <textarea placeholder="Enter name" class="form-control form-white" name="detail-description"
-                            cols="30" rows="5"
-                            disabled></textarea>
+                            cols="30" rows="5" disabled></textarea>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
-                        <!-- <p class="detail-dates"></p> -->
+                            <!-- <p class="detail-dates"></p> -->
                             <input type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="detail-dates" disabled>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
-                        <!-- <p class="detail-datee"></p> -->
+                            <!-- <p class="detail-datee"></p> -->
                             <input type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="detail-datee" disabled>
                         </div>
@@ -751,15 +779,15 @@ foreach ($room as $value) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
-                        <!-- <p class="detail-times"></p> -->
-                            <input type="text" class="form-control" value="" placeholder="08:00"
-                                name="detail-times" disabled>
+                            <!-- <p class="detail-times"></p> -->
+                            <input type="text" class="form-control" value="" placeholder="08:00" name="detail-times"
+                                disabled>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
-                        <!-- <p class="detail-timee"></p> -->
-                            <input type="text" class="form-control" value="" placeholder="17:30"
-                                name="detail-timee" disabled>
+                            <!-- <p class="detail-timee"></p> -->
+                            <input type="text" class="form-control" value="" placeholder="17:30" name="detail-timee"
+                                disabled>
                         </div>
                     </div>
                     <div class="form-group d-none" data-visitor="true">
@@ -770,9 +798,9 @@ foreach ($room as $value) {
                     </div>
                     <div class="form-group" data-user-start="true">
                         <label class="control-label">ผู้สร้างแบบฟอร์ม</label>
-                            <p class="user-start-name">
+                        <p class="user-start-name">
 
-                            </p>
+                        </p>
                     </div>
                 </form>
             </div>

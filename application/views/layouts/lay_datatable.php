@@ -13,9 +13,8 @@ $path_script_end = 'application/views/partials/e_script_end.php';
 <html lang="en">
 <style>
     .card {
-        height: 1090px;
+        height: 100%;
     }
-
     footer {
         position: fixed !important;
         bottom: 0 !important;

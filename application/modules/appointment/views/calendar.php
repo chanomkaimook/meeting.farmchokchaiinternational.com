@@ -196,14 +196,22 @@ $(document).ready(function() {
      *
      * #
      * # Properties Button
-     * 1. btn_insert = button insert
-     * 2. save_category = button save
-     * 3. approve_footer = button approve,button not approve
-     * 4. save_footer = button save,button close
-     * 5. btn_unloading = button save in #detail-modal
-     * 6. btn_loading = button save (spinner) in #detail-modal
-     * 7. btn_edit = button edit in #detail-modal
-     * 8. btn_delete = button delete in #detail-modal
+     * 1. btn_insert = button insert event
+     * 2. btn_update = button update event
+     * 3. btn_draft_insert = button insert draft
+     * 4. btn_draft_update = button update draft
+     * 5. btn_delete = button delete event,draft
+     * 6. btn_approve = button approve event when creater is entitled person
+     * 7. btn_disapprove = button disapprove event when creater is entitled person
+     * 8. btn_accept = button accept event when imma visitor
+     * 9. btn_refuse = button refuse event when imma visitor
+     * 10. btn_success = button success when event is done
+     * 11. btn_cancle = button cancle when event is done
+     * 12. btn_defer = button accept when imma creater
+     * 13. btn_deny = button refuse when imma creater
+     * 14. btn_reject = button delete visitor when imma creater
+     * 15. btn_restore = button restore event when event is cancle
+     * 16. btn_search = button submit filter
      *
      *
      */
@@ -327,7 +335,8 @@ $(document).ready(function() {
                     data.forEach(function(item, index) {
                         dataDefault = item
                     })
-                    detail(dataDefault, '', '')
+                    type = "draft"
+                    draft_to_use(dataDefault,type)
                 }
             })
     })
@@ -342,7 +351,8 @@ $(document).ready(function() {
                     data.forEach(function(item, index) {
                         dataDefault = item
                     })
-                    draft_to_use(dataDefault)
+                    type = "use"
+                    draft_to_use(dataDefault,type)
                 }
             })
     })
@@ -782,7 +792,7 @@ $(document).ready(function() {
     function createFullcalendar(array = []) {
         get_data(array)
             .then((data) => {
-                console.log(data)
+                // console.log(data)
                 let dataDefault = [];
                 if (data) {
                     data.forEach(function(item, index) {
