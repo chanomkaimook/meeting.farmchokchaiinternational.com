@@ -46,18 +46,19 @@ div.table-responsive {
 </style>
 <!-- <input type="hidden" name="my-id" id="my-id" value="<?=$_SESSION["user_code"]?>"> -->
 <input type="hidden" name="my-id" id="my-id" value="1">
+<input type="hidden" name="event-id" id="event-id" value="">
 <!-- Button trigger modal -->
 
 <div class="row">
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-lg-4">
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
                 <button type="button" class="btn btn-secondary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
             </div>
-            <div class="col-lg-10">
+            <div class="col-lg-8">
                 <input type="hidden" name="hidden_dates" id="hidden_dates">
                 <input type="hidden" name="hidden_datee" id="hidden_datee">
                 <input type="hidden" name="hidden_times" id="hidden_times">
@@ -67,62 +68,65 @@ div.table-responsive {
                 <input type="hidden" name="hidden_status" id="hidden_status">
                 <input type="hidden" name="hidden_type" id="hidden_type">
 
-                <div class="d-flex flex-row justify-content-end">
-                    <div class="pl-1">
-                        <select class="form-control form-white select2" data-toggle="select2" name="type">
-                            <option>ประเภท</option>
-                            <option value="1">นัดหมาย/จองห้องประชุม</option>
-                            <option value="2">จองรถ</option>
-                            <!-- <option value="3">แบบร่างการนัดหมาย/จองห้องประชุม</option>
+                <div class="filter-card">
+                    <div class="d-flex flex-row justify-content-end">
+                        <div class="pl-1">
+                            <select class="form-control form-white select2" data-toggle="select2" name="type">
+                                <option>ประเภท</option>
+                                <option value="1">นัดหมาย/จองห้องประชุม</option>
+                                <option value="2">จองรถ</option>
+                                <!-- <option value="3">แบบร่างการนัดหมาย/จองห้องประชุม</option>
                                 <option value="4">แบบร่างการจองรถ</option> -->
-                        </select>
-                    </div>
+                            </select>
+                        </div>
 
-                    <div class="pl-1">
-                        <select class="form-control form-white select2" data-toggle="select2" name="user">
-                            <option>จัดการ</option>
-                            <?php
+                        <div class="pl-1">
+                            <select class="form-control form-white select2" data-toggle="select2" name="user">
+                                <option>จัดการ</option>
+                                <?php
 foreach ($staff as $data) {
     ?>
-                            <option value="<?=$data->ID?>"><?=$data->NAME . " " . $data->LASTNAME?></option>
-                            <?php
+                                <option value="<?=$data->ID?>"><?=$data->NAME . " " . $data->LASTNAME?></option>
+                                <?php
 }
 ?>
-                        </select>
-                    </div>
+                            </select>
+                        </div>
 
-                    <div class="pl-1">
-                        <select class="form-control form-white" data-toggle="select2" name="status">
-                            <option value="">สถานะ</option>
-                            <option value="1">รออนุมัติ,รอตอบรับ,รอดำเนินการ</option>
-                            <option value="2">อนุมัติ,เข้าร่วม,ดำเนินการสำเร็จ</option>
-                            <option value="3">ไม่อนุมัติ,ปฏิเสธมดำเนินการไม่สำเร็จ</option>
-                            <option value="4">ยกเลิก</option>
-                            <option value="5">กำลังดำเนินการ</option>
-                        </select>
+                        <div class="pl-1">
+                            <select class="form-control form-white" data-toggle="select2" name="status">
+                                <option value="">สถานะ</option>
+                                <option value="1">รออนุมัติ,รอตอบรับ,รอดำเนินการ</option>
+                                <option value="2">อนุมัติ,เข้าร่วม,ดำเนินการสำเร็จ</option>
+                                <option value="3">ไม่อนุมัติ,ปฏิเสธมดำเนินการไม่สำเร็จ</option>
+                                <option value="4">ยกเลิก</option>
+                                <option value="5">กำลังดำเนินการ</option>
+                            </select>
+                        </div>
+                        <div class="pl-1">
+                            <select class="form-control form-white" data-toggle="select2" name="permit">
+                                <option value="0">ทั้งหมด</option>
+                                <option value="1">เฉพาะที่มีสิทธิ์จัดการ</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="pl-1">
-                        <select class="form-control form-white" data-toggle="select2" name="permit">
-                            <option value="0">ทั้งหมด</option>
-                            <option value="1">เฉพาะที่มีสิทธิ์จัดการ</option>
-                        </select>
+                    <div class="d-flex flex-row justify-content-end">
+
+                        <div class="pl-1">
+                            <input type="text" class="form-control datepicker-autoclose" name="dates"
+                                placeholder="ตั้งแต่วันที่">
+                        </div>
+                        <div class="pl-1">
+                            <input type="text" class="form-control datepicker-autoclose" name="datee"
+                                placeholder="ถึงวันที่">
+                        </div>
+
                     </div>
-                </div>
-                <div class="d-flex flex-row justify-content-end">
-                    <div class="pl-1">
-                        <input type="text" class="form-control datepicker-autoclose" name="dates"
-                            placeholder="ตั้งแต่วันที่">
-                    </div>
-                    <div class="pl-1">
-                        <input type="text" class="form-control datepicker-autoclose" name="datee"
-                            placeholder="ถึงวันที่">
-                    </div>
-                </div>
-                <div class="d-flex flex-row justify-content-end">
-                    <div class="pl-1">
-                        <select class="form-control form-white" name="times">
-                            <option selected disabled>ตั้งแต่เวลา</option>
-                            <?php
+                    <div class="d-flex flex-row justify-content-end">
+                        <div class="pl-1">
+                            <select class="form-control form-white" name="times">
+                                <option selected disabled>ตั้งแต่เวลา</option>
+                                <?php
 foreach ($time as $val) {
     if (!$val["START"]) {
         $times = $val["END"];
@@ -132,18 +136,18 @@ foreach ($time as $val) {
         $times = $val["START"];
     }
     ?>
-                            <option value="<?=date('H:i:s', strtotime($times))?>">
-                                <?=date('H:i', strtotime($times))?>
-                            </option>
-                            <?php
+                                <option value="<?=date('H:i:s', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?>
+                                </option>
+                                <?php
 }
 ?>
-                        </select>
-                    </div>
-                    <div class="pl-1">
-                        <select class="form-control form-white" name="timee">
-                            <option selected disabled>ถึงเวลา</option>
-                            <?php
+                            </select>
+                        </div>
+                        <div class="pl-1">
+                            <select class="form-control form-white" name="timee">
+                                <option selected disabled>ถึงเวลา</option>
+                                <?php
 foreach ($time as $val) {
     if (!$val["START"]) {
         $times = $val["END"];
@@ -153,44 +157,68 @@ foreach ($time as $val) {
         $times = $val["START"];
     }
     ?>
-                            <option value="<?=date('H:i:s', strtotime($times))?>">
-                                <?=date('H:i', strtotime($times))?>
-                            </option>
-                            <?php
+                                <option value="<?=date('H:i:s', strtotime($times))?>">
+                                    <?=date('H:i', strtotime($times))?>
+                                </option>
+                                <?php
 }
 ?>
-                        </select>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
+                                aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
-                        aria-hidden="true"></i></button>
             </div>
+            <!-- end col-lg-10 -->
         </div>
-        <!-- end col-lg-10 -->
-    </div>
-    <div class="card">
-        <div class="card-body">
+        <div class="card">
+            <div class="card-body">
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div id="calendar"></div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="calendar"></div>
+                    </div>
+                    <!-- end col -->
                 </div>
-                <!-- end col -->
+                <!-- end row -->
             </div>
-            <!-- end row -->
-        </div>
 
+        </div>
     </div>
-</div>
 </div>
 
 <?php
 include "crud_modal.php";
 ?>
 <script>
-$(document).ready(function() {
-    let my_id = $('#my-id').val();
+let my_id = $('#my-id').val();
 
+let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
+let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
+
+$(document).ready(function() {
+    /**
+     * #
+     * function get data
+     * #
+     */
+    createFullcalendar(url_calendar)
+    createDraftModal(url_draft)
+
+    function createDraftModal(url_draft) {
+        get_data_draft(url_draft)
+            .then((data) => {
+                let dataDefault = [];
+                if (data) {
+                    data.forEach(function(item, index) {
+                        dataDefault.push(item);
+                    })
+                    detail_draft(dataDefault)
+                }
+            })
+    }
     /**
      * Button modal
      *
@@ -287,6 +315,12 @@ $(document).ready(function() {
         // console.log($('#hidden_type').val())
     })
 
+
+    $('#user').change(function() {
+        let id = $(this).val()
+        // console.log(id)
+    })
+
     /**
      *
      * EVENT CLICK
@@ -294,8 +328,6 @@ $(document).ready(function() {
      */
 
     $(btn_search).click(function() {
-        $('#calendar').fullCalendar('destroy');
-        $('#calendar').empty();
 
         let data = new FormData()
 
@@ -307,13 +339,16 @@ $(document).ready(function() {
         data.append('permit', $('#hidden_permit').val())
         data.append('status', $('#hidden_status').val())
         data.append('type', $('#hidden_type').val())
-
-        createFullcalendar(data)
+        // calendar, url, filter = null
+        calendarDestroy('#calendar', url_calendar, data)
+        // createFullcalendar(data)
     })
 
     $(document).on('click', 'a.btn-detail-meeting', function() {
         let id = $(this).attr('data-id')
-        get_data_draft(id)
+        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+            id, domain);
+        get_data_draft(url_draft)
             .then((data) => {
                 let dataDefault;
                 if (data.length) {
@@ -327,7 +362,9 @@ $(document).ready(function() {
 
     $(document).on('click', 'a.btn-draft-meeting', function() {
         let id = $(this).attr('data-id')
-        get_data_draft(id)
+        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+            id, domain);
+        get_data_draft(url_draft)
             .then((data) => {
                 // console.log(data)
                 let dataDefault;
@@ -336,14 +373,16 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "draft"
-                    draft_to_use(dataDefault,type)
+                    draft_to_use(dataDefault, type)
                 }
             })
     })
 
     $(document).on('click', 'a.btn-update-meeting', function() {
         let id = $(this).attr('data-id')
-        get_data_draft(id)
+        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+            id, domain);
+        get_data_draft(url_draft)
             .then((data) => {
                 // console.log(data)
                 let dataDefault;
@@ -352,28 +391,28 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "use"
-                    draft_to_use(dataDefault,type)
+                    draft_to_use(dataDefault, type)
                 }
             })
     })
 
     /**
      *
-     * EVENT CHANGE
+     * ADDITIONAL FUNCTIONS
      *
      */
 
-    $('#user').change(function() {
-        let id = $(this).val()
-        // console.log(id)
-    })
 
-    /* $(document).on('change', '[name=sid_create]', function() {
-            let sid = $('[name=sid_create]').val()
-            $('#modal_create').find('[name=period_create]').attr('data-sid', sid)
-            $('#modal_create').find('[name=sid]').val(sid)
-            get_data_hld_dom(sid)
-        }) */
+    /* function calendarDestroy(calendar, filter = null) {
+        $(calendar).fullCalendar('destroy');
+        $(calendar).empty();
+        if (filter) {
+            createFullcalendar(filter)
+        } else {
+            createFullcalendar()
+        }
+    } */
+
 
     /**
      *
@@ -389,13 +428,14 @@ $(document).ready(function() {
      */
     $(btn_insert).click(function(e) {
         e.preventDefault()
-        let visitor = [],
+        let visitor = [],array=[],dataDefault=[],
             data = new FormData(),
             dataArray = $('#insert-meeting').serializeArray()
 
+            dataArray.forEach(function(item, index) {
+                    dataDefault.push(item);
+                })
         for (var i = 0; i < dataArray.length; i++) {
-            data.append(dataArray[i].name, dataArray[i].value)
-
             if (dataArray[i].name == "insert-type") {
                 data.append("insert-type-id", dataArray[i].value)
                 data.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
@@ -403,9 +443,40 @@ $(document).ready(function() {
             if (dataArray[i].name == "insert-visitor") {
                 visitor.push(dataArray[i].value)
             }
+            array.push(dataArray[i].name, dataArray[i].value)
+            // data.append(dataArray[i].name, dataArray[i].value)
         }
+        // data.append(dataDefault)
+        console.log(array)
+        console.log(array.length)
+        console.log(dataDefault)
+        console.log(dataDefault.length)
+        console.log(data)
+        return false
         data.append("visitor", visitor)
+        /* 
+        $type_id = $data['insert-type-id'];
+            $type_name = $data['insert-type-name'];
+            $event_name = $data['insert-name'];
+            $staff_id = $data['insert-head'];
+            $event_description = $data['insert-description'];
+            $date_begin = $data['insert-dates'];
+            $date_end = $data['insert-datee'];
+            $time_begin = $data['insert-times'];
+            $time_end = $data['insert-timee'];
+            $rooms_id = $data['insert-rooms-id'];
+            $rooms_name = $data['insert-rooms-name'];
+            $car_id = $data['insert-car-id'];
+            $car_name = $data['insert-car-name'];
+            $driver_id = $data['insert-driver-id'];
+            $driver_name = $data['insert-driver-name'];
+        */
+        /* if (dataArray.length < 10) {
+            swal_alert('error', 'ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบ')
+        } else {
+
         insert_meeting(data, "calendar")
+        } */
     })
 
     /**
@@ -748,82 +819,7 @@ $(document).ready(function() {
      * #
      */
 
-    /**
-     * #
-     * function get data
-     * #
-     */
 
-    createFullcalendar()
-    createDraftModal()
-
-    async function get_data(array = []) {
-        let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
-        let response = await fetch(url_calendar, {
-            method: 'post',
-            body: array
-        })
-
-        return response.json()
-    }
-
-    async function get_data_draft(id = '') {
-        let url_calendar = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
-            id,
-            domain);
-        let response = await fetch(url_calendar, {})
-
-        return response.json()
-    }
-
-    function createDraftModal(id) {
-        get_data_draft(id)
-            .then((data) => {
-                let dataDefault = [];
-                if (data) {
-                    data.forEach(function(item, index) {
-                        dataDefault.push(item);
-                    })
-                    detail_draft(dataDefault)
-                }
-            })
-    }
-
-    function createFullcalendar(array = []) {
-        get_data(array)
-            .then((data) => {
-                // console.log(data)
-                let dataDefault = [];
-                if (data) {
-                    data.forEach(function(item, index) {
-                        dataDefault.push(item);
-                    })
-                }
-                $('#calendar').fullCalendar({
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
-                    },
-                    editable: true,
-                    eventLimit: true, // allow "more" link when too many events
-                    events: dataDefault,
-                    timeFormat: "H:mm",
-                    // droppable: true, // this allows things to be dropped onto the calendar !!!
-                    // selectable: true,
-
-                    /* drop: function(date) {
-                        calendarDrop($(this), date);
-                    }, */
-                    // select: function(start, end, allDay) {
-                    //     modal_insert(start, end, allDay);
-                    // },
-                    eventClick: function(calEvent, jsEvent, view) {
-                        detail(calEvent, jsEvent, view);
-                    },
-                });
-            })
-    }
     /**
      * #
      * #
@@ -832,4 +828,5 @@ $(document).ready(function() {
 </script>
 <?php
 include APPPATH . "views/script/crud_modal.php";
+include APPPATH . "views/script/calendar.php";
 ?>

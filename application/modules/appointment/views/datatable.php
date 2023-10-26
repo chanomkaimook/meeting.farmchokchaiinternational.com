@@ -757,7 +757,7 @@ $(document).ready(function() {
                 }
             },
             autoWidth: false,
-            // "order": [],
+            "order": [],
             columns: [{
                     "data": "HEAD_FULLNAME"
                 },
@@ -765,10 +765,10 @@ $(document).ready(function() {
                     "data": "EVENT_NAME"
                 },
                 {
-                    "data": "DATE_BEGIN"
+                    "data": "DATE_BEGIN_SHOW"
                 },
                 {
-                    "data": "TIME_BEGIN"
+                    "data": "TIME_BEGIN_SHOW"
                 },
                 {
                     "data": "USER_START_FULLNAME"
@@ -782,32 +782,6 @@ $(document).ready(function() {
             ],
             "createdRow": function(row, data, index) {
                 let table_btn_name =
-                /* <li class="dropdown d-none d-lg-block">
-                                            <a class="text-primary nav-link dropdown-toggle mr-0" data-toggle="dropdown"
-                                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                                                <i class="mdi mdi-dots-vertical"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#detail-modal-meeting"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">รายละเอียด</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" data-toggle="modal" data-target="#update-modal-meeting"
-                                                    class="dropdown-item notify-item">
-                                                    <span class="align-middle">แก้ไข</span>
-                                                </a>
-
-                                                <!-- item-->
-                                                <a href="#" class="dropdown-item notify-item btn-delete" data-id="3">
-                                                    <span class="align-middle">ลบ</span>
-                                                </a>
-
-                                            </div>
-                                        </li>
-                 */
                     `
                     <div class="btn-group dropdown">
                     <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">

@@ -1,46 +1,47 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 
-//	convert thai date
-//	@param	date	@date = date yyyy-mm-dd
-//	@param	typereturn	@text = [date , datetime]
-//	return datetime TH
+//    convert thai date
+//    @param    date    @date = date yyyy-mm-dd
+//    @param    typereturn    @text = [date , datetime]
+//    return datetime TH
 //
-function toThaiDateTimeString($date, $typereturn=null)
+function toThaiDateTimeString($date, $typereturn = null)
 {
 
-  $thai_day_arr = array("อา", "จ", "อ", "พ", "พฤ", "ศ", "ส");
-  $thai_month_arr = array(
-    "00" => "",
-    "01" => "ม.ค",
-    "02" => "ก.พ",
-    "03" => "มี.ค",
-    "04" => "เม.ย",
-    "05" => "พ.ค",
-    "06" => "มิ.ย",
-    "07" => "ก.ค",
-    "08" => "ส.ค",
-    "09" => "ก.ย",
-    "10" => "ต.ค",
-    "11" => "พ.ย",
-    "12" => "ธ.ค"
-  );
+    $thai_day_arr = array("อา","จ","อ","พ","พฤ","ศ","ส");
+    $thai_month_arr = array(
+        "00" => "",
+        "01" => "ม.ค",
+        "02" => "ก.พ",
+        "03" => "มี.ค",
+        "04" => "เม.ย",
+        "05" => "พ.ค",
+        "06" => "มิ.ย",
+        "07" => "ก.ค",
+        "08" => "ส.ค",
+        "09" => "ก.ย",
+        "10" => "ต.ค",
+        "11" => "พ.ย",
+        "12" => "ธ.ค",
+    );
 
-  $time = strtotime($date);
-  $time_day = date("j", $time);
-  $time_month = date("m", $time);
-  $time_year = date("Y", $time);
+    $time = strtotime($date);
+    $time_day = date("w", $time);
+    $time_date = date("j", $time);
+    $time_month = date("m", $time);
+    $time_year = date("Y", $time);
 
-  $thai_date_return = $time_day . " " . $thai_month_arr[$time_month] . " " . $time_year;
-  $thai_time_return = date('H:i:s', $time);
+    $thai_date_return = $thai_day_arr[$time_day] . ". " . $time_date . " " . $thai_month_arr[$time_month] . " " . $time_year;
+    $thai_time_return = date('H:i:s', $time);
 
-  if ($typereturn == "datetime") {
-    $result = $thai_date_return . " " . $thai_time_return;
-  } else {
-    $result = $thai_date_return;
-  }
+    if ($typereturn == "datetime") {
+        $result = $thai_date_return . " " . $thai_time_return;
+    } else {
+        $result = $thai_date_return;
+    }
 
-  return $result;
+    return $result;
 }
 
 /**
@@ -52,13 +53,13 @@ function toThaiDateTimeString($date, $typereturn=null)
  */
 function toTime($time = null, $typereturn = 'H:i')
 {
-  $result = "";
+    $result = "";
 
-  if ($time) {
-    $result = date($typereturn, strtotime($time));
-  }
+    if ($time) {
+        $result = date($typereturn, strtotime($time));
+    }
 
-  return $result;
+    return $result;
 }
 
 /**
@@ -70,7 +71,7 @@ function toTime($time = null, $typereturn = 'H:i')
  */
 function TimeDiff($strTime1, $strTime2)
 {
-  return (strtotime($strTime2) - strtotime($strTime1)) /  (60 * 60); // 1 Hour =  60*60
+    return (strtotime($strTime2) - strtotime($strTime1)) / (60 * 60); // 1 Hour =  60*60
 }
 
 /**
@@ -81,32 +82,32 @@ function TimeDiff($strTime1, $strTime2)
  */
 function dateRange_fromDate(string $dateset = null)
 {
-  $start_week = '';
-  $end_week = '';
+    $start_week = '';
+    $end_week = '';
 
-  if ($dateset) {
-  
-    $date = new DateTime($dateset);
-    $numberToWeek = (int) $date->format("N");
-    if ($numberToWeek == 1) {
-      $start_week = strtotime($dateset);
-    } else {
-      $previous_week = strtotime($dateset);
-      $start_week = strtotime("last monday", $previous_week);
+    if ($dateset) {
+
+        $date = new DateTime($dateset);
+        $numberToWeek = (int) $date->format("N");
+        if ($numberToWeek == 1) {
+            $start_week = strtotime($dateset);
+        } else {
+            $previous_week = strtotime($dateset);
+            $start_week = strtotime("last monday", $previous_week);
+        }
+
+        $end_week = strtotime("next sunday", $start_week);
+
+        $start_week = date("Y-m-d", $start_week);
+        $end_week = date("Y-m-d", $end_week);
     }
 
-    $end_week = strtotime("next sunday", $start_week);
+    $result = array(
+        'start' => $start_week,
+        'end' => $end_week,
+    );
 
-    $start_week = date("Y-m-d", $start_week);
-    $end_week = date("Y-m-d", $end_week);
-  }
-
-  $result = array(
-    'start' => $start_week,
-    'end' => $end_week,
-  );
-
-  return $result;
+    return $result;
 }
 
 /**
@@ -117,22 +118,22 @@ function dateRange_fromDate(string $dateset = null)
  */
 function monthRange_fromDate(string $dateset = null)
 {
-  $start = '';
-  $end = '';
+    $start = '';
+    $end = '';
 
-  if ($dateset) {
-  
-    $start = date("Y-m-01", strtotime($dateset));
-    $end = date("Y-m-t", strtotime($dateset));
-    // $end = new \DateTime('last day of this month');
-  }
+    if ($dateset) {
 
-  $result = array(
-    'start' => $start,
-    'end' => $end,
-  );
+        $start = date("Y-m-01", strtotime($dateset));
+        $end = date("Y-m-t", strtotime($dateset));
+        // $end = new \DateTime('last day of this month');
+    }
 
-  return $result;
+    $result = array(
+        'start' => $start,
+        'end' => $end,
+    );
+
+    return $result;
 }
 
 /**
@@ -143,19 +144,19 @@ function monthRange_fromDate(string $dateset = null)
  */
 function yearRange_fromDate(string $dateset = null)
 {
-  $start = '';
-  $end = '';
+    $start = '';
+    $end = '';
 
-  if ($dateset) {
-  
-    $start = date("Y-01-01", strtotime($dateset));
-    $end = date("Y-12-31", strtotime($dateset));
-  }
+    if ($dateset) {
 
-  $result = array(
-    'start' => $start,
-    'end' => $end,
-  );
+        $start = date("Y-01-01", strtotime($dateset));
+        $end = date("Y-12-31", strtotime($dateset));
+    }
 
-  return $result;
+    $result = array(
+        'start' => $start,
+        'end' => $end,
+    );
+
+    return $result;
 }

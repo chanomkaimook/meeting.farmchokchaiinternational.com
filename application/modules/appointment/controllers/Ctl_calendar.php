@@ -11,7 +11,7 @@ class Ctl_calendar extends MY_Controller
 
         $this->_title = 'ตารางนัดหมาย';
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
-        $this->load->libraries(array('generate_event_code', 'crud_valid'));
+        $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
     }
 
@@ -80,8 +80,8 @@ class Ctl_calendar extends MY_Controller
             $status_vis = "ยกเลิก";
             $status_child = "ยกเลิก";
         } else if ($status_complete == 5) {
-            $color = $status_process;
-            $color_child = $status_process;
+            $color = $status_pending;
+            $color_child = $status_pending_soft;
             $status = "กำลังดำเนินการ";
             $status_vis = "กำลังดำเนินการ";
             $status_child = "กำลังดำเนินการ";
@@ -89,13 +89,13 @@ class Ctl_calendar extends MY_Controller
 
         //
         // ตรวจสอบ สถานะ
-        if ($child == "me" || $child == "owner") {
+        if ($child == "me" || $child == "child") {
             $event_color = $color;
             $event_status = $status;
         } else if ($child == "other") {
             $event_color = $color_child;
             $event_status = $status;
-        } else if ($child == "child") {
+        } else if ($child == "owner") {
             $event_color = $color_child;
             $event_status = $status_child;
         } else if ($child == "vis") {
@@ -129,11 +129,12 @@ class Ctl_calendar extends MY_Controller
                     $state = 'child';
                 }
 
-                if ($dataVal['VIS_STATUS_COMPLETE']) {
-                    $attr = $this->status_color($dataVal["VIS_STATUS_COMPLETE"], $state);
-                } else {
-                    $attr = $this->status_color($dataVal["STATUS_COMPLETE"], $state);
-                }
+                // if ($dataVal['VIS_STATUS_COMPLETE']) {
+                //     $attr = $this->status_color($dataVal["VIS_STATUS_COMPLETE"], $state);
+                // } else {
+                //     $attr = $this->status_color($dataVal["STATUS_COMPLETE"], $state);
+                // }
+                $attr = $this->status_color($dataVal["STATUS_COMPLETE"], $state);
 
                 $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                 $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
@@ -143,7 +144,7 @@ class Ctl_calendar extends MY_Controller
                 $Calendar[$i]['USER_START_NAME'] = $emp[0]->NAME;
                 $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
                 $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-                $Calendar[$i]['end'] = $dataVal["DATE_END"];
+                $Calendar[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1days"));
                 $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
                 $Calendar[$i]['className'] = $attr['color'];
                 $Calendar[$i]['STATUS_SHOW'] = $attr['status'];

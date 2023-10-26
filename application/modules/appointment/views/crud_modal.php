@@ -686,7 +686,7 @@ foreach ($time as $value) {
                 <h4 class="modal-title-status text-danger d-none"></h4>
                 <h4 class="modal-title-status text-success d-none"></h4>
                 <h4 class="modal-title-status text-secondary d-none"></h4>
-                <h4 class="modal-title-status text-orange d-none"></h4>
+                <!-- <h4 class="modal-title-status text-orange d-none"></h4> -->
                 <!-- </div> -->
                 <!-- </div> -->
             </div>
@@ -704,7 +704,7 @@ foreach ($time as $value) {
                         <div class="col-6">
                             <div class="cardbox text-center">
                                 <button type="button"
-                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light delete-meeting item-cardbox"
+                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting"
                                     data-dismiss="modal">ลบ</button>
                             </div>
                         </div>

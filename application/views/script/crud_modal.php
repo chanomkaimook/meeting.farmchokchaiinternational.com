@@ -1,11 +1,20 @@
 <script>
 $(document).ready(function() {
+
+    /**
+     *
+     * ADDITIONAL FUNCTIONS
+     *
+     */
+
     $('body').on('hidden.bs.modal', function() {
         if ($('.modal[aria-hidden=true]').length > 0) {
             $('body').addClass('modal-open');
         }
     })
+
 })
+
 /* ********** EVENT CHANGE ********** */
 $('select[name=insert-rooms-id]').change(function() {
     let id = $(this).val()
@@ -40,7 +49,8 @@ $('.update-meeting').click(function() {
     $("#detail-modal-meeting").modal("hide")
 })
 
-/* ********** FUNCTION ********** */
+/* ********** ADDITIONAL FUNCTION ********** */
+
 function modalShow(modal, obj, val) {
     let length = 0;
     if (modal && obj.length && val.length) {
@@ -173,61 +183,15 @@ function draft_to_use(data, type) {
     $(modal).find('p.user-start-name').html(user_start)
 
     /* ************** ACTION HEADER *************** */
-    $('.modal-header').find('h4.modal-title-status').text(data.STATUS_SHOW)
-    if (data.class == "draft") {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').removeClass('d-none')
-        $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(data.STATUS_SHOW)
-    } else if (data.STATUS_COMPLETE == 1) {
-        $('.modal-footer').find('.approve-footer').removeClass('d-none')
-        $('.modal-header').find('.text-warning').removeClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').addClass('d-none')
-        $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(data.STATUS_SHOW)
-    } else if (data.STATUS_COMPLETE == 2) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').removeClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').addClass('d-none')
-        $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(data.STATUS_SHOW)
-    } else if (data.STATUS_COMPLETE == 3) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').removeClass('d-none')
-        $('.modal-header').find('.text-secondary').addClass('d-none')
-        $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-danger').html(data.STATUS_SHOW)
-    } else if (data.STATUS_COMPLETE == 4) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').removeClass('d-none')
-        $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-secondary').html(data.STATUS_SHOW)
-    } else if (data.STATUS_COMPLETE == 5) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').addClass('d-none')
-        $('.modal-header').find('.text-orange').removeClass('d-none')
-        $('.modal-header').find('.text-orange').html(data.STATUS_SHOW)
-    }
+    $('.modal-header').find('.text-secondary').removeClass('d-none').text('นัดหมาย/จองห้องประชุม')
+    // $('.modal-header').find('h4.modal-title-status')
+    $('.modal-footer').find('.approve-footer').addClass('d-none')
     /* ************** END ACTION HEADER *************** */
 }
 
 function detail(calEvent, jsEvent, view) {
     let vis = '',
+        status_header = '',
         vis_html = '',
         btn_html = '',
         modal_detail, obj_detail = [],
@@ -249,14 +213,14 @@ function detail(calEvent, jsEvent, view) {
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-meeting';
 
-
+        status_header = 'แบบร่างการนัดหมาย/จองห้องประชุม'
     } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 4) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-car'
 
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-car'
-
+        status_header = 'แบบร่างการจองรถ'
     }
 
     $(modal_detail).modal("show")
@@ -346,15 +310,15 @@ function detail(calEvent, jsEvent, view) {
 
     /* ************** ACTION HEADER *************** */
     // console.log(calEvent)
-    $('.modal-header').find('h4.modal-title-status').text(calEvent.STATUS_SHOW)
+    $('.modal-header').find('h4.modal-title-status').text(calEvent.STATUS_COMPLETE_NAME)
     if (calEvent.class == "draft") {
+        $('.modal-header').find('.text-secondary').removeClass('d-none').text(status_header)
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
         $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').removeClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+        // $('.modal-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
     } else if (calEvent.STATUS_COMPLETE == 1) {
         $('.modal-footer').find('.approve-footer').removeClass('d-none')
         $('.modal-header').find('.text-warning').removeClass('d-none')
@@ -362,7 +326,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+        $('.modal-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
     } else if (calEvent.STATUS_COMPLETE == 2) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
@@ -370,7 +334,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-warning').html(calEvent.STATUS_SHOW)
+        $('.modal-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
     } else if (calEvent.STATUS_COMPLETE == 3) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
@@ -378,7 +342,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').removeClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-danger').html(calEvent.STATUS_SHOW)
+        $('.modal-header').find('.text-danger').html(calEvent.STATUS_COMPLETE_NAME)
     } else if (calEvent.STATUS_COMPLETE == 4) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
@@ -386,7 +350,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').removeClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
-        $('.modal-header').find('.text-secondary').html(calEvent.STATUS_SHOW)
+        $('.modal-header').find('.text-secondary').html(calEvent.STATUS_COMPLETE_NAME)
     } else if (calEvent.STATUS_COMPLETE == 5) {
         $('.modal-footer').find('.approve-footer').addClass('d-none')
         $('.modal-header').find('.text-warning').addClass('d-none')
@@ -394,7 +358,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-secondary').addClass('d-none')
         $('.modal-header').find('.text-orange').removeClass('d-none')
-        $('.modal-header').find('.text-orange').html(calEvent.STATUS_SHOW)
+        $('.modal-header').find('.text-orange').html(calEvent.STATUS_COMPLETE_NAME)
     }
     /* ************** END ACTION HEADER *************** */
 }
@@ -433,7 +397,7 @@ function detail_draft(data) {
                             </a>
 
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item btn-delete" >
+                            <a href="" class="dropdown-item delete-meeting" data-event-id='${item.ID}' data-event-code='${item.CODE}'>
                                 <span class="align-middle">ลบ</span>
                             </a>
                         </div>
@@ -470,7 +434,7 @@ function detail_draft(data) {
                             </a>
 
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item btn-delete" >
+                            <a class="dropdown-item delete-meeting" data-dismiss="modal" data-event-id='${item.ID}' data-event-code='${item.CODE}'>
                                 <span class="align-middle">ลบ</span>
                             </a>
                         </div>
@@ -488,9 +452,10 @@ function swal_alert(icon, title, text) {
     $('.modal').modal('hide')
     Swal.fire(title, text, icon).then((result) => {
         if (result.isConfirmed) {
-            // delete_meeting(data)
-            location.reload();
+
+            // calendarDestroy()
         }
+        calendarDestroy('#calendar', url_calendar)
     })
 
 }
@@ -507,6 +472,7 @@ function swal_delete(data) {
         cancelButtonText: 'ยกเลิก'
     }).then((result) => {
         if (result.isConfirmed) {
+            // calendarDestroy()
             delete_meeting(data)
             // if (data.vid) {
             //     reject_visitor(data)
@@ -538,8 +504,11 @@ function swal_confirm(text, color, func, data) {
             } else if (func == "restore") {
                 restore(data)
             }
+
         }
     })
+    // calendarDestroy('#calendar')
+
     $('.modal').modal('hide')
 }
 

@@ -11,7 +11,7 @@ class Ctl_datatable extends MY_Controller
 
         $this->_title = 'ตารางนัดหมาย';
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
-        $this->load->libraries(array('generate_event_code', 'crud_valid'));
+        $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
     }
 
     public function index()
@@ -113,7 +113,7 @@ class Ctl_datatable extends MY_Controller
             $status_child = "รออนุมัติ";
         } else if ($status_complete == 2) {
             $color = $status_success;
-            $color_child = $status_success_soft;
+            $color_child = $status_success;
             $status = "ดำเนินการสำเร็จ";
             $status_vis = "เข้าร่วม";
             $status_child = "อนุมัติ";
@@ -295,6 +295,10 @@ class Ctl_datatable extends MY_Controller
                 $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
 
                 $Calendar[$i] = $dataVal;
+                $Calendar[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
+                $Calendar[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
+                $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i',strtotime($dataVal['TIME_BEGIN']));
+                $Calendar[$i]['TIME_END_SHOW'] = date('H:i',strtotime($dataVal['TIME_END']));
                 $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
                 $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
                 $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
@@ -307,6 +311,7 @@ class Ctl_datatable extends MY_Controller
                 $Calendar[$i]['className'] = $attr['color'];
                 $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
                 $Calendar[$i]['class'] = $state;
+                // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
 
                 $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                 $optionnals['join'] = true;
@@ -592,9 +597,9 @@ class Ctl_datatable extends MY_Controller
             }
         }
 
-                /* if ($optionnal_where['vis']) {
-                } */
-        $optionnal_v['where'] = $optionnal_where['vis'];
+        if ($optionnal_where['vis']) {
+            $optionnal_vis['where'] = $optionnal_where['vis'];
+        }
         $optionnal_vis['select'] = "event_visitor.EVENT_VISITOR,event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
         $optionnal_vis['where']['event_visitor.event_visitor'] = 1;
         $optionnal_vis['join'] = true;
