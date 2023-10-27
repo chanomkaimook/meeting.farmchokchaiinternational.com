@@ -245,12 +245,12 @@ function detail(calEvent, jsEvent, view) {
     obj_update.push('[name=item_id]', '[name=code]', '[name=update-type-id]', '[name=update-type-name]',
         '[name=update-name]',
         '[name=update-head]', '[name=update-description]', '[name=update-dates]', '[name=update-datee]',
-        'select[name=update-times]', 'select[name=update-timee]', '[name=update-rooms-id]')
+        'select[name=update-times]', 'select[name=update-timee]', '[name=update-rooms-id]', '[name=update-rooms-name]')
 
     val_update.push(calEvent.ID, calEvent.CODE, calEvent.TYPE_ID, calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent
         .STAFF_ID, calEvent
         .EVENT_DESCRIPTION, calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END, calEvent
-        .ROOMS_ID)
+        .ROOMS_ID, calEvent.ROOMS_NAME)
 
     modalShow(modal_update, obj_update, val_update)
     /* ************** END UPDATE *************** */
@@ -454,6 +454,7 @@ function swal_alert(icon, title, text) {
         if (result.isConfirmed) {
 
             // calendarDestroy()
+            // console.log(url_calendar)
         }
         calendarDestroy('#calendar', url_calendar)
     })

@@ -72,7 +72,7 @@ foreach ($staff as $data) {
                                 placeholder="ถึงวันที่">
                         </div>
 
-                        </div>
+                    </div>
                     <div class="d-flex flex-row justify-content-end">
                         <div class="pl-1">
                             <select class="form-control form-white" name="times">
@@ -175,9 +175,23 @@ foreach ($time as $val) {
 include "crud_modal.php";
 ?>
 <script>
-$(document).ready(function() {
-    let my_id = $('#my-id').val();
+let url_datatable = new URL('appointment/ctl_datatable/get_data', domain);
+url_datatable.searchParams.append('id', $('#my-id').val())
 
+var filterArray = []
+filterArray.push({
+    dates: null,
+    datee: null,
+    times: null,
+    timee: null,
+    user: null,
+    permit: null,
+    status: null,
+    type: null,
+})
+$(document).ready(function() {
+    // let my_id = $('#my-id').val();
+    createDatatable(url_datatable, '#data_table', filterArray)
     /**
      * Button modal
      *
@@ -281,10 +295,22 @@ $(document).ready(function() {
      */
 
     $(btn_search).click(function() {
-        
-        $('#data_table').DataTable().ajax.reload()
 
-        // createDatatable()
+        $('#data_table').DataTable().ajax.reload()
+        // createDatatable(url_datatable, '#data_table')
+        /* filterArray = []
+        filterArray.push({
+            dates: $('#hidden_dates').val(),
+            datee: $('#hidden_datee').val(),
+            times: $('#hidden_times').val(),
+            timee: $('#hidden_timee').val(),
+            user: $('#hidden_user').val(),
+            permit: $('#hidden_permit').val(),
+            status: $('#hidden_status').val(),
+            type: $('#hidden_type').val(),
+        }) */
+        // console.log(url_datatable)
+        // console.log(filterArray)
     })
 
     $(document).on('click', 'a.btn-detail-meeting', function() {
@@ -312,7 +338,7 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "draft"
-                    draft_to_use(dataDefault,type)
+                    draft_to_use(dataDefault, type)
                 }
             })
     })
@@ -328,7 +354,7 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "use"
-                    draft_to_use(dataDefault,type)
+                    draft_to_use(dataDefault, type)
                 }
             })
     })
@@ -731,91 +757,89 @@ $(document).ready(function() {
      *
      */
     // let url = new URL('appointment/ctl_datatable/get_data', domain);
-    createDatatable()
 
-    function createDatatable(data = []) {
 
-        let url_datatable = new URL('appointment/ctl_datatable/get_data', domain);
-        url_datatable.searchParams.append('id', my_id)
+    // function createDatatable(data = []) {
 
-        // console.log('appointment/ctl_datatable/get_data?id=' + my_id, domain)
-        // console.log(url_datatable)
-        $('#data_table').DataTable({
-            ajax: {
-                url: url_datatable,
-                type: "post",
-                dataType: "json",
-                data: function(d) {
-                    d.dates = $('#hidden_dates').val();
-                    d.datee = $('#hidden_datee').val();
-                    d.times = $('#hidden_times').val();
-                    d.timee = $('#hidden_timee').val();
-                    d.user = $('#hidden_user').val();
-                    d.permit = $('#hidden_permit').val();
-                    d.status = $('#hidden_status').val();
-                    d.type = $('#hidden_type').val();
-                }
-            },
-            autoWidth: false,
-            "order": [],
-            columns: [{
-                    "data": "HEAD_FULLNAME"
-                },
-                {
-                    "data": "EVENT_NAME"
-                },
-                {
-                    "data": "DATE_BEGIN_SHOW"
-                },
-                {
-                    "data": "TIME_BEGIN_SHOW"
-                },
-                {
-                    "data": "USER_START_FULLNAME"
-                },
-                {
-                    "data": "STATUS_SHOW"
-                },
-                {
-                    "data": "ID"
-                },
-            ],
-            "createdRow": function(row, data, index) {
-                let table_btn_name =
-                    `
-                    <div class="btn-group dropdown">
-                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="mdi mdi-dots-vertical"></i>
-                    </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <!-- item-->
-                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-dismiss="modal">
-                                <span class="align-middle">รายละเอียด</span>
-                            </a>
 
-                            <!-- item-->
-                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
-                                <span class="align-middle">แก้ไข</span>
-                            </a>
+    //     // console.log('appointment/ctl_datatable/get_data?id=' + my_id, domain)
+    //     // console.log(url_datatable)
+    //     $('#data_table').DataTable({
+    //         ajax: {
+    //             url: url_datatable,
+    //             type: "post",
+    //             dataType: "json",
+    //             data: function(d) {
+    //                 d.dates = $('#hidden_dates').val();
+    //                 d.datee = $('#hidden_datee').val();
+    //                 d.times = $('#hidden_times').val();
+    //                 d.timee = $('#hidden_timee').val();
+    //                 d.user = $('#hidden_user').val();
+    //                 d.permit = $('#hidden_permit').val();
+    //                 d.status = $('#hidden_status').val();
+    //                 d.type = $('#hidden_type').val();
+    //             }
+    //         },
+    //         autoWidth: false,
+    //         "order": [],
+    //         columns: [{
+    //                 "data": "HEAD_FULLNAME"
+    //             },
+    //             {
+    //                 "data": "EVENT_NAME"
+    //             },
+    //             {
+    //                 "data": "DATE_BEGIN_SHOW"
+    //             },
+    //             {
+    //                 "data": "TIME_BEGIN_SHOW"
+    //             },
+    //             {
+    //                 "data": "USER_START_FULLNAME"
+    //             },
+    //             {
+    //                 "data": "STATUS_SHOW"
+    //             },
+    //             {
+    //                 "data": "ID"
+    //             },
+    //         ],
+    //         "createdRow": function(row, data, index) {
+    //             let table_btn_name =
+    //                 `
+    //                 <div class="btn-group dropdown">
+    //                 <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+    //                     <i class="mdi mdi-dots-vertical"></i>
+    //                 </a>
+    //                     <div class="dropdown-menu dropdown-menu-right">
+    //                         <!-- item-->
+    //                         <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-dismiss="modal">
+    //                             <span class="align-middle">รายละเอียด</span>
+    //                         </a>
 
-                            <!-- item-->
-                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-delete" >
-                                <span class="align-middle">ลบ</span>
-                            </a>
-                        </div>
+    //                         <!-- item-->
+    //                         <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
+    //                             <span class="align-middle">แก้ไข</span>
+    //                         </a>
 
-                </div>
+    //                         <!-- item-->
+    //                         <a href="" data-id="${data['ID']}" class="dropdown-item btn-delete" >
+    //                             <span class="align-middle">ลบ</span>
+    //                         </a>
+    //                     </div>
 
-                 `
-                $('td', row).eq(6).html(table_btn_name)
-            },
+    //             </div>
 
-            dom: datatable_dom,
-            buttons: datatable_button,
+    //              `
+    //             $('td', row).eq(6).html(table_btn_name)
+    //         },
 
-        });
+    //         dom: datatable_dom,
+    //         buttons: datatable_button,
 
-    }
+    //     });
+
+    // }
 
     /**
      *
@@ -834,4 +858,5 @@ $(document).ready(function() {
 
 <?php
 include APPPATH . "views/script/crud_modal.php";
+include APPPATH . "views/script/datatable.php";
 ?>

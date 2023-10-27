@@ -402,16 +402,82 @@ $(document).ready(function() {
      *
      */
 
+    function valid(type = null, data = []) {
+        let dataAppend = new FormData(),
+            visitor = [],
+            countVal = 0;
+        if (type == 'insert') {
+            array = ['insert-name',
+                'insert-head',
+                'insert-rooms-id',
+                'insert-description',
+                'insert-dates',
+                'insert-datee',
+                'insert-times',
+                'insert-timee'
+            ]
+            for (let i = 0; i < array.length; i++) {
+                for (let s = 0; s < data.length; s++) {
+                    if (data[s].name == array[i] && data[s].value != "") {
+                        countVal++;
+                    }
+                }
+            }
+            if (countVal == array.length) {
+                for (let i = 0; i < data.length; i++) {
 
-    /* function calendarDestroy(calendar, filter = null) {
-        $(calendar).fullCalendar('destroy');
-        $(calendar).empty();
-        if (filter) {
-            createFullcalendar(filter)
-        } else {
-            createFullcalendar()
+                    if (data[i].name == "insert-type") {
+                        dataAppend.append("insert-type-id", data[i].value)
+                        dataAppend.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
+                    }
+                    if (data[i].name == "insert-visitor") {
+                        visitor.push(data[i].value)
+                    }
+                    dataAppend.append(data[i].name, data[i].value)
+
+                }
+                dataAppend.append("visitor", visitor)
+                insert_meeting(dataAppend, "calendar")
+            }
+        } else if (type == 'update') {
+            array = ['item_id',
+                'code',
+                'update-type-id',
+                'update-type-name',
+                'update-name',
+                'update-head',
+                'update-rooms-id',
+                'update-rooms-name',
+                'update-description',
+                'update-dates',
+                'update-datee',
+                'update-times',
+                'update-timee'
+            ]
+            for (let i = 0; i < array.length; i++) {
+                for (let s = 0; s < data.length; s++) {
+                    if (data[s].name == array[i] && data[s].value != "") {
+                        countVal++;
+                    }
+                }
+            }
+            if (countVal == array.length) {
+
+                for (var i = 0; i < array.length; i++) {
+                    if (data[i].name == "update-visitor") {
+                        visitor.push(dataAppend[i].value)
+                    }
+                    dataAppend.append(data[i].name, data[i].value)
+                }
+                dataAppend.append("visitor", visitor)
+                update_meeting(dataAppend, "calendar")
+
+            }
         }
-    } */
+        if (countVal < array.length) {
+            swal_alert('error', 'ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบก่อนบันทึก')
+        }
+    }
 
 
     /**
@@ -428,55 +494,16 @@ $(document).ready(function() {
      */
     $(btn_insert).click(function(e) {
         e.preventDefault()
-        let visitor = [],array=[],dataDefault=[],
+        let visitor = [],
+            dataDefault = [],
             data = new FormData(),
+
             dataArray = $('#insert-meeting').serializeArray()
 
-            dataArray.forEach(function(item, index) {
-                    dataDefault.push(item);
-                })
-        for (var i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].name == "insert-type") {
-                data.append("insert-type-id", dataArray[i].value)
-                data.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
-            }
-            if (dataArray[i].name == "insert-visitor") {
-                visitor.push(dataArray[i].value)
-            }
-            array.push(dataArray[i].name, dataArray[i].value)
-            // data.append(dataArray[i].name, dataArray[i].value)
-        }
-        // data.append(dataDefault)
-        console.log(array)
-        console.log(array.length)
-        console.log(dataDefault)
-        console.log(dataDefault.length)
-        console.log(data)
-        return false
-        data.append("visitor", visitor)
-        /* 
-        $type_id = $data['insert-type-id'];
-            $type_name = $data['insert-type-name'];
-            $event_name = $data['insert-name'];
-            $staff_id = $data['insert-head'];
-            $event_description = $data['insert-description'];
-            $date_begin = $data['insert-dates'];
-            $date_end = $data['insert-datee'];
-            $time_begin = $data['insert-times'];
-            $time_end = $data['insert-timee'];
-            $rooms_id = $data['insert-rooms-id'];
-            $rooms_name = $data['insert-rooms-name'];
-            $car_id = $data['insert-car-id'];
-            $car_name = $data['insert-car-name'];
-            $driver_id = $data['insert-driver-id'];
-            $driver_name = $data['insert-driver-name'];
-        */
-        /* if (dataArray.length < 10) {
-            swal_alert('error', 'ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบ')
-        } else {
-
-        insert_meeting(data, "calendar")
-        } */
+        dataArray.forEach(function(item, index) {
+            dataDefault.push(item);
+        })
+        valid("insert", dataDefault)
     })
 
     /**
@@ -521,19 +548,15 @@ $(document).ready(function() {
     $(btn_update).click(function(e) {
         e.preventDefault()
         let visitor = [],
+            dataDefault = [],
             data = new FormData(),
+
             dataArray = $('#update-meeting').serializeArray()
 
-        for (var i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].name == "update-visitor") {
-                visitor.push(dataArray[i].value)
-            } else {
-
-            }
-            data.append(dataArray[i].name, dataArray[i].value)
-        }
-        data.append("visitor", visitor)
-        update_meeting(data, "calendar")
+        dataArray.forEach(function(item, index) {
+            dataDefault.push(item);
+        })
+        valid("update", dataDefault)
     })
 
     /**
@@ -555,7 +578,6 @@ $(document).ready(function() {
         data.append('item_code', code)
 
         swal_delete(data)
-        // $("#detail-modal-meeting").modal("hide")
     })
 
     $(document).on('click', btn_reject, function(e) {

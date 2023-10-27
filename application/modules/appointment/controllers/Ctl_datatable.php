@@ -267,76 +267,83 @@ class Ctl_datatable extends MY_Controller
     public function foreach_loop($dataShow)
     {
         $i = 0;
+        $Calendar = array();
+
         // print_r($dataShow);die;
-        foreach ($dataShow as $key => $val) {
-            foreach ($val as $sub_key => $value) {
-                $dataVal = (array) $value;
-                if ($dataVal['VIS_STATUS_COMPLETE']) {
-                    $state = 'vis';
-                } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
-                    $state = "me";
-                } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
-                    $state = 'other';
-                } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] == 1) {
-                    $state = 'owner';
-                } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
-                    $state = 'child';
-                }
+        if($dataShow){
+            foreach ($dataShow as $key => $val) {
 
-                if ($dataVal['VIS_STATUS_COMPLETE']) {
-                    $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
-                } else {
-                    $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-                }
-
-                $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
-
-                $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
-
-                $Calendar[$i] = $dataVal;
-                $Calendar[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
-                $Calendar[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
-                $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i',strtotime($dataVal['TIME_BEGIN']));
-                $Calendar[$i]['TIME_END_SHOW'] = date('H:i',strtotime($dataVal['TIME_END']));
-                $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
-                $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
-                $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
-                $Calendar[$i]['USER_START_NAME'] = $emp[0]->NAME;
-                $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
-                $Calendar[$i]['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
-                $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-                $Calendar[$i]['end'] = $dataVal["DATE_END"];
-                $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
-                $Calendar[$i]['className'] = $attr['color'];
-                $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
-                $Calendar[$i]['class'] = $state;
-                // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
-
-                $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $optionnals['join'] = true;
-                $optionnals['where'] = array(
-                    'event_visitor.event_code' => $dataVal["CODE"],
-                );
-                $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
-                // echo $this->db->last_query();
-                if (count($visitor)) {
-                    $j = 0;
-                    foreach ($visitor as $vis_val) {
-                        $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
-                        $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                        $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                        $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
-                        $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
-                        $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
-
-                        $j++;
+                if($val){
+                    foreach ($val as $sub_key => $value) {
+                        $dataVal = (array) $value;
+                        if ($dataVal['VIS_STATUS_COMPLETE']) {
+                            $state = 'vis';
+                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
+                            $state = "me";
+                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
+                            $state = 'other';
+                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] == 1) {
+                            $state = 'owner';
+                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
+                            $state = 'child';
+                        }
+        
+                        if ($dataVal['VIS_STATUS_COMPLETE']) {
+                            $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
+                        } else {
+                            $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
+                        }
+        
+                        $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
+        
+                        $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
+        
+                        $Calendar[$i] = $dataVal;
+                        $Calendar[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
+                        $Calendar[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
+                        $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i',strtotime($dataVal['TIME_BEGIN']));
+                        $Calendar[$i]['TIME_END_SHOW'] = date('H:i',strtotime($dataVal['TIME_END']));
+                        $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
+                        $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
+                        $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
+                        $Calendar[$i]['USER_START_NAME'] = $emp[0]->NAME;
+                        $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
+                        $Calendar[$i]['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
+                        $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
+                        $Calendar[$i]['end'] = $dataVal["DATE_END"];
+                        $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
+                        $Calendar[$i]['className'] = $attr['color'];
+                        $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
+                        $Calendar[$i]['class'] = $state;
+                        // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
+        
+                        $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $optionnals['join'] = true;
+                        $optionnals['where'] = array(
+                            'event_visitor.event_code' => $dataVal["CODE"],
+                        );
+                        $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
+                        // echo $this->db->last_query();
+                        if (count($visitor)) {
+                            $j = 0;
+                            foreach ($visitor as $vis_val) {
+                                $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
+                                $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
+                                $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
+                                $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                                $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
+                                $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
+        
+                                $j++;
+                            }
+                        }
+                        $i++;
                     }
                 }
-                $i++;
+                // echo "<pre>";
+                // print_r($dataVal);
             }
-            // echo "<pre>";
-            // print_r($dataVal);
         }
         return $Calendar;
     }
