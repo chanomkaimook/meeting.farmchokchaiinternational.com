@@ -288,11 +288,12 @@ class Ctl_datatable extends MY_Controller
                             $state = 'child';
                         }
         
-                        if ($dataVal['VIS_STATUS_COMPLETE']) {
-                            $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
-                        } else {
-                            $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-                        }
+                        // if ($dataVal['VIS_STATUS_COMPLETE']) {
+                        //     $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
+                        // } else {
+                        //     $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
+                        // }
+                        $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
         
                         $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                         $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
@@ -542,6 +543,7 @@ class Ctl_datatable extends MY_Controller
                     $optionnal_where['child']['event.approve_date'] = null;
                     $optionnal_where['child']['event.disapprove_date'] = null;
                     $optionnal_where['child']['event.cancle_date'] = null;
+                    $optionnal_where['child']['event.status_complete'] = 1;
                 } elseif ($status == 2) {
                     $optionnal_where['child']['event.approve_date <>'] = null;
                 } elseif ($status == 3) {

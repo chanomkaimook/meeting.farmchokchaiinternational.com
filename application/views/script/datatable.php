@@ -29,6 +29,7 @@ function createDatatable(url, datatable) {
             }
         },
         autoWidth: false,
+        columnDefs: [ { orderDataType: 'date-time', 'targets': [2] } ],
         "order": [],
         columns: [{
                 "data": "HEAD_FULLNAME"

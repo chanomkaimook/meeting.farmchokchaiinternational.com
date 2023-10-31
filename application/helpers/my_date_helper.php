@@ -32,7 +32,7 @@ function toThaiDateTimeString($date, $typereturn = null)
     $time_month = date("m", $time);
     $time_year = date("Y", $time);
 
-    $thai_date_return = $thai_day_arr[$time_day] . ". " . $time_date . " " . $thai_month_arr[$time_month] . " " . $time_year;
+    $thai_date_return = $thai_day_arr[$time_day] . ". " . $time_date . "/" . $time_month . "/" . $time_year;
     $thai_time_return = date('H:i:s', $time);
 
     if ($typereturn == "datetime") {
