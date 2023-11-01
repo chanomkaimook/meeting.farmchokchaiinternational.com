@@ -3,9 +3,9 @@
 <div class="pl-1">
     <select class="form-control form-white select2" data-toggle="select2" name="type">
         <option>ประเภท</option>
-        <option value="1">นัดหมาย/จองห้องประชุม</option>
         <option value="2">จองรถ</option>
-        <option value="3">แบบร่างการนัดหมาย/จองห้องประชุม</option>
+        <option value="1">จองห้องประชุม</option>
+        <option value="3">นัดหมายกิจกรรม</option>
     </select>
 </div>
 <script>

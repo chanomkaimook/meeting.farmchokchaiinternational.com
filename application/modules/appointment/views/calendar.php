@@ -44,8 +44,8 @@ div.table-responsive {
     min-height: 30rem !important;
 }
 </style>
-<!-- <input type="hidden" name="my-id" id="my-id" value="<?=$_SESSION["user_code"]?>"> -->
-<input type="hidden" name="my-id" id="my-id" value="1">
+<input type="hidden" name="my-id" id="my-id" value="<?=$_SESSION["user_code"]?>">
+<!-- <input type="hidden" name="my-id" id="my-id" value="1"> -->
 <input type="hidden" name="event-id" id="event-id" value="">
 <!-- Button trigger modal -->
 
@@ -54,9 +54,10 @@ div.table-responsive {
 
         <div class="row">
             <div class="col-4">
+            <?//=print_r($_SESSION)?>
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal"
+                <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
             </div>
 
@@ -202,6 +203,7 @@ $(document).ready(function() {
         data.append('user', $('#hidden_user').val())
         data.append('permit', $('#hidden_permit').val())
         data.append('status', $('#hidden_status').val())
+        data.append('area', $('#hidden_area').val())
         data.append('type', $('#hidden_type').val())
         
         calendarDestroy('#calendar', url_calendar, data)
@@ -294,13 +296,16 @@ $(document).ready(function() {
      */
 
     function valid(type = null, data = []) {
+            // console.log(type)
+            // console.log(data)
+            // return false
         let dataAppend = new FormData(),
             visitor = [],
             countVal = 0;
         if (type == 'insert') {
             array = ['insert-name',
                 'insert-head',
-                'insert-rooms-id',
+                'insert-rooms-name',
                 'insert-description',
                 'insert-dates',
                 'insert-datee',
@@ -317,10 +322,10 @@ $(document).ready(function() {
             if (countVal == array.length) {
                 for (let i = 0; i < data.length; i++) {
 
-                    if (data[i].name == "insert-type") {
-                        dataAppend.append("insert-type-id", data[i].value)
-                        dataAppend.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
-                    }
+                    // if (data[i].name == "insert-type") {
+                    //     // dataAppend.append("insert-type-id", data[i].value)
+                    //     // dataAppend.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
+                    // }
                     if (data[i].name == "insert-visitor") {
                         visitor.push(data[i].value)
                     }
@@ -384,7 +389,6 @@ $(document).ready(function() {
      */
     $(btn_insert).click(function(e) {
         e.preventDefault()
-        let visitor = [],
             dataDefault = [],
             data = new FormData(),
 
@@ -413,9 +417,11 @@ $(document).ready(function() {
         for (var i = 0; i < dataArray.length; i++) {
             data.append(dataArray[i].name, dataArray[i].value)
 
-            if (dataArray[i].name == "insert-type") {
-                data.append("insert-type-id", Number.parseInt(dataArray[i].value) + 2)
-                data.append("insert-type-name", "แบบร่างนัดหมาย/จองห้องประชุม")
+            if (dataArray[i].name == "insert-type-id") {
+                data.append("insert-type-id", Number.parseInt(dataArray[i].value) + 3)
+            }
+            if (dataArray[i].name == "insert-type-name") {
+                data.append("insert-type-name", "แบบร่างการ" + dataArray[i].value)
             }
             if (dataArray[i].name == "insert-visitor") {
                 visitor.push(dataArray[i].value)
@@ -458,7 +464,7 @@ $(document).ready(function() {
      *
      */
 
-    $(btn_delete).click(function(e) {
+    /* $(btn_delete).click(function(e) {
         e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
@@ -468,7 +474,7 @@ $(document).ready(function() {
         data.append('item_code', code)
 
         swal_delete(data)
-    })
+    }) */
 
     $(document).on('click', btn_reject, function(e) {
         e.preventDefault()
@@ -481,6 +487,21 @@ $(document).ready(function() {
         data.append('item_code', code)
         // data.append('item_data', '2')
         data.append('vid', vid)
+
+        swal_delete(data)
+    })
+
+    $(document).on('click', btn_delete, function(e) {
+        e.preventDefault()
+        let data = new FormData(),
+            id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code')
+            // vid = $(this).attr('data-id')
+
+        data.append('item_id', id)
+        data.append('item_code', code)
+        // data.append('item_data', '2')
+        // data.append('vid', vid)
 
         swal_delete(data)
     })

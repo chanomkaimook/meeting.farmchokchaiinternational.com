@@ -3,19 +3,28 @@
     height: 4rem;
 }
 
+.mod-cardbox {
+    height: 5rem;
+}
+
 .item-cardbox {
     height: 3rem;
     width: 13rem;
 }
 
+.item-mod-cardbox {
+    height: 4rem;
+    width: 9rem;
+}
+
 .filter-card {
     height: 100%;
-    width: 100% !important; 
+    width: 100% !important;
     /* background-color: #000; */
 }
 
 .filter-lg-list {
-    width: 250px !important; 
+    width: 250px !important;
 }
 </style>
 <!-- CREATE Modal -insert- -->
@@ -31,18 +40,25 @@
             </div>
             <div class="modal-body pb-0">
                 <div class="row">
-                    <div class="col-6">
-                        <div class="cardbox text-center">
+                    <div class="col-4">
+                        <div class="mod-cardbox text-center">
                             <button type="button"
-                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-cardbox"
+                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-mod-cardbox"
                                 data-dismiss="modal">จองรถ</button>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="cardbox text-center">
+                    <div class="col-4">
+                        <div class="mod-cardbox text-center">
                             <button type="button"
-                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-cardbox"
-                                data-dismiss="modal">นัดหมาย/จองห้องประชุม</button>
+                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-mod-cardbox"
+                                data-dismiss="modal">นัดหมายกิจกรรม</button>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="mod-cardbox text-center">
+                            <button type="button"
+                                class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting-room item-mod-cardbox"
+                                data-dismiss="modal">จองห้องประชุม</button>
                         </div>
                     </div>
 
@@ -381,22 +397,15 @@ foreach ($time as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
+                <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="insert-meeting">
 
-                    <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
-                        name="insert-type" />
-                    <!-- <input class="form-control form-white" placeholder="Enter name" value="นัดหมาย/จองห้องประชุม" type="hidden" name="insert-type-name" /> -->
-                    <!-- <div class="form-group">
-                        <label class="control-label">ประเภท</label>
-                        <input class="form-control form-white" placeholder="Enter name" value="1" type="hidden"
-                            name="insert-type-id" />
-                        <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
-                            <option value="1">นัดหมาย/จองห้องประชุม</option>
-                        </select>
-                    </div> -->
+                    <input class="form-control form-white" placeholder="Enter name" type="hidden"
+                        name="insert-type-id" />
+                    <input class="form-control form-white" placeholder="Enter name" type="hidden"
+                        name="insert-type-name" />
                     <div class="form-group">
                         <label class="control-label">หัวข้อ</label>
                         <input class="form-control form-white" placeholder="Enter name" type="text" name="insert-name"
@@ -418,20 +427,28 @@ foreach ($staff as $val) {
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="insert-rooms-id">
-                                <option selected disabled>กรุณาเลือก...</option>
-                                <?php
-foreach ($room as $value) {
+                            <div class="meeting-room d-none">
+                                <label class="control-label">ห้องประชุม</label>
+                                <select class="form-control form-white" name="insert-rooms-id">
+                                    <option selected disabled>กรุณาเลือก...</option>
+                                    <?php
+    foreach ($room as $value) {
+        ?>
+                                    <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                        data-rooms-branch="<?=$value->BRANCH?>">
+                                        <?=$value->ROOMS?></option>
+                                    <?php
+    }
     ?>
-                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
-                                    data-rooms-branch="<?=$value->BRANCH?>">
-                                    <?=$value->ROOMS?></option>
-                                <?php
-}
-?>
-                            </select>
-                            <input type="hidden" name="insert-rooms-name">
+                                </select>
+                            </div>
+                            <div class="meeting-place d-none">
+                                <label class="control-label">สถานที่</label>
+                                <input type="text" class="form-control"
+                                    data-placeholder="กรุณาระบุ..." value="" placeholder="กรุณาระบุ..."
+                                    name="insert-rooms-name">
+                                <input type="hidden" name="insert-rooms-id">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">

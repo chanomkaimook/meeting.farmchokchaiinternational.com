@@ -25,11 +25,12 @@ function createDatatable(url, datatable) {
                     d.user = $('#hidden_user').val(),
                     d.permit = $('#hidden_permit').val(),
                     d.status = $('#hidden_status').val(),
+                    d.area = $('#hidden_area').val(),
                     d.type = $('#hidden_type').val()
             }
         },
         autoWidth: false,
-        columnDefs: [ { orderDataType: 'date-time', 'targets': [2] } ],
+        // columnDefs: [ { orderDataType: 'date-time', 'targets': [2] } ],
         "order": [],
         columns: [{
                 "data": "HEAD_FULLNAME"
@@ -38,7 +39,10 @@ function createDatatable(url, datatable) {
                 "data": "EVENT_NAME"
             },
             {
-                "data": "DATE_BEGIN_SHOW"
+                "data": {
+                    _: "date_datatable.display",
+                    sort: "date_datatable.timestamp"
+                }
             },
             {
                 "data": "TIME_BEGIN_SHOW"

@@ -3,10 +3,11 @@
 <div class="row">
     <div class="col-12">
         <div class="row">
-            <div class="col-4">
+        <div class="col-4">
+            <?//=print_r($_SESSION)?>
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal"
+                <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
             </div>
 

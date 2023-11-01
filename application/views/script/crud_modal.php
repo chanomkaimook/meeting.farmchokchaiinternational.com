@@ -36,8 +36,27 @@ $('.insert-car').click(function() {
     $("#insert-modal").modal("hide")
 })
 
+$('.insert-meeting-room').click(function() {
+    $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
+    $("#insert-modal-meeting").find(".modal-title").html("จองห้องประชุม")
+    $("#insert-modal-meeting").find("input[name=insert-rooms-id]").attr("disabled")
+    $("#insert-modal-meeting").find(".meeting-room").removeClass("d-none")
+    $("#insert-modal-meeting").find(".meeting-place").addClass("d-none")
+    $("#insert-modal-meeting").find("[name=insert-type-id]").val("1")
+    $("#insert-modal-meeting").find("[name=insert-type-name]").val("จองห้องประชุม")
+    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    $("#insert-modal-meeting").modal("show")
+    $("#insert-modal").modal("hide")
+})
+
 $('.insert-meeting').click(function() {
     $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
+    $("#insert-modal-meeting").find(".modal-title").html("นัดหมายกิจกรรม")
+    $("#insert-modal-meeting").find("input[name=insert-rooms-id]").removeAttr("disabled")
+    $("#insert-modal-meeting").find(".meeting-room").addClass("d-none")
+    $("#insert-modal-meeting").find(".meeting-place").removeClass("d-none")
+    $("#insert-modal-meeting").find("[name=insert-type-id]").val("3")
+    $("#insert-modal-meeting").find("[name=insert-type-name]").val("นัดหมายกิจกรรม")
     $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-meeting").modal("show")
     $("#insert-modal").modal("hide")
@@ -123,27 +142,50 @@ function draft_to_use(data, type) {
     // $('#detail-modal-car').find('[data-visitor=true]').addClass('d-none')
     // $('#detail-modal-meeting').find('[data-visitor=true]').addClass('d-none')
 
-    if (data.TYPE_ID == 3) {
+    if (data.TYPE_ID == 4) {
         modal = '#update-modal-meeting';
         if (type == "use") {
             $(modal).find("[name=update-type-id]").val(1)
-            $(modal).find("[name=update-type-name]").val("นัดหมาย/จองห้องประชุม")
+            $(modal).find("[name=update-type-name]").val("จองห้องประชุม")
+            $(modal).find("input[name=insert-rooms-id]").attr("disabled")
+            $(modal).find(".meeting-room").removeClass("d-none")
+            $(modal).find(".meeting-place").addClass("d-none")
 
         } else {
-            $(modal).find("[name=update-type-id]").val(3)
-            $(modal).find("[name=update-type-name]").val("แบบร่างนัดหมาย/จองห้องประชุม")
+            $(modal).find("[name=update-type-id]").val(4)
+            $(modal).find("[name=update-type-name]").val("แบบร่างการจองห้องประชุม")
+            $(modal).find("input[name=insert-rooms-id]").removeAttr("disabled")
+            $(modal).find(".meeting-room").addClass("d-none")
+            $(modal).find(".meeting-place").removeClass("d-none")
 
         }
 
-    } else if (data.TYPE_ID == 4) {
+    } else if (data.TYPE_ID == 5) {
         modal = '#update-modal-car'
         if (type == "use") {
             $(modal).find("[name=update-type-id]").val(2)
             $(modal).find("[name=update-type-name]").val("จองรถ")
 
         } else {
-            $(modal).find("[name=update-type-id]").val(4)
-            $(modal).find("[name=update-type-name]").val("แบบร่างจองรถ")
+            $(modal).find("[name=update-type-id]").val(5)
+            $(modal).find("[name=update-type-name]").val("แบบร่างการจองรถ")
+
+        }
+    } else if (data.TYPE_ID == 6) {
+        modal = '#update-modal-meeting'
+        if (type == "use") {
+            $(modal).find("[name=update-type-id]").val(3)
+            $(modal).find("[name=update-type-name]").val("นัดหมายกิจกรรม")
+            $(modal).find("input[name=insert-rooms-id]").attr("disabled")
+            $(modal).find(".meeting-room").removeClass("d-none")
+            $(modal).find(".meeting-place").addClass("d-none")
+
+        } else {
+            $(modal).find("[name=update-type-id]").val(6)
+            $(modal).find("[name=update-type-name]").val("แบบร่างการนัดหมายกิจกรรม")
+            $(modal).find("input[name=insert-rooms-id]").removeAttr("disabled")
+            $(modal).find(".meeting-room").addClass("d-none")
+            $(modal).find(".meeting-place").removeClass("d-none")
 
         }
     }
@@ -203,24 +245,33 @@ function detail(calEvent, jsEvent, view) {
         vid = '';
 
     // console.log(calEvent)
+    // console.log(123)
     $('#detail-modal-car').find('[data-visitor=true]').addClass('d-none')
     $('#detail-modal-meeting').find('[data-visitor=true]').addClass('d-none')
 
-    if (calEvent.TYPE_ID == 1 || calEvent.TYPE_ID == 3) {
+    if (calEvent.TYPE_ID == 1 || calEvent.TYPE_ID == 4) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-meeting'
 
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-meeting';
 
-        status_header = 'แบบร่างการนัดหมาย/จองห้องประชุม'
-    } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 4) {
+        status_header = 'แบบร่างการจองห้องประชุม'
+    } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 5) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-car'
 
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-car'
         status_header = 'แบบร่างการจองรถ'
+    } else if (calEvent.TYPE_ID == 3 || calEvent.TYPE_ID == 6) {
+        /* ************* DETAIL **************** */
+        modal_detail = '#detail-modal-meeting'
+
+        /* ************** UPDATE *************** */
+        modal_update = '#update-modal-meeting';
+
+        status_header = 'แบบร่างการนัดหมายกิจกรรม'
     }
 
     $(modal_detail).modal("show")
@@ -245,7 +296,8 @@ function detail(calEvent, jsEvent, view) {
     obj_update.push('[name=item_id]', '[name=code]', '[name=update-type-id]', '[name=update-type-name]',
         '[name=update-name]',
         '[name=update-head]', '[name=update-description]', '[name=update-dates]', '[name=update-datee]',
-        'select[name=update-times]', 'select[name=update-timee]', '[name=update-rooms-id]', '[name=update-rooms-name]')
+        'select[name=update-times]', 'select[name=update-timee]', '[name=update-rooms-id]',
+        '[name=update-rooms-name]')
 
     val_update.push(calEvent.ID, calEvent.CODE, calEvent.TYPE_ID, calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent
         .STAFF_ID, calEvent
@@ -319,7 +371,7 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-danger').addClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
         // $('.modal-header').find('.text-warning').html(calEvent.STATUS_COMPLETE_NAME)
-    } else if (calEvent.STATUS_COMPLETE == 1) {
+    } else if (calEvent.STATUS_COMPLETE == 1 || calEvent.STATUS_COMPLETE == 5) {
         $('.modal-footer').find('.approve-footer').removeClass('d-none')
         $('.modal-header').find('.text-warning').removeClass('d-none')
         $('.modal-header').find('.text-success').addClass('d-none')
@@ -351,15 +403,16 @@ function detail(calEvent, jsEvent, view) {
         $('.modal-header').find('.text-secondary').removeClass('d-none')
         $('.modal-header').find('.text-orange').addClass('d-none')
         $('.modal-header').find('.text-secondary').html(calEvent.STATUS_COMPLETE_NAME)
-    } else if (calEvent.STATUS_COMPLETE == 5) {
-        $('.modal-footer').find('.approve-footer').addClass('d-none')
-        $('.modal-header').find('.text-warning').addClass('d-none')
-        $('.modal-header').find('.text-success').addClass('d-none')
-        $('.modal-header').find('.text-danger').addClass('d-none')
-        $('.modal-header').find('.text-secondary').addClass('d-none')
-        $('.modal-header').find('.text-orange').removeClass('d-none')
-        $('.modal-header').find('.text-orange').html(calEvent.STATUS_COMPLETE_NAME)
     }
+    /* else if () {
+           $('.modal-footer').find('.approve-footer').addClass('d-none')
+           $('.modal-header').find('.text-warning').addClass('d-none')
+           $('.modal-header').find('.text-success').addClass('d-none')
+           $('.modal-header').find('.text-danger').addClass('d-none')
+           $('.modal-header').find('.text-secondary').addClass('d-none')
+           $('.modal-header').find('.text-orange').removeClass('d-none')
+           $('.modal-header').find('.text-orange').html(calEvent.STATUS_COMPLETE_NAME)
+       } */
     /* ************** END ACTION HEADER *************** */
 }
 
@@ -369,7 +422,7 @@ function detail_draft(data) {
         html_dom = []
     data.forEach(function(item, index) {
         i++
-        if (item.TYPE_ID == 3) {
+        if (item.TYPE_ID == 4 || item.TYPE_ID == 6) {
             html_dom[i] = `
         <tr>
             <th>${i}</th>
@@ -382,7 +435,7 @@ function detail_draft(data) {
                     </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-                            <a href="" data-id="${item.ID}" class="dropdown-item btn-detail-meeting" data-dismiss="modal">
+                            <a href="" data-id="${item.ID}" class="dropdown-item btn-detail-meeting" data-toggle="modal" data-dismiss="modal">
                                 <span class="align-middle">รายละเอียด</span>
                             </a>
 
@@ -406,7 +459,7 @@ function detail_draft(data) {
             </td>
         </tr>
         `
-        } else if (item.TYPE_ID == 4) {
+        } else if (item.TYPE_ID == 5) {
             html_dom[i] = `
         <tr>
             <th>${i}</th>

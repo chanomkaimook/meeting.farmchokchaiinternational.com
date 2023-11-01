@@ -17,7 +17,7 @@ class Ctl_datatable extends MY_Controller
     public function index()
     {
         $optionnals['where'] = array(
-            'roles_focus.staff_owner = 1 OR employee.id = 1' => null,
+            'roles_focus.staff_owner = ' . $_SESSION['user_emp'] . ' OR employee.id = ' . $_SESSION['user_emp'] => null,
         );
         $optionnals['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
         $optionnals['join'] = true;
@@ -160,151 +160,41 @@ class Ctl_datatable extends MY_Controller
         return $return;
     }
 
-    /* public function foreach_loop($dataShow)
-    {
-    $array = [];
-    $length = count($dataShow['me']);
-    for ($j = 0; $j < $length; $j++) {
-
-    if (count($dataShow['child'])) {
-    for ($c = 0; $c < count($dataShow['child']); $c++) {
-    if ($dataShow['child'][$c]['ID'] == $dataShow['me'][$j]->ID) {
-    echo "111111111111111-----" . $dataShow['child'][$c]['ID'] . "==" . $dataShow['me'][$j]->ID . "-----111111111111111<br>";
-    $array[$j] = (array) $dataShow['child'][$c];
-    break;
-    } else {
-    echo "22222222222222222-----" . $dataShow['child'][$c]['ID'] . "==" . $dataShow['me'][$j]->ID . "-----22222222222222222<br>";
-    $array[$j] = (array) $dataShow['me'][$j];
-    }
-    }
-    } else {
-    $array[$j] = (array) $dataShow['me'][$j];
-
-    }
-
-    if (count($dataShow['vis'])) {
-    for ($v = 0; $v < count($dataShow['vis']); $v++) {
-    if ($dataShow['vis'][$v]['ID'] == $dataShow['me'][$j]->ID) {
-    echo "333333333333333333333-----" . $dataShow['vis'][$v]['ID'] . "==" . $dataShow['me'][$j]->ID . "-----333333333333333333333<br>";
-    $array[$j] = (array) $dataShow['vis'][$v];
-    break;
-    } else {
-    echo "4444444444444444444444444-----" . $dataShow['vis'][$v]['ID'] . "==" . $dataShow['me'][$j]->ID . "-----4444444444444444444444444<br>";
-    $array[$j] = (array) $dataShow['me'][$j];
-
-    }
-    }
-    } else {
-    $array[$j] = (array) $dataShow['me'][$j];
-
-    }
-    }
-
-    $i = 0;
-    foreach ($array as $key_a => $dataVal) {
-
-    if ($dataVal['VIS_STATUS_COMPLETE']) {
-    $state = 'vis';
-    } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
-    $state = "me";
-    } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
-    $state = 'other';
-    } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] == 1) {
-    $state = 'owner';
-    } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
-    $state = 'child';
-    }
-
-    if ($dataVal['VIS_STATUS_COMPLETE']) {
-    $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
-    } else {
-    $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-    }
-
-    $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-    $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
-    $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
-
-    $Calendar[$i] = $dataVal;
-    $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
-    $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
-    $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
-    $Calendar[$i]['USER_START_NAME'] = $emp[0]->NAME;
-    $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
-    $Calendar[$i]['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
-    $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-    $Calendar[$i]['end'] = $dataVal["DATE_END"];
-    $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
-    $Calendar[$i]['className'] = $attr['color'];
-    $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
-    $Calendar[$i]['class'] = $state;
-
-    $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-    $optionnals['join'] = true;
-    $optionnals['where'] = array(
-    'event_visitor.event_code' => $dataVal["CODE"],
-    );
-    $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
-    if (count($visitor)) {
-    $j = 0;
-    foreach ($visitor as $vis_val) {
-    $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
-    $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-    $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-    $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
-    $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
-    $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
-
-    $j++;
-    }
-    }
-    $i++;
-    }
-    // print_r($Calendar);
-    return $Calendar;
-    } */
-
     public function foreach_loop($dataShow)
     {
         $i = 0;
         $Calendar = array();
 
-        // print_r($dataShow);die;
-        if($dataShow){
+        if ($dataShow) {
             foreach ($dataShow as $key => $val) {
 
-                if($val){
+                if ($val) {
                     foreach ($val as $sub_key => $value) {
                         $dataVal = (array) $value;
                         if ($dataVal['VIS_STATUS_COMPLETE']) {
                             $state = 'vis';
-                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
+                        } else if ($dataVal['STAFF_ID'] == $_SESSION['user_emp'] && $dataVal['USER_START'] == $_SESSION['user_emp']) {
                             $state = "me";
-                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
+                        } else if ($dataVal['STAFF_ID'] != $_SESSION['user_emp'] && $dataVal['USER_START'] != $_SESSION['user_emp']) {
                             $state = 'other';
-                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] == 1) {
+                        } else if ($dataVal['STAFF_ID'] != $_SESSION['user_emp'] && $dataVal['USER_START'] == $_SESSION['user_emp']) {
                             $state = 'owner';
-                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
+                        } else if ($dataVal['STAFF_ID'] == $_SESSION['user_emp'] && $dataVal['USER_START'] != $_SESSION['user_emp']) {
                             $state = 'child';
                         }
-        
-                        // if ($dataVal['VIS_STATUS_COMPLETE']) {
-                        //     $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
-                        // } else {
-                        //     $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-                        // }
+
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-        
+
                         $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                         $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp);
-        
+
                         $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
-        
+
                         $Calendar[$i] = $dataVal;
                         $Calendar[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
                         $Calendar[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
-                        $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i',strtotime($dataVal['TIME_BEGIN']));
-                        $Calendar[$i]['TIME_END_SHOW'] = date('H:i',strtotime($dataVal['TIME_END']));
+                        $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i', strtotime($dataVal['TIME_BEGIN']));
+                        $Calendar[$i]['TIME_END_SHOW'] = date('H:i', strtotime($dataVal['TIME_END']));
                         $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
                         $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
                         $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
@@ -318,7 +208,7 @@ class Ctl_datatable extends MY_Controller
                         $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
                         $Calendar[$i]['class'] = $state;
                         // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
-        
+
                         $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                         $optionnals['join'] = true;
                         $optionnals['where'] = array(
@@ -335,7 +225,7 @@ class Ctl_datatable extends MY_Controller
                                 $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
                                 $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
                                 $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
-        
+
                                 $j++;
                             }
                         }
@@ -506,6 +396,13 @@ class Ctl_datatable extends MY_Controller
         $dataShow = [];
         $array = $this->input->post();
 
+        $optionnal['where']['event.date_begin <> '] = "0000-00-00";
+        $optionnal['where']['event.date_end <> '] = "0000-00-00";
+        $optionnal['where']['event.type_id <'] = 4;
+        $optionnal['select'] = "event.*
+        ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
+        ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
+
         if (count($array)) {
             $dates = $array['dates'];
             $datee = $array['datee'];
@@ -514,121 +411,163 @@ class Ctl_datatable extends MY_Controller
             $user = $array['user'];
             $permit = $array['permit'];
             $status = $array['status'];
+            $area = $array['area'];
             $type = $array['type'];
 
             if ($dates) {
                 $optionnal['where']['event.date_begin'] = $dates;
             }
+
             if ($datee) {
                 $optionnal['where']['event.date_end'] = $datee;
             }
+
             if ($times) {
                 $optionnal['where']['event.time_begin'] = $times;
             }
+
             if ($timee) {
                 $optionnal['where']['event.time_end'] = $timee;
             }
+
+            if ($status) {
+                if ($area == "event") {
+                    $optionnal_status['emp']['event.status_complete'] = $status;
+                    $optionnal_status['child']['event.status_complete'] = null;
+                    $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
+                } elseif ($area == "approve") {
+                    $optionnal_status['emp']['event.status_complete'] = null;
+                    $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
+
+                    if (!$user) {
+                        $user = $_SESSION['user_code'];
+                    }
+
+                    if ($status == 1) {
+                        $optionnal_status['child']['event.approve_date'] = null;
+                        $optionnal_status['child']['event.disapprove_date'] = null;
+                        $optionnal_status['child']['event.cancle_date'] = null;
+                        $optionnal_status['child']['event.status_complete'] = 1;
+                    } elseif ($status == 2) {
+                        $optionnal_status['child']['event.approve_date <>'] = null;
+                    } elseif ($status == 3) {
+                        $optionnal_status['child']['event.disapprove_date <>'] = null;
+                    }
+                } elseif ($area == "visitor") {
+                    $optionnal_status['emp']['event.status_complete'] = null;
+                    $optionnal_status['child']['event.status_complete'] = null;
+                    $optionnal_vis['where']['event_visitor.STATUS_COMPLETE'] = $status;
+
+                    if (!$user) {
+                        $optionnal['where']['event.staff_id <> '] = $_SESSION['user_code'];
+                    }
+                }
+            }
+
             if ($user) {
                 $optionnal['where']['event.staff_id'] = $user;
             }
+
             if ($permit) {
                 $optionnal['where']['event.user_start'] = $permit;
-            }
-            if ($status) {
-                $optionnal_where['emp']['event.status_complete'] = $status;
-
-                $optionnal_where['vis']['event_visitor.STATUS_COMPLETE'] = $status;
-
-                if ($status == 1) {
-                    $optionnal_where['child']['event.approve_date'] = null;
-                    $optionnal_where['child']['event.disapprove_date'] = null;
-                    $optionnal_where['child']['event.cancle_date'] = null;
-                    $optionnal_where['child']['event.status_complete'] = 1;
-                } elseif ($status == 2) {
-                    $optionnal_where['child']['event.approve_date <>'] = null;
-                } elseif ($status == 3) {
-                    $optionnal_where['child']['event.disapprove_date <>'] = null;
-                } elseif ($status == 4) {
-                    $optionnal_where['child']['event.cancle_date <>'] = null;
-                } elseif ($status == 5) {
-                    $optionnal_where['child']['event.status_complete'] = $status;
-
-                }
             }
             if ($type) {
                 $optionnal['where']['event.type_id'] = $type;
             }
 
         } else {
-            $optionnal['where']['event.type_id <'] = 3;
-            // $optionnal['where']['event.staff_id'] = 1;
+            // $optionnal['where']['event.staff_id'] = $_SESSION['user_emp'];
         }
-        $optionnal['select'] = "event.*
-        ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
-        ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
 
         $optionnal_e = $optionnal;
-        if ($optionnal_where['emp']) {
-            $optionnal_e['where'] = $optionnal_where['emp'];
-        }
-        $optionnal_e['where']['event.staff_id'] = 1;
-        $optionnal_e['where']['event.type_id <'] = 3;
-        $optionnal_e['join'] = "all";
-
-        $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
+        $optionnal_c = $optionnal;
+        $optionnal_v = $optionnal;
 
         // echo "<pre>";
-        // print_r($optionnal_e);
-        $optionnal_child['where']['roles_focus.staff_owner'] = 1;
+        // print_r($dataShow);
 
-        $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
-        $optionnal_child['join'] = true;
-        $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
+        if ($user && $user != $_SESSION['user_code']) {
+            $dataShow['me'] = null;
 
-        $dataChild = [];
-        if (count($child)) {
+            if ($optionnal_status['child']) {
+                $optionnal_c['where'] = $optionnal_status['child'];
+            }
 
-            foreach ($child as $sid) {
-                $optionnal_c = $optionnal;
-                if ($optionnal_where['child']) {
-                    $optionnal_c['where'] = $optionnal_where['child'];
+            $optionnal_c['where']['event.staff_id'] = $user;
+
+            $optionnal_c['join'] = "all";
+
+            $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal_c);
+            if (count($dataChild)) {
+                for ($c = 0; $c < count($dataChild); $c++) {
+                    $dataShow['child'][$c] = (array) $dataChild[$c];
                 }
-                $optionnal_c['where']['event.staff_id'] = $sid->STAFF_CHILD;
-                $optionnal_c['join'] = "all";
+            }
 
-                $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal_c);
-                if (count($dataChild)) {
-                    for ($c = 0; $c < count($dataChild); $c++) {
-                        $dataShow['child'][$c] = (array) $dataChild[$c];
+        } elseif ($user && $user == $_SESSION['user_code']) {
+            if ($optionnal_status['emp']) {
+                $optionnal_e['where'] = $optionnal_status['emp'];
+            }
+            // $optionnal_e['where']['event.type_id <'] = 4;
+            $optionnal_e['where']['event.staff_id'] = $_SESSION['user_code'];
+            $optionnal_e['join'] = "all";
+
+            $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
+
+            $dataShow['child'] = null;
+
+        } else {
+            if ($optionnal_status['emp']) {
+                $optionnal_e['where'] = $optionnal_status['emp'];
+            }
+            // $optionnal_e['where']['event.type_id <'] = 4;
+            $optionnal_e['where']['event.staff_id'] = $_SESSION['user_code'];
+            $optionnal_e['join'] = "all";
+
+            $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
+
+            $optionnal_child['where']['roles_focus.staff_owner'] = $_SESSION['user_emp'];
+            $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
+            $optionnal_child['join'] = true;
+            $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
+
+            $dataChild = [];
+            if (count($child)) {
+
+                foreach ($child as $sid) {
+                    if ($optionnal_status['child']) {
+                        $optionnal_c['where'] = $optionnal_status['child'];
                     }
-                }
+                    $optionnal_c['where']['event.staff_id'] = $sid->STAFF_CHILD;
+                    $optionnal_c['join'] = "all";
 
+                    $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal_c);
+                    if (count($dataChild)) {
+                        for ($c = 0; $c < count($dataChild); $c++) {
+                            $dataShow['child'][$c] = (array) $dataChild[$c];
+                        }
+                    }
+
+                }
             }
         }
 
-        if ($optionnal_where['vis']) {
-            $optionnal_vis['where'] = $optionnal_where['vis'];
-        }
         $optionnal_vis['select'] = "event_visitor.EVENT_VISITOR,event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
-        $optionnal_vis['where']['event_visitor.event_visitor'] = 1;
+        $optionnal_vis['where']['event_visitor.event_visitor'] = $_SESSION['user_emp'];
+        
         $optionnal_vis['join'] = true;
-
         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
 
         $dataVis = [];
         $data_visitor = [];
         if (count($vis)) {
-            // echo $this->db->last_query;
             $v = 0;
             foreach ($vis as $key => $sid) {
-                $optionnal_v = $optionnal;
                 $optionnal_v['where']['event.code'] = $sid->EVENT_CODE;
 
                 $optionnal_v['join'] = "all";
 
                 $dataVis = (array) $this->mdl_event->get_dataShow(null, $optionnal_v);
-                // print_r($dataVis);
-                // echo $this->db->last_query();
                 if (count($dataVis)) {
                     foreach ($dataVis as $key => $array) {
                         $data_visitor[$v] = (array) $array;
@@ -640,10 +579,22 @@ class Ctl_datatable extends MY_Controller
                 }
             }
         }
-        // print_r($dataShow);
         if (count($dataShow)) {
             $dataall = $this->mdl_event->get_data_all(null, $optionnal);
             $DataTable = $this->foreach_loop($dataShow);
+            if ($DataTable) {
+                foreach($DataTable as $key => $val)
+                {
+                    $DataTable[$key]['date_datatable'] = array(
+                        "display" => $val['DATE_BEGIN_SHOW'],
+                        "timestamp" => date('Y-m-d',strtotime($val['DATE_BEGIN'])),
+                    );
+
+                }
+            }
+           /*  echo "<pre>";
+            print_r($DataTable);
+            echo "</pre>"; */
             $result = array(
                 "recordsTotal" => count($DataTable),
                 "recordsFiltered" => $dataall,
@@ -700,7 +651,7 @@ class Ctl_datatable extends MY_Controller
         } else {
 
             $optionnal['where'] = array(
-                'event.user_start' => 1,
+                'event.user_start' => $_SESSION['user_emp'],
                 'event.type_id >' => 2,
             );
             $optionnal['join'] = "all";
@@ -724,7 +675,7 @@ class Ctl_datatable extends MY_Controller
                 foreach ($child as $sid) {
                     $optionnal['where'] = array(
                         'event.staff_id' => $sid->STAFF_CHILD,
-                        'event.user_start' => 1,
+                        'event.user_start' => $_SESSION['user_emp'],
                         'event.type_id >' => 2,
                     );
                     $optionnal['join'] = "all";
