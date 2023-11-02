@@ -82,10 +82,38 @@ function modalShow(modal, obj, val) {
     }
 }
 
-function button_action(modal, entitled, status, event_id, event_code, vid) {
-    let html = ''
-
+function button_action(modal, entitled, status, status_approval, event_id, event_code, vid, attr_inline, attr_line) {
+    let html = '',
+        owner_action = ''
+    // meeting-inline
+    // meeting-line
     $(modal).find('.action-header').removeClass('d-none')
+    $(modal).find('.rooms-inline').removeClass('d-none')
+    $(modal).find('.meeting-inline').removeClass('d-none')
+    $(modal).find('.approve-inline').removeClass('d-none')
+    $(modal).find('.rooms-line').removeClass('d-none')
+    $(modal).find('.meeting-line').removeClass('d-none')
+
+    $(modal).find('.status-inline').removeClass('d-none')
+    $(modal).find('.status-inline').removeClass('col-md-3')
+    $(modal).find('.status-inline').removeClass('col-md-6')
+
+    $(modal).find('[name=status-inline-text]').val(status_approval)
+    // console.log(entitled)
+    // console.log(status)
+    // console.log(status_approval)
+    /**
+     * attr_line[0] , attr_inline[0] -> hide
+     * attr_line[1] , attr_inline[1] -> show
+     * .action-header - ปุ่มแก้ไข / ปุ่มลบ
+     * .rooms-inline - ห้องประชุม col-md-6
+     * .meeting-inline - สถานที่ col-md-6
+     * .status-inline - input สถานะ disabled col-md-3
+     * .approve-inline - btn-group อนุมัติ / ไม่อนุมัติ col-md-3
+     * .rooms-line - ห้องประชุม form-group
+     * .meeting-line - สถานที่ form-group
+     */
+
     if (modal && entitled) {
         if (status == 1) {
             if (entitled == 'me' || entitled == 'owner') {
@@ -93,38 +121,266 @@ function button_action(modal, entitled, status, event_id, event_code, vid) {
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
 
+                $(modal).find('.action-header').removeClass('d-none')
+
+
+                if (entitled == 'owner') {
+                    owner_action = `
+                        <label class="control-label">action</label>
+                        <div>
+                                <button type='button' class='btn btn-icon waves-effect waves-light btn-danger btn-disapprove' data-event-id="${event_id}" data-event-code="${event_code}"> <i class='fas fa-times'></i> </button>
+                                <button type='button' class='btn btn-icon waves-effect btn-success btn-approve'  data-event-id="${event_id}" data-event-code="${event_code}"> <i class='fas fa-check'></i> </button>
+
+                        </div>`
+
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).removeClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).addClass('d-none')
+
+                    $(modal).find('.status-inline').addClass('col-md-3')
+
+                    $(modal).find('.status-inline').removeClass('d-none')
+                    $(modal).find('.status-inline').removeClass('col-md-6')
+                    $(modal).find('.approve-inline').removeClass('d-none').html(owner_action)
+                } else {
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).addClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                    $(modal).find('.status-inline').removeClass('col-md-3')
+                    $(modal).find('.status-inline').removeClass('col-md-6')
+
+                    $(modal).find('.status-inline').addClass('d-none')
+                    $(modal).find('.approve-inline').addClass('d-none')
+                }
+
             } else if (entitled == 'other') {
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
                 $(modal).find('.action-header').addClass('d-none')
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
                 html = ``
             } else if (entitled == 'vis') {
-                $(modal).find('.action-header').addClass('d-none')
                 html =
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-refuse" data-id="${vid}"  data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ไม่เข้าร่วม</button>
-                    <button type="button" class="btn btn-success waves-effect waves-light btn-accept" data-id="${vid}"  data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">เข้าร่วม</button>`
+                <button type="button" class="btn btn-success waves-effect waves-light btn-accept" data-id="${vid}"  data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">เข้าร่วม</button>`
+                $(modal).find('.action-header').addClass('d-none')
+
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
             } else if (entitled == 'child') {
                 html =
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-disapprove" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ไม่อนุมัติ</button>
                     <button type="button" class="btn btn-success waves-effect waves-light btn-approve" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">อนุมัติ</button>`
+
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.action-header').removeClass('d-none')
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
             }
         } else if (status == 2) {
-            $(modal).find('.action-header').addClass('d-none')
             html = ``
+            $(modal).find(attr_line[0]).addClass('d-none')
+            $(modal).find(attr_line[1]).addClass('d-none')
+            $(modal).find(attr_inline[0]).addClass('d-none')
+            $(modal).find(attr_inline[1]).removeClass('d-none')
+
+            $(modal).find('.status-inline').removeClass('col-md-3')
+            $(modal).find('.status-inline').removeClass('col-md-6')
+
+            $(modal).find('.action-header').addClass('d-none')
+            $(modal).find('.status-inline').addClass('d-none')
+            $(modal).find('.approve-inline').addClass('d-none')
         } else if (status == 3 || status == 4) {
             if (entitled == 'me' || entitled == 'owner') {
                 html =
                     `<button type="button" class="btn btn-success waves-effect waves-light btn-restore" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">นำกลับมาใช้</button>`;
+
+                if (entitled == 'owner') {
+
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).removeClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).addClass('d-none')
+
+                    $(modal).find('.approve-inline').addClass('d-none')
+                    $(modal).find('.status-inline').removeClass('col-md-3')
+
+                    $(modal).find('.status-inline').addClass('col-md-6')
+                    $(modal).find('.status-inline').removeClass('d-none')
+                } else {
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).addClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                    $(modal).find('.status-inline').removeClass('col-md-3')
+                    $(modal).find('.status-inline').removeClass('col-md-6')
+
+                    $(modal).find('.status-inline').addClass('d-none')
+                    $(modal).find('.approve-inline').addClass('d-none')
+                }
+            } else if (entitled == 'other') {
+                html = ``
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.action-header').addClass('d-none')
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
+                html = ``
+            } else if (entitled == 'vis') {
+                html = ``
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.action-header').addClass('d-none')
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
+            } else if (entitled == 'child') {
+                html =
+                    `<button type="button" class="btn btn-success waves-effect waves-light btn-restore" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">นำกลับมาใช้</button>`;
+
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.action-header').removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
             }
         } else if (status == 5) {
             if (entitled == 'me' || entitled == 'owner') {
                 html =
                     `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
                 <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
+
+                $(modal).find('.action-header').removeClass('d-none')
+                if (entitled == 'owner') {
+
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).removeClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).addClass('d-none')
+
+                    $(modal).find('.approve-inline').addClass('d-none')
+                    $(modal).find('.status-inline').removeClass('col-md-3')
+                    $(modal).find('.status-inline').addClass('col-md-6')
+
+                    $(modal).find('.status-inline').removeClass('d-none')
+
+                } else {
+                    $(modal).find(attr_line[0]).addClass('d-none')
+                    $(modal).find(attr_line[1]).addClass('d-none')
+                    $(modal).find(attr_inline[0]).addClass('d-none')
+                    $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                    $(modal).find('.status-inline').removeClass('col-md-3')
+                    $(modal).find('.status-inline').removeClass('col-md-6')
+
+                    $(modal).find('.status-inline').addClass('d-none')
+                    $(modal).find('.approve-inline').addClass('d-none')
+                }
+            } else if (entitled == 'other') {
+                html = ``
+
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.action-header').addClass('d-none')
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
+                html = ``
+            } else if (entitled == 'vis') {
+                html = ``
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.action-header').addClass('d-none')
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
+            } else if (entitled == 'child') {
+                html = ``
+                $(modal).find(attr_line[0]).addClass('d-none')
+                $(modal).find(attr_line[1]).addClass('d-none')
+                $(modal).find(attr_inline[0]).addClass('d-none')
+                $(modal).find(attr_inline[1]).removeClass('d-none')
+
+                $(modal).find('.meeting-inline').removeClass('d-none')
+                $(modal).find('.status-inline').removeClass('col-md-3')
+                $(modal).find('.status-inline').removeClass('col-md-6')
+
+                $(modal).find('.status-inline').addClass('d-none')
+                $(modal).find('.approve-inline').addClass('d-none')
             }
         }
+
     } else {
         html =
             ``;
+        $(modal).find(attr_line[0]).addClass('d-none')
+        $(modal).find(attr_line[1]).addClass('d-none')
+        $(modal).find(attr_inline[0]).addClass('d-none')
+        $(modal).find(attr_inline[1]).removeClass('d-none')
+        
+        $(modal).find('.status-inline').removeClass('col-md-3')
+        $(modal).find('.status-inline').removeClass('col-md-6')
+
+        $(modal).find('.action-header').addClass('d-none')
+        $(modal).find('.status-inline').addClass('d-none')
+        $(modal).find('.approve-inline').addClass('d-none')
     }
+
+    $(modal).find('.approve-inline').html(owner_action)
     $(modal).find('.action-footer').html(html)
 }
 
@@ -148,15 +404,15 @@ function draft_to_use(data, type) {
             $(modal).find("[name=update-type-id]").val(1)
             $(modal).find("[name=update-type-name]").val("จองห้องประชุม")
             $(modal).find("input[name=insert-rooms-id]").attr("disabled")
-            $(modal).find(".meeting-room").removeClass("d-none")
-            $(modal).find(".meeting-place").addClass("d-none")
+            $(modal).find(".rooms-inline").removeClass("d-none")
+            $(modal).find(".meeting-inline").addClass("d-none")
 
         } else {
             $(modal).find("[name=update-type-id]").val(4)
             $(modal).find("[name=update-type-name]").val("แบบร่างการจองห้องประชุม")
             $(modal).find("input[name=insert-rooms-id]").removeAttr("disabled")
-            $(modal).find(".meeting-room").addClass("d-none")
-            $(modal).find(".meeting-place").removeClass("d-none")
+            $(modal).find(".rooms-inline").addClass("d-none")
+            $(modal).find(".meeting-inline").removeClass("d-none")
 
         }
 
@@ -177,15 +433,15 @@ function draft_to_use(data, type) {
             $(modal).find("[name=update-type-id]").val(3)
             $(modal).find("[name=update-type-name]").val("นัดหมายกิจกรรม")
             $(modal).find("input[name=insert-rooms-id]").attr("disabled")
-            $(modal).find(".meeting-room").removeClass("d-none")
-            $(modal).find(".meeting-place").addClass("d-none")
+            $(modal).find(".rooms-inline").removeClass("d-none")
+            $(modal).find(".meeting-inline").addClass("d-none")
 
         } else {
             $(modal).find("[name=update-type-id]").val(6)
             $(modal).find("[name=update-type-name]").val("แบบร่างการนัดหมายกิจกรรม")
             $(modal).find("input[name=insert-rooms-id]").removeAttr("disabled")
-            $(modal).find(".meeting-room").addClass("d-none")
-            $(modal).find(".meeting-place").removeClass("d-none")
+            $(modal).find(".rooms-inline").addClass("d-none")
+            $(modal).find(".meeting-inline").removeClass("d-none")
 
         }
     }
@@ -242,6 +498,9 @@ function detail(calEvent, jsEvent, view) {
         val_update = [],
         entitled = '',
         status = '',
+        status_approval = '',
+        attr_inline = [],
+        attr_line = [],
         vid = '';
 
     // console.log(calEvent)
@@ -253,13 +512,20 @@ function detail(calEvent, jsEvent, view) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-meeting'
 
+        attr_inline.push('.meeting-inline', '.rooms-inline')
+        attr_line.push('.meeting-line', '.rooms-line')
+
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-meeting';
+        $(modal_update).find(".rooms-inline").removeClass("d-none")
+        $(modal_update).find(".meeting-inline").addClass("d-none")
 
         status_header = 'แบบร่างการจองห้องประชุม'
     } else if (calEvent.TYPE_ID == 2 || calEvent.TYPE_ID == 5) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-car'
+
+        // inline = '.meeting-inline'
 
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-car'
@@ -268,8 +534,13 @@ function detail(calEvent, jsEvent, view) {
         /* ************* DETAIL **************** */
         modal_detail = '#detail-modal-meeting'
 
+        attr_inline.push('.rooms-inline', '.meeting-inline')
+        attr_line.push('.rooms-line', '.meeting-line')
+
         /* ************** UPDATE *************** */
         modal_update = '#update-modal-meeting';
+        $(modal_update).find(".rooms-inline").addClass("d-none")
+        $(modal_update).find(".meeting-inline").removeClass("d-none")
 
         status_header = 'แบบร่างการนัดหมายกิจกรรม'
     }
@@ -281,13 +552,14 @@ function detail(calEvent, jsEvent, view) {
     /* ************* DETAIL **************** */
     obj_detail.push('[name=detail-type]', '[name=detail-name]', '[name=detail-head]', '[name=detail-description]',
         '[name=detail-dates]', '[name=detail-datee]', '[name=detail-times]', '[name=detail-timee]',
-        '[name=detail-rooms]')
+        '[name=detail-rooms-id]', '[name=detail-rooms-name]')
     // obj_detail.push('.detail-type', '.detail-name', '.detail-head', '.detail-description',
     //     '.detail-dates', '.detail-datee', '.detail-times', '.detail-timee',
     //     '.detail-rooms')
 
     val_detail.push(calEvent.TYPE_NAME, calEvent.EVENT_NAME, calEvent.STAFF_ID, calEvent.EVENT_DESCRIPTION,
-        calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END, calEvent.ROOMS_ID)
+        calEvent.DATE_BEGIN, calEvent.DATE_END, calEvent.TIME_BEGIN, calEvent.TIME_END, calEvent.ROOMS_ID, calEvent
+        .ROOMS_NAME)
 
     modalShow(modal_detail, obj_detail, val_detail)
     /* ************* END DETAIL **************** */
@@ -352,13 +624,24 @@ function detail(calEvent, jsEvent, view) {
     user_start = calEvent.USER_START_NAME + " " + calEvent.USER_START_LNAME
     $(modal_detail).find('p.user-start-name').html(user_start)
 
-    /* ************** ACTION FOOTER *************** */
+    /* ************** ACTION BUTTON *************** */
+    if (calEvent.STATUS_COMPLETE == 1 || calEvent.STATUS_COMPLETE == 5) {
+        if (!calEvent.APPROVE_DATE && !calEvent.DISAPPROVE_DATE) {
+            status_approval = 'รออนุมัติ'
+        } else if (calEvent.APPROVE_DATE) {
+            status_approval = 'อนุมัติ'
+        } else if (calEvent.DISAPPROVE_DATE) {
+            status_approval = 'ไม่อนุมัติ'
+        }
+    }
+
+
     entitled = calEvent.class
     status = calEvent.STATUS_COMPLETE
     event_id = calEvent.ID
     event_code = calEvent.CODE
-    button_action(modal_detail, entitled, status, event_id, event_code, vid)
-    /* ************** END ACTION FOOTER *************** */
+    button_action(modal_detail, entitled, status, status_approval, event_id, event_code, vid, attr_inline, attr_line)
+    /* ************** END ACTION BUTTON *************** */
 
     /* ************** ACTION HEADER *************** */
     // console.log(calEvent)

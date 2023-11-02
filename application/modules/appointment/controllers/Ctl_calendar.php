@@ -490,6 +490,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
             $code = $this->generate_event_code->gen_code();
 
             $returns = $this->crud_valid->insert_data($data, $code);
@@ -502,6 +503,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
             $code = $data['code'];
 
             $returns = $this->crud_valid->update_data($data, $code);
@@ -514,6 +516,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
 
             if ($data['vid']) {
                 $returns = $this->crud_valid->reject_visitor($data);
@@ -531,6 +534,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
 
             $returns = $this->crud_valid->approval($data);
             echo json_encode($returns);
@@ -542,6 +546,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
 
             $returns = $this->crud_valid->invitation($data);
             echo json_encode($returns);
@@ -553,6 +558,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
 
             $returns = $this->crud_valid->processing($data);
             echo json_encode($returns);
@@ -564,6 +570,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->session->userdata('user_emp');
 
             $returns = $this->crud_valid->restore($data);
             echo json_encode($returns);

@@ -444,9 +444,8 @@ foreach ($staff as $val) {
                             </div>
                             <div class="meeting-place d-none">
                                 <label class="control-label">สถานที่</label>
-                                <input type="text" class="form-control"
-                                    data-placeholder="กรุณาระบุ..." value="" placeholder="กรุณาระบุ..."
-                                    name="insert-rooms-name">
+                                <input type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                    placeholder="กรุณาระบุ..." name="insert-rooms-name">
                                 <input type="hidden" name="insert-rooms-id">
                             </div>
                         </div>
@@ -568,7 +567,8 @@ foreach ($time as $value) {
                     </div>
 
                     <div class="form-group mb-3 d-flex flex-row">
-                        <div class="col-md-6"><label class="control-label">นำโดย</label>
+                        <div class="col-md-6">
+                            <label class="control-label">นำโดย</label>
 
                             <select class="form-control form-white" name="update-head" required>
                                 <option disabled selected>กรุณาเลือก...</option>
@@ -583,20 +583,29 @@ foreach ($staff as $val) {
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="control-label">ห้องประชุม</label>
-                            <select class="form-control form-white" name="update-rooms-id">
-                                <option selected disabled>กรุณาเลือก...</option>
-                                <?php
-foreach ($room as $value) {
+                            <div class="rooms-inline d-none">
+                                <label class="control-label">ห้องประชุม</label>
+                                <select class="form-control form-white" name="update-rooms-id">
+                                    <option selected disabled>กรุณาเลือก...</option>
+                                    <?php
+    foreach ($room as $value) {
+        ?>
+                                    <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                        data-rooms-branch="<?=$value->BRANCH?>">
+                                        <?=$value->ROOMS?></option>
+                                    <?php
+    }
     ?>
-                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
-                                    data-rooms-branch="<?=$value->BRANCH?>">
-                                    <?=$value->ROOMS?></option>
-                                <?php
-}
-?>
-                            </select>
-                            <input type="hidden" name="update-rooms-name">
+                                </select>
+                                <input type="hidden" name="update-rooms-name">
+                            </div>
+
+                            <div class="meeting-inline d-none">
+                                <label class="control-label">สถานที่</label>
+                                <input type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                    placeholder="กรุณาระบุ..." name="update-rooms-name">
+                                <input type="hidden" name="update-rooms-id">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -756,10 +765,10 @@ foreach ($employee as $val) {
 ?>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 rooms-inline d-none">
                             <label class="control-label">ห้องประชุม</label>
                             <!-- <p class="detail-rooms"></p> -->
-                            <select class="form-control form-white" name="detail-rooms" disabled>
+                            <select class="form-control form-white" name="detail-rooms-id" disabled>
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
 foreach ($room as $value) {
@@ -771,8 +780,52 @@ foreach ($room as $value) {
 }
 ?>
                             </select>
+                            <input class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
+                                name="detail-rooms-name" />
+                        </div>
+
+                        <div class="col-md-6 meeting-inline d-none">
+                            <label class="control-label">สถานที่</label>
+                            <!-- <p class="detail-rooms"></p> -->
+                            <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
+                                name="detail-rooms-name" disabled />
+                        </div>
+
+                        <div class="status-inline d-none">
+                            <label class="control-label invisible">status</label>
+                            <input class="form-control" name="status-inline-text" value="" disabled>
+                        </div>
+                        <div class="col-md-3 approve-inline d-none">
+
                         </div>
                     </div>
+
+                    <div class="form-group rooms-line d-none">
+                        <label class="control-label">ห้องประชุม</label>
+                        <!-- <p class="detail-rooms"></p> -->
+                        <select class="form-control form-white" name="detail-rooms-id" disabled>
+                            <option selected disabled>กรุณาเลือก...</option>
+                            <?php
+foreach ($room as $value) {
+    ?>
+                            <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                data-rooms-branch="<?=$value->BRANCH?>">
+                                <?=$value->ROOMS?></option>
+                            <?php
+}
+?>
+                        </select>
+                        <input class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
+                            name="detail-rooms-name" />
+                    </div>
+
+                    <div class="form-group meeting-line d-none">
+                        <label class="control-label">สถานที่</label>
+                        <!-- <p class="detail-rooms"></p> -->
+                        <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
+                            name="detail-rooms-name" disabled />
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <!-- <p class="detail-description"></p> -->

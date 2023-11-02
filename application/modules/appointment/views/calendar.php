@@ -319,7 +319,7 @@ $(document).ready(function() {
                     }
                 }
             }
-            if (countVal == array.length) {
+            if (countVal >= array.length) {
                 for (let i = 0; i < data.length; i++) {
 
                     // if (data[i].name == "insert-type") {
@@ -357,7 +357,8 @@ $(document).ready(function() {
                     }
                 }
             }
-            if (countVal == array.length) {
+            
+            if (countVal >= array.length) {
 
                 for (var i = 0; i < array.length; i++) {
                     if (data[i].name == "update-visitor") {
