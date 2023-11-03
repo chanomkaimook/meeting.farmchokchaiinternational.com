@@ -54,7 +54,7 @@ div.table-responsive {
 
         <div class="row">
             <div class="col-4">
-            <?//=print_r($_SESSION)?>
+                <?//=print_r($_SESSION)?>
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -132,6 +132,22 @@ $(document).ready(function() {
                 }
             })
     }
+
+
+    /**
+     * 
+     * HIDDEN.BS.MODAL
+     * 
+     */
+    $('body').on('hidden.bs.modal', function() {
+            if ($('.modal[aria-hidden=true]').length > 0) {
+                $('body').addClass('modal-open');
+            }
+        })
+    /**
+     * 
+     */
+
     /**
      * Button modal
      *
@@ -205,7 +221,7 @@ $(document).ready(function() {
         data.append('status', $('#hidden_status').val())
         data.append('area', $('#hidden_area').val())
         data.append('type', $('#hidden_type').val())
-        
+
         calendarDestroy('#calendar', url_calendar, data)
     })
 
@@ -240,8 +256,8 @@ $(document).ready(function() {
      * 
      * 
      */
-    
-     $(document).on('click', 'a.btn-draft-meeting', function() {
+
+    $(document).on('click', 'a.btn-draft-meeting', function() {
         let id = $(this).attr('data-id')
         let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
             id, domain);
@@ -266,7 +282,7 @@ $(document).ready(function() {
      * 
      * 
      */
-    
+
     $(document).on('click', 'a.btn-update-meeting', function() {
         let id = $(this).attr('data-id')
         let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
@@ -294,13 +310,33 @@ $(document).ready(function() {
      * ADDITIONAL FUNCTIONS
      *
      */
+    /* $(document).on('click','.btn-insert',function(e){
+        e.preventDefault()
+        let error = 0
+        let validvalue = [
+            '#id_input_1',
+            '#id_input_2',
+            '#id_input_3',
+        ]
+        validvalue.forEach(function(item){
+            if(!$(item).val()){
+                error = 1
+                $(item).addClass('bg-warning')
+            }
+        })
+        if(error === 0){
+            func_insert(data);
+        }
+    }) */
 
     function valid(type = null, data = []) {
-            // console.log(type)
-            // console.log(data)
-            // return false
+        // console.log(type)
+        // console.log(data)
+        // return false
         let dataAppend = new FormData(),
             visitor = [],
+            attr_error = [],
+            error = 0,
             countVal = 0;
         if (type == 'insert') {
             array = ['insert-name',
@@ -316,6 +352,11 @@ $(document).ready(function() {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
                         countVal++;
+
+                    } 
+                    
+                    if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
+                        error = 1
                     }
                 }
             }
@@ -357,7 +398,7 @@ $(document).ready(function() {
                     }
                 }
             }
-            
+
             if (countVal >= array.length) {
 
                 for (var i = 0; i < array.length; i++) {
@@ -372,7 +413,7 @@ $(document).ready(function() {
             }
         }
         if (countVal < array.length) {
-            swal_alert('error', 'ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบก่อนบันทึก')
+            Swal.fire('ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบก่อนบันทึก', 'error')
         }
     }
 
@@ -390,7 +431,7 @@ $(document).ready(function() {
      */
     $(btn_insert).click(function(e) {
         e.preventDefault()
-            dataDefault = [],
+        dataDefault = [],
             data = new FormData(),
 
             dataArray = $('#insert-meeting').serializeArray()
@@ -497,7 +538,7 @@ $(document).ready(function() {
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code')
-            // vid = $(this).attr('data-id')
+        // vid = $(this).attr('data-id')
 
         data.append('item_id', id)
         data.append('item_code', code)
@@ -761,6 +802,8 @@ $(document).ready(function() {
 })
 </script>
 <?php
-include APPPATH . "views/script/crud_modal.php";
+include APPPATH . "views/script/modal_manages.php";
+include APPPATH . "views/script/form_manage.php";
+include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
 ?>

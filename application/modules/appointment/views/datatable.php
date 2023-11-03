@@ -581,6 +581,6 @@ $(document).ready(function() {
 </script>
 
 <?php
-include APPPATH . "views/script/crud_modal.php";
+include APPPATH . "views/script/modal_manage.php";
 include APPPATH . "views/script/datatable.php";
 ?>

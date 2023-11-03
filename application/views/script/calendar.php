@@ -29,7 +29,7 @@ function createFullcalendar(url,array = []) {
                 //     modal_insert(start, end, allDay);
                 // },
                 eventClick: function(calEvent, jsEvent, view) {
-                    detail(calEvent, jsEvent, view);
+                    modal_show(calEvent);
                 },
             });
         })

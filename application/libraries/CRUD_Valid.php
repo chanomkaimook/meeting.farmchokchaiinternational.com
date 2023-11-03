@@ -88,7 +88,7 @@ class CRUD_Valid
             $main = $ci->mdl_event->insert_data($dataArray);
 
             if (!$main['error']) {
-                if ($type_id == 1 || $type_id == 3) {
+                if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
                     $SubDataArray = array(
                         'event_code' => $code,
                         'event_id' => $main['data']['id'],
@@ -103,7 +103,7 @@ class CRUD_Valid
 
                     $ci->mdl_event_meeting->insert_data($SubDataArray);
 
-                } elseif ($type_id == 2 || $type_id == 4) {
+                } elseif ($type_id == 2 || $type_id == 5) {
                     $SubDataArray = array(
                         'code' => $code,
                         'event_id' => $main['data']['id'],

@@ -4,12 +4,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Ctl_calendar extends MY_Controller
 {
     public $_title;
+    public $my_id;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
+        $this->my_id = $this->session->userdata('user_emp');
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
@@ -18,7 +20,7 @@ class Ctl_calendar extends MY_Controller
     public function index()
     {
         $optionnals['where'] = array(
-            'roles_focus.staff_owner = ' . $_SESSION['user_emp'] . ' OR employee.id = ' . $_SESSION['user_emp'] => null,
+            'roles_focus.staff_owner = ' . $this->my_id . ' OR employee.id = ' . $this->my_id => null,
         );
         $optionnals['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
         $optionnals['join'] = true;
@@ -114,6 +116,7 @@ class Ctl_calendar extends MY_Controller
     public function foreach_loop($dataShow)
     {
         $i = 0;
+
         $Calendar = array();
 
         // print_r($dataShow);die;
@@ -125,13 +128,13 @@ class Ctl_calendar extends MY_Controller
                         $dataVal = (array) $value;
                         if ($dataVal['VIS_STATUS_COMPLETE']) {
                             $state = 'vis';
-                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] == 1) {
+                        } else if ($dataVal['STAFF_ID'] == $this->my_id && $dataVal['USER_START'] == $this->my_id) {
                             $state = "me";
-                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] != 1) {
+                        } else if ($dataVal['STAFF_ID'] != $this->my_id && $dataVal['USER_START'] != $this->my_id) {
                             $state = 'other';
-                        } else if ($dataVal['STAFF_ID'] != 1 && $dataVal['USER_START'] == 1) {
+                        } else if ($dataVal['STAFF_ID'] != $this->my_id && $dataVal['USER_START'] == $this->my_id) {
                             $state = 'owner';
-                        } else if ($dataVal['STAFF_ID'] == 1 && $dataVal['USER_START'] != 1) {
+                        } else if ($dataVal['STAFF_ID'] == $this->my_id && $dataVal['USER_START'] != $this->my_id) {
                             $state = 'child';
                         }
 
@@ -159,7 +162,7 @@ class Ctl_calendar extends MY_Controller
                         $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
                         $Calendar[$i]['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
                         $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
-                        $Calendar[$i]['end'] = $dataVal["DATE_END"];
+                        $Calendar[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1 days"));
                         $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
                         $Calendar[$i]['className'] = $attr['color'];
                         $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
@@ -246,7 +249,7 @@ class Ctl_calendar extends MY_Controller
                     $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
 
                     if (!$user) {
-                        $user = $_SESSION['user_code'];
+                        $user = $this->my_id;
                     }
 
                     if ($status == 1) {
@@ -263,9 +266,9 @@ class Ctl_calendar extends MY_Controller
                     $optionnal_status['emp']['event.status_complete'] = null;
                     $optionnal_status['child']['event.status_complete'] = null;
                     $optionnal_vis['where']['event_visitor.STATUS_COMPLETE'] = $status;
-                    
+
                     if (!$user) {
-                        $optionnal['where']['event.staff_id <> '] = $_SESSION['user_code'];
+                        $optionnal['where']['event.staff_id <> '] = $this->my_id;
                     }
                 }
             }
@@ -282,7 +285,7 @@ class Ctl_calendar extends MY_Controller
             }
 
         } else {
-            // $optionnal['where']['event.staff_id'] = $_SESSION['user_emp'];
+            // $optionnal['where']['event.staff_id'] = $this->my_id;
         }
 
         $optionnal_e = $optionnal;
@@ -292,7 +295,7 @@ class Ctl_calendar extends MY_Controller
         // echo "<pre>";
         // print_r($dataShow);
 
-        if ($user && $user != $_SESSION['user_code']) {
+        if ($user && $user != $this->my_id) {
             $dataShow['me'] = null;
 
             if ($optionnal_status['child']) {
@@ -310,12 +313,12 @@ class Ctl_calendar extends MY_Controller
                 }
             }
 
-        } elseif ($user && $user == $_SESSION['user_code']) {
+        } elseif ($user && $user == $this->my_id) {
             if ($optionnal_status['emp']) {
                 $optionnal_e['where'] = $optionnal_status['emp'];
             }
             // $optionnal_e['where']['event.type_id <'] = 4;
-            $optionnal_e['where']['event.staff_id'] = $_SESSION['user_code'];
+            $optionnal_e['where']['event.staff_id'] = $this->my_id;
             $optionnal_e['join'] = "all";
 
             $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
@@ -327,12 +330,12 @@ class Ctl_calendar extends MY_Controller
                 $optionnal_e['where'] = $optionnal_status['emp'];
             }
             // $optionnal_e['where']['event.type_id <'] = 4;
-            $optionnal_e['where']['event.staff_id'] = $_SESSION['user_code'];
+            $optionnal_e['where']['event.staff_id'] = $this->my_id;
             $optionnal_e['join'] = "all";
 
             $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
 
-            $optionnal_child['where']['roles_focus.staff_owner'] = $_SESSION['user_emp'];
+            $optionnal_child['where']['roles_focus.staff_owner'] = $this->my_id;
             $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
             $optionnal_child['join'] = true;
             $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
@@ -359,9 +362,9 @@ class Ctl_calendar extends MY_Controller
         }
 
         $optionnal_vis['select'] = "event_visitor.EVENT_VISITOR,event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
-        $optionnal_vis['where']['event_visitor.event_visitor'] = $_SESSION['user_emp'];
+        $optionnal_vis['where']['event_visitor.event_visitor'] = $this->my_id;
         /* if ($optionnal_status['vis']) {
-            $optionnal_vis['where'] = $optionnal_status['vis'];
+        $optionnal_vis['where'] = $optionnal_status['vis'];
         } */
         $optionnal_vis['join'] = true;
         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
@@ -372,6 +375,7 @@ class Ctl_calendar extends MY_Controller
             $v = 0;
             foreach ($vis as $key => $sid) {
                 $optionnal_v['where']['event.code'] = $sid->EVENT_CODE;
+                $optionnal_v['where']['event.APPROVE_DATE <>'] = null;
 
                 $optionnal_v['join'] = "all";
 
@@ -440,7 +444,7 @@ class Ctl_calendar extends MY_Controller
         } else {
 
             $optionnal['where'] = array(
-                'event.user_start' => $_SESSION['user_emp'],
+                'event.user_start' => $this->my_id,
                 'event.type_id >' => 3,
             );
             $optionnal['join'] = "all";
@@ -452,7 +456,7 @@ class Ctl_calendar extends MY_Controller
 
             // echo $this->db->last_query();
             $optionnal_child['where'] = array(
-                'staff_owner' => $_SESSION['user_emp'],
+                'staff_owner' => $this->my_id,
             );
 
             $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
@@ -464,7 +468,7 @@ class Ctl_calendar extends MY_Controller
                 foreach ($child as $sid) {
                     $optionnal['where'] = array(
                         'event.staff_id' => $sid->STAFF_CHILD,
-                        'event.user_start' => $_SESSION['user_emp'],
+                        'event.user_start' => $this->my_id,
                         'event.type_id >' => 3,
                     );
                     $optionnal['join'] = "all";
@@ -490,7 +494,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
             $code = $this->generate_event_code->gen_code();
 
             $returns = $this->crud_valid->insert_data($data, $code);
@@ -503,7 +507,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
             $code = $data['code'];
 
             $returns = $this->crud_valid->update_data($data, $code);
@@ -516,7 +520,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
 
             if ($data['vid']) {
                 $returns = $this->crud_valid->reject_visitor($data);
@@ -534,7 +538,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->approval($data);
             echo json_encode($returns);
@@ -546,7 +550,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->invitation($data);
             echo json_encode($returns);
@@ -558,7 +562,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->processing($data);
             echo json_encode($returns);
@@ -570,7 +574,7 @@ class Ctl_calendar extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
-            $data['user_action'] = $this->session->userdata('user_emp');
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->restore($data);
             echo json_encode($returns);

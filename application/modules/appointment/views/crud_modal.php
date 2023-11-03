@@ -29,13 +29,13 @@
 </style>
 <!-- CREATE Modal -insert- -->
 <div class="modal fade" id="insert-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Booking</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-modal-hide="#insert-modal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="false">&times;</span>
                 </button>
             </div>
             <div class="modal-body pb-0">
@@ -44,21 +44,21 @@
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-mod-cardbox"
-                                data-dismiss="modal">จองรถ</button>
+                                data-modal-show="#insert-car" data-modal-hide="#insert-modal" data-dismiss="modal">จองรถ</button>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-mod-cardbox"
-                                data-dismiss="modal">นัดหมายกิจกรรม</button>
+                                data-modal-show="#insert-meeting" data-modal-hide="#insert-modal" data-dismiss="modal">นัดหมายกิจกรรม</button>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting-room item-mod-cardbox"
-                                data-dismiss="modal">จองห้องประชุม</button>
+                                data-modal-show="#insert-meeting-room" data-modal-hide="#insert-modal" data-dismiss="modal">จองห้องประชุม</button>
                         </div>
                     </div>
 
@@ -71,11 +71,11 @@
 
 <!-- CREATE Modal -car- -->
 <div class="modal fade" id="insert-modal-car" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#insert-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -167,11 +167,11 @@ foreach ($time as $value) {
 
 <!-- UPDATE Modal -car- -->
 <div class="modal fade none-border" id="update-modal-car" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#update-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -265,11 +265,11 @@ foreach ($time as $value) {
 
 <!-- READ Modal -car- -->
 <div class="modal fade none-border" id="detail-modal-car" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#detail-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">Booking</h4>
@@ -376,7 +376,7 @@ foreach ($time as $value) {
                         class="btn btn-success save-event waves-effect waves-light unloading">บันทึก</button>
                     <button type="button" class="btn btn-success save-event waves-effect waves-light loading d-none"
                         disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="false"></span>
                         กำลังบันทึก
                     </button>
                 </div>
@@ -392,11 +392,11 @@ foreach ($time as $value) {
 
 <!-- CREATE Modal -meeting- -->
 <div class="modal fade none-border" id="insert-modal-meeting" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#insert-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
@@ -542,11 +542,11 @@ foreach ($time as $value) {
 
 <!-- UPDATE Modal -meeting- -->
 <div class="modal fade none-border" id="update-modal-meeting" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#update-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
             </div>
             <div class="modal-body pb-0">
@@ -698,11 +698,11 @@ foreach ($time as $value) {
 
 <!-- READ Modal -meeting- -->
 <div class="modal fade none-border" id="detail-modal-meeting" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#detail-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <!-- <div class="d-flex"> -->
                 <!-- <div>
                         <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
@@ -888,11 +888,11 @@ foreach ($room as $value) {
 
 <!-- READ Modal -draft meeting- -->
 <div class="modal fade none-border" id="draft-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-    aria-hidden="true">
+    aria-hidden="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-modal-hide="#draft-modal" data-dismiss="modal" aria-hidden="false">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">แบบร่าง</h4>
