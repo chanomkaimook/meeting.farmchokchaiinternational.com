@@ -112,13 +112,15 @@ let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, doma
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 $(document).ready(function() {
+    btn_manage('pending', 'owner')
+    // btn_all_in_modal()
     /**
      * #
      * function get data
      * #
      */
     createFullcalendar(url_calendar)
-    createDraftModal(url_draft)
+    /* createDraftModal(url_draft)
 
     function createDraftModal(url_draft) {
         get_data_draft(url_draft)
@@ -131,7 +133,7 @@ $(document).ready(function() {
                     detail_draft(dataDefault)
                 }
             })
-    }
+    } */
 
 
     /**
@@ -802,8 +804,9 @@ $(document).ready(function() {
 })
 </script>
 <?php
-include APPPATH . "views/script/modal_manages.php";
-include APPPATH . "views/script/form_manage.php";
+include APPPATH . "views/script/crud_modal.php";
+// include APPPATH . "views/script/modal_manages.php";
+// include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
 ?>

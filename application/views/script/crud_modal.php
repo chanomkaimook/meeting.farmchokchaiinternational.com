@@ -136,8 +136,8 @@ function button_action(modal, entitled, status, status_approval, event_id, event
         if (status == 1) {
             if (entitled == 'me' || entitled == 'owner') {
                 html =
-                    `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
-                <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
+                //     `<button type="button" class="btn btn-danger waves-effect waves-light btn-cancle" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ยกเลิก</button>
+                // <button type="button" class="btn btn-success waves-effect waves-light btn-finish" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">สำเร็จ</button>`;
 
                 $(modal).find('.action-header').removeClass('d-none')
 
@@ -509,7 +509,7 @@ function detail(calEvent, jsEvent, view) {
         attr_line = [],
         vid = '';
 
-    console.log(calEvent)
+    // console.log(calEvent)
     // console.log(123)
     $('#detail-modal-car').find('[data-visitor=true]').addClass('d-none')
     $('#detail-modal-meeting').find('[data-visitor=true]').addClass('d-none')

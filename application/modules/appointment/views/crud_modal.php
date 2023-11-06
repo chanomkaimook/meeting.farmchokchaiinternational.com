@@ -34,7 +34,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Booking</h4>
-                <button type="button" class="close" data-modal-hide="#insert-modal" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-modal-hide="#insert-modal" data-dismiss="modal"
+                    aria-label="Close">
                     <span aria-hidden="false">&times;</span>
                 </button>
             </div>
@@ -44,21 +45,24 @@
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-mod-cardbox"
-                                data-modal-show="#insert-car" data-modal-hide="#insert-modal" data-dismiss="modal">จองรถ</button>
+                                data-modal-show="#insert-car" data-modal-hide="#insert-modal"
+                                data-dismiss="modal">จองรถ</button>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-mod-cardbox"
-                                data-modal-show="#insert-meeting" data-modal-hide="#insert-modal" data-dismiss="modal">นัดหมายกิจกรรม</button>
+                                data-modal-show="#insert-meeting" data-modal-hide="#insert-modal"
+                                data-dismiss="modal">นัดหมายกิจกรรม</button>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting-room item-mod-cardbox"
-                                data-modal-show="#insert-meeting-room" data-modal-hide="#insert-modal" data-dismiss="modal">จองห้องประชุม</button>
+                                data-modal-show="#insert-meeting-room" data-modal-hide="#insert-modal"
+                                data-dismiss="modal">จองห้องประชุม</button>
                         </div>
                     </div>
 
@@ -75,7 +79,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#insert-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#insert-modal-car" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -171,7 +176,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#update-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#update-modal-car" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -269,7 +275,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#detail-modal-car" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#detail-modal-car" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">Booking</h4>
@@ -396,7 +403,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#insert-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#insert-modal-meeting" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
@@ -546,7 +554,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#update-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#update-modal-meeting" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
             </div>
             <div class="modal-body pb-0">
@@ -702,7 +711,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#detail-modal-meeting" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#detail-modal-meeting" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <!-- <div class="d-flex"> -->
                 <!-- <div>
                         <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
@@ -720,6 +730,8 @@ foreach ($time as $value) {
             <div class="modal-body pb-0">
                 <form class="form" id="detail-meeting">
                     <div class="row action-header">
+
+                        <!-- ************************************************************************************** -->
                         <div class="col-6">
                             <div class="cardbox text-center">
                                 <button type="button"
@@ -734,6 +746,7 @@ foreach ($time as $value) {
                                     data-dismiss="modal">ลบ</button>
                             </div>
                         </div>
+                        <!-- ************************************************************************************** -->
 
                     </div>
                     <div class="form-group">
@@ -765,6 +778,7 @@ foreach ($employee as $val) {
 ?>
                             </select>
                         </div>
+                        <!-- ************************************************************************************** -->
                         <div class="col-md-6 rooms-inline d-none">
                             <label class="control-label">ห้องประชุม</label>
                             <!-- <p class="detail-rooms"></p> -->
@@ -783,23 +797,28 @@ foreach ($room as $value) {
                             <input class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
                                 name="detail-rooms-name" />
                         </div>
-
+                        <!-- ************************************************************************************** -->
+                        <!-- ************************************************************************************** -->
                         <div class="col-md-6 meeting-inline d-none">
                             <label class="control-label">สถานที่</label>
                             <!-- <p class="detail-rooms"></p> -->
                             <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
                                 name="detail-rooms-name" disabled />
                         </div>
-
+                        <!-- ************************************************************************************** -->
+                        <!-- ************************************************************************************** -->
                         <div class="status-inline d-none">
                             <label class="control-label invisible">status</label>
                             <input class="form-control" name="status-inline-text" value="" disabled>
                         </div>
-                        <div class="col-md-3 approve-inline d-none">
+                        <!-- ************************************************************************************** -->
+                        <!-- ************************************************************************************** -->
+                        <div class="col-md-3 action-approval d-none">
 
                         </div>
+                        <!-- ************************************************************************************** -->
                     </div>
-
+                    <!-- ************************************************************************************** -->
                     <div class="form-group rooms-line d-none">
                         <label class="control-label">ห้องประชุม</label>
                         <!-- <p class="detail-rooms"></p> -->
@@ -818,13 +837,15 @@ foreach ($room as $value) {
                         <input class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
                             name="detail-rooms-name" />
                     </div>
-
+                    <!-- ************************************************************************************** -->
+                    <!-- ************************************************************************************** -->
                     <div class="form-group meeting-line d-none">
                         <label class="control-label">สถานที่</label>
                         <!-- <p class="detail-rooms"></p> -->
                         <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
                             name="detail-rooms-name" disabled />
                     </div>
+                    <!-- ************************************************************************************** -->
 
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
@@ -892,7 +913,8 @@ foreach ($room as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#draft-modal" data-dismiss="modal" aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-modal-hide="#draft-modal" data-dismiss="modal"
+                    aria-hidden="false">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">แบบร่าง</h4>
