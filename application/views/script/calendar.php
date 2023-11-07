@@ -30,6 +30,8 @@ function createFullcalendar(url,array = []) {
                 // },
                 eventClick: function(calEvent, jsEvent, view) {
                     detail(calEvent);
+                    form_data_all(calEvent)
+                    // console.log(calEvent)
                 },
             });
         })

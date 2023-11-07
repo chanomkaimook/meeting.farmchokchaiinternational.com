@@ -156,11 +156,11 @@ function btn_displayed(status = null) {
 
     let array = []
 
-    array['pending'] = btn_pending,
-        array['success'] = btn_success,
-        array['failure'] = btn_failure,
-        array['canceled'] = btn_canceled,
-        array['doing'] = btn_doing
+    array[1] = btn_pending,
+        array[2] = btn_success,
+        array[3] = btn_failure,
+        array[4] = btn_canceled,
+        array[5] = btn_doing
 
     return array
 }

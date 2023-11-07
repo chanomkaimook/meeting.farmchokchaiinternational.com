@@ -556,7 +556,7 @@ foreach ($time as $value) {
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#update-modal-meeting" data-dismiss="modal"
                     aria-hidden="false">&times;</button>
-                <h4 class="modal-title">นัดหมาย/จองห้องประชุม</h4>
+                <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="update-meeting">
@@ -777,33 +777,6 @@ foreach ($employee as $val) {
 }
 ?>
                             </select>
-                        </div>
-                        <!-- ************************************************************************************** -->
-                        <div class="col-md-6 rooms-inline d-none">
-                            <label class="control-label">ห้องประชุม</label>
-                            <!-- <p class="detail-rooms"></p> -->
-                            <select class="form-control form-white" name="detail-rooms-id" disabled>
-                                <option selected disabled>กรุณาเลือก...</option>
-                                <?php
-foreach ($room as $value) {
-    ?>
-                                <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
-                                    data-rooms-branch="<?=$value->BRANCH?>">
-                                    <?=$value->ROOMS?></option>
-                                <?php
-}
-?>
-                            </select>
-                            <input class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
-                                name="detail-rooms-name" />
-                        </div>
-                        <!-- ************************************************************************************** -->
-                        <!-- ************************************************************************************** -->
-                        <div class="col-md-6 meeting-inline d-none">
-                            <label class="control-label">สถานที่</label>
-                            <!-- <p class="detail-rooms"></p> -->
-                            <input class="form-control form-white" placeholder="Enter topic" type="text" value=""
-                                name="detail-rooms-name" disabled />
                         </div>
                         <!-- ************************************************************************************** -->
                         <!-- ************************************************************************************** -->

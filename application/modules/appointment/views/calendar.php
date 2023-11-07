@@ -112,7 +112,8 @@ let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, doma
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 $(document).ready(function() {
-    btn_manage('pending', 'owner')
+    
+    // btn_manage('pending', 'owner')
     // btn_all_in_modal()
     /**
      * #
@@ -142,10 +143,10 @@ $(document).ready(function() {
      * 
      */
     $('body').on('hidden.bs.modal', function() {
-            if ($('.modal[aria-hidden=true]').length > 0) {
-                $('body').addClass('modal-open');
-            }
-        })
+        if ($('.modal[aria-hidden=true]').length > 0) {
+            $('body').addClass('modal-open');
+        }
+    })
     /**
      * 
      */
@@ -312,6 +313,16 @@ $(document).ready(function() {
      * ADDITIONAL FUNCTIONS
      *
      */
+    function form_manage(data = []) {
+        if (data.TYPE_ID == 1 || data.TYPE_ID == 4) {
+            form_rooms_manage(data)
+        } else if (data.TYPE_ID == 2 || data.TYPE_ID == 5) {
+            form_car_manage(data)
+
+        } else if (data.TYPE_ID == 3 || data.TYPE_ID == 6) {
+            form_meeting_manage(data)
+        }
+    }
     /* $(document).on('click','.btn-insert',function(e){
         e.preventDefault()
         let error = 0
@@ -355,8 +366,8 @@ $(document).ready(function() {
                     if (data[s].name == array[i] && data[s].value != "") {
                         countVal++;
 
-                    } 
-                    
+                    }
+
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
                         error = 1
                     }
@@ -806,7 +817,7 @@ $(document).ready(function() {
 <?php
 include APPPATH . "views/script/crud_modal.php";
 // include APPPATH . "views/script/modal_manages.php";
-// include APPPATH . "views/script/form_manage.php";
-include APPPATH . "views/script/btn_manage.php";
+include APPPATH . "views/script/form_manage.php";
+// include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
 ?>
