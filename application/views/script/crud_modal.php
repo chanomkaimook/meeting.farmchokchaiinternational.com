@@ -612,7 +612,7 @@ function detail(calEvent, jsEvent, view) {
             vis_html = vis_html + calEvent.VISITOR[i].VNAME + ' ' + calEvent.VISITOR[i].VLNAME + ' ' + status_vis +
                 '<br>'
 
-            vid = calEvent.VISITOR[i].EID
+            vid = calEvent.VISITOR[i].VID
         }
 
         user_visitor = calEvent.VISITOR.map((item, index) => {

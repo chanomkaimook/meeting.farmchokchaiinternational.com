@@ -1,19 +1,19 @@
 <script>
 /**@function
- * 
+ *
  * form_rooms_manage(data = [])
  * form_car_manage(data = [])
  * form_meeting_manage(data = [])
- * 
+ *
  * @array data
  * ข้อมูลดิบจาก database ยังไม่ได้จำแนก
- * 
+ *
  * ################################
- * 
+ *
  * @function
- * 
+ *
  * form_manage(data = [])
- * 
+ *
  * @array data
  * ข้อมูลที่จำแนกแล้ว โดยที่
  * index = ชื่อ field ภายใน form
@@ -25,11 +25,68 @@
  * ################################
  */
 
-function form_data_all(data = []) {
+function form_displayed(data) {
+    let modal_detail, modal_update, status_head
+
+    if (data.TYPE_ID == 1 || data.TYPE_ID == 3) {
+        modal_detail = '#detail-modal-meeting'
+        modal_update = '#update-modal-meeting'
+        if (data.TYPE_ID == 1) {
+            $(modal_detail).find('div.rooms-line').removeClass('d-none')
+            $(modal_detail).find('div.meeting-line').addClass('d-none')
+
+            $(modal_update).find('div.update-rooms').removeClass('d-none')
+            $(modal_update).find('div.update-meeting').addClass('d-none')
+
+        } else if (data.TYPE_ID == 3) {
+            $(modal_detail).find('div.rooms-line').addClass('d-none')
+            $(modal_detail).find('div.meeting-line').removeClass('d-none')
+
+            $(modal_update).find('div.update-rooms').addClass('d-none')
+            $(modal_update).find('div.update-meeting').removeClass('d-none')
+
+        }
+    } else {
+        modal_detail = '#detail-modal-car'
+        modal_update = '#update-modal-car'
+    }
+
+    $(modal_detail).modal('show')
+
+    // form_displayed_body()
+    form_displayed_layouts(data.STATUS_COMPLETE, data.class, modal_detail)
+    form_displayed_data(data, modal_detail, modal_update)
+    form_displayed_header(data.STATUS_COMPLETE, data.STATUS_COMPLETE_NAME)
+
+    /********************************************* Form Data *********************************************/
+    if (!data.APPROVE_DATE && !data.DISAPPROVE_DATE && !data.CANCLE_DATE) {
+        $(modal_detail).find('[name=status-inline-text]').val('รออนุมัติ')
+    } else if (data.APPROVE_DATE) {
+        $(modal_detail).find('[name=status-inline-text]').val('อนุมัติ')
+    } else if (data.DISAPPROVE_DATE) {
+        $(modal_detail).find('[name=status-inline-text]').val('ไม่อนุมัติ')
+    }
+
+    /********************************************* Form Layouts *********************************************/
+
+
+}
+
+function form_displayed_layouts(status, role, modal_detail) {
+    /* if (type == 1) {
+        $(modal_detail).find('div.meeting-line').addClass('d-none')
+        $(modal_detail).find('div.rooms-line').removeClass('d-none')
+    } else if (type == 3) {
+        $(modal_detail).find('div.rooms-line').addClass('d-none')
+        $(modal_detail).find('div.meeting-line').removeClass('d-none')
+    } */
+
     let addClass = {
             1: { // สถานะ pending
                 me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ pending
-                owner: {'div.status-inline': 'col-md-3'}, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่าง
+                owner: {
+                    'div.status-inline': 'col-md-3'
+                }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่าง
                 child: {
                     'div.status-inline': 'col-md-6',
                     'div.action-approval': 'd-none',
@@ -40,28 +97,28 @@ function form_data_all(data = []) {
             },
             2: { // สถานะ success
                 me: {
-                    'div.action-footer': 'd-none',
+                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-md-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
-                    'div.action-footer': 'd-none',
+                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-md-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 child: {
-                    'div.action-footer': 'd-none',
+                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-md-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 vis: {
-                    'div.action-footer': 'd-none',
+                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-md-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
@@ -69,81 +126,68 @@ function form_data_all(data = []) {
                 }, // role 'vis' เป็นผู้เข้าร่วม ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
             },
             3: { // สถานะ failure
-                me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
-                }, // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ failure
+                me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ failure
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
             },
             4: { // สถานะ canceled
                 me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
             },
             5: { // สถานะ doing
                 me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ปิดงานได้เท่านั้น (สำเร็จ/ยกเลิก)
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-6',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม ตอบรับได้เท่านั้น (เข้าร่วม/ไม่เข้าร่วม)
             },
 
@@ -152,311 +196,320 @@ function form_data_all(data = []) {
             1: { // สถานะ pending
                 me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ pending
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'd-none',
+                    'div.action-approval': 'd-none',
+                    'div.action-respond': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่าง
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน อนุมัติ/ไม่อนุมัติเท่านั้น
-                vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
-                }, // role 'vis' เป็นผู้เข้าร่วม ไม่มีสถานะ pending
+                vis: '', // role 'vis' เป็นผู้เข้าร่วม ไม่มีสถานะ pending
             },
             2: { // สถานะ success
                 me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
             },
             3: { // สถานะ failure
                 me: '', // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
             },
             4: { // สถานะ canceled
                 me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
             },
             5: { // สถานะ doing
                 me: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-respond': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 owner: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-respond': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 child: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.action-header': 'd-none',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ปิดงานได้เท่านั้น (สำเร็จ/ยกเลิก)
                 vis: {
-                    '': '',
-                    '': '',
-                    '': '',
-                    '': '',
+                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'd-none',
+                    'div[data-visitor=true]': 'd-none',
+                    'div.action-footer': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม ตอบรับได้เท่านั้น (เข้าร่วม/ไม่เข้าร่วม)
             },
-        },
+        }
 
+    $.each(addClass[status][role], function(tagname, class_val) {
+
+        $(modal_detail).find(tagname).addClass(class_val)
+    });
+
+    $.each(removeClass[status][role], function(tagname, class_val) {
+
+        $(modal_detail).find(tagname).removeClass(class_val)
+    });
+
+}
+
+function form_displayed_header(status, status_text) {
+    if (status == 1 || status == 5) {
+        $('.modal-header').find('.text-warning').removeClass('d-none').html(status_text)
+        $('.modal-header').find('.text-success').addClass('d-none')
+        $('.modal-header').find('.text-danger').addClass('d-none')
+        $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
+    } else if (status == 2) {
+        $('.modal-header').find('.text-warning').addClass('d-none')
+        $('.modal-header').find('.text-success').removeClass('d-none').html(status_text)
+        $('.modal-header').find('.text-danger').addClass('d-none')
+        $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
+    } else if (status == 3) {
+        $('.modal-header').find('.text-warning').addClass('d-none')
+        $('.modal-header').find('.text-success').addClass('d-none')
+        $('.modal-header').find('.text-danger').removeClass('d-none').html(status_text)
+        $('.modal-header').find('.text-secondary').addClass('d-none')
+        $('.modal-header').find('.text-orange').addClass('d-none')
+    } else if (status == 4) {
+        $('.modal-header').find('.text-warning').addClass('d-none')
+        $('.modal-header').find('.text-success').addClass('d-none')
+        $('.modal-header').find('.text-danger').addClass('d-none')
+        $('.modal-header').find('.text-secondary').removeClass('d-none').html(status_text)
+        $('.modal-header').find('.text-orange').addClass('d-none')
+    }
+
+}
+
+function form_displayed_data(data, modal_detail, modal_update) {
+    // console.log(data.class)
+
+    let form_update = {
+            '[name=item_id]': data.ID,
+            '[name=code]': data.CODE,
+            '[name=update-type-id]': data.TYPE_ID,
+            '[name=update-type-name]': data.TYPE_NAME,
+            '[name=update-name]': data.EVENT_NAME,
+            '[name=update-head]': data.STAFF_ID,
+            '[name=update-rooms-id]': data.ROOMS_ID,
+            '[name=update-rooms-name]': data.ROOMS_NAME,
+            '[name=update-description]': data.EVENT_DESCRIPTION,
+            '[name=update-dates]': data.DATE_BEGIN,
+            '[name=update-datee]': data.DATE_END,
+            'select[name=update-times]': data.TIME_BEGIN,
+            'select[name=update-timee]': data.TIME_END,
+            '[name=update-visitor]': data.VISITOR
+        },
         form_detail = {
-            'item_id': data.ID,
-            'code': data.CODE,
-            'update-type-id': data.TYPE_ID,
-            'update-type-name': data.TYPE_NAME,
-            'update-name': data.EVENT_NAME,
-            'update-head': data.STAFF_ID,
-            'update-rooms-id': data.ROOMS_ID,
-            'update-rooms-name': data.ROOMS_NAME,
-            'update-description': data.EVENT_DESCRIPTION,
-            'update-dates': data.DATE_BEGIN,
-            'update-datee': data.DATE_END,
-            'update-times': data.TIME_BEGIN_SHOW,
-            'update-timee': data.TIME_END_SHOW,
-            'update-visitor': data.VISITOR
-        },
-        form_update = {
-            'type-id': data.TYPE_ID,
-            'detail-type': data.TYPE_NAME,
-            'detail-name': data.EVENT_NAME,
-            'detail-head': data.STAFF_ID,
-            'detail-rooms-id': data.ROOMS_ID,
-            'detail-rooms-name': data.ROOMS_NAME,
-            'detail-description': data.EVENT_DESCRIPTION,
-            'detail-dates': data.DATE_BEGIN,
-            'detail-datee': data.DATE_END,
-            'detail-times': data.TIME_BEGIN_SHOW,
-            'detail-timee': data.TIME_END_SHOW,
+            '[name=type-id]': data.TYPE_ID,
+            '[name=detail-type]': data.TYPE_NAME,
+            '[name=detail-name]': data.EVENT_NAME,
+            '[name=detail-head]': data.STAFF_ID,
+            '[name=detail-rooms-id]': data.ROOMS_ID,
+            '[name=detail-rooms-name]': data.ROOMS_NAME,
+            '[name=detail-description]': data.EVENT_DESCRIPTION,
+            '[name=detail-dates]': data.DATE_BEGIN,
+            '[name=detail-datee]': data.DATE_END,
+            '[name=detail-times]': data.TIME_BEGIN_SHOW,
+            '[name=detail-timee]': data.TIME_END_SHOW,
+            'user-start-name': data.USER_START_FULLNAME,
             'detail-visitor': data.VISITOR,
-            'visitor-name': '',
-            'user-start-name': data.USER_START_FULLNAME
-        }
-}
-
-function form_rooms_manage(data = []) {
-    let updateForm = {
-            'item_id': data.ID,
-            'code': data.CODE,
-            'update-type-id': data.TYPE_ID,
-            'update-type-name': data.TYPE_NAME,
-            'update-name': data.EVENT_NAME,
-            'update-head': data.STAFF_ID,
-            'update-rooms-id': data.ROOMS_ID,
-            'update-rooms-name': data.ROOMS_NAME,
-            'update-description': data.EVENT_DESCRIPTION,
-            'update-dates': data.DATE_BEGIN,
-            'update-datee': data.DATE_END,
-            'update-times': data.TIME_BEGIN_SHOW,
-            'update-timee': data.TIME_END_SHOW,
-            'update-visitor': data.VISITOR
         },
-        detailForm = {
-            'type-id': data.TYPE_ID,
-            'detail-type': data.TYPE_NAME,
-            'detail-name': data.EVENT_NAME,
-            'detail-head': data.STAFF_ID,
-            'detail-rooms-id': data.ROOMS_ID,
-            'detail-rooms-name': data.ROOMS_NAME,
-            'detail-description': data.EVENT_DESCRIPTION,
-            'detail-dates': data.DATE_BEGIN,
-            'detail-datee': data.DATE_END,
-            'detail-times': data.TIME_BEGIN_SHOW,
-            'detail-timee': data.TIME_END_SHOW,
-            'detail-visitor': data.VISITOR,
-            'visitor-name': '',
-            'user-start-name': data.USER_START_FULLNAME
-        },
-        role = data.class,
-        status = data.STATUS_COMPLETE
-    /* 
-        console.log(detailForm);
-        console.log(updateForm);
-     */
-
-    form_manage(detailForm, updateForm, status, role)
-}
-
-function form_car_manage(data = []) {
-
-}
-
-function form_meeting_manage(data = []) {
-    item = ['item_id',
-        'code',
-        'update-type-id',
-        'update-type-name',
-        'update-name',
-        'update-head',
-        'update-rooms-id',
-        'update-rooms-name',
-        'update-description',
-        'update-dates',
-        'update-datee',
-        'update-times',
-        'update-timee'
-    ]
-}
-
-function form_manage(status, role) {
-    $('.action-header').addClass('d-none')
-    $('.action-respond').addClass('d-none')
-    $('.action-approval').addClass('d-none')
-    $('.action-footer').addClass('d-none')
-
-    let formData
-    if (type == '1') {
-        formData = form_rooms_manage()
-    } else if (type == '2') {
-        formData = form_car_manage()
-    } else if (type == '3') {
-        formData = form_meeting_manage()
-    }
-
-    // console.log(btn[status][role])
-    form_displayed(formData[status][role])
-}
-
-function form_displayed(data = []) {
-    let visitor_id = [],
-        visitor_name = []
-
-    if (status !== 2) {
-        if (role != 'other' && role != 'vis') {
-            $('.action-header').removeClass('d-none')
-        } else {
-            $('.action-header').addClass('d-none')
-        }
-
-    } else { // status_complete === 2
-        $('.action-header').addClass('d-none')
-
-        $('.status-inline').addClass('col-md-6')
-
-        $('.action-approval').addClass('d-none')
-        $('.meeting-line').addClass('d-none')
-        $('.meeting-inline').addClass('d-none')
-
-        if (detailForm['type-id'] === 1) {
-            $('.meeting-inline').addClass('d-none')
-        } else if (detailForm['type-id'] === 3) {
-            $('.status-inline').addClass('col-md-6')
-
-            $('.meeting-line').addClass('d-none')
-            $('.action-approval').addClass('d-none')
-        }
-
-    }
-
-
-
-
-
-    $.each(detailForm, function(key, value) {
-        console.log(key + ": " + value);
-
-        $('[name=' + key + ']').val(value)
-
-
-
-
-
-
-
-
-        if (key == 'detail-visitor' || key == 'detail-visitor' || key == 'detail-visitor') {
-            if (value) {
-                for (let i = 0; i < value.length; i++) {
-                    // console.log(key + ": " + value[i].VID);
-                    visitor_id.push(value[i].VID)
-                    visitor_name.push(value[i].VNAME + " " + value[i].VLNAME)
-                }
-                detailForm['visitor-name'] = visitor_name
-                updateForm['update-visitor'] = visitor_id
+        vid = [],
+        visitor_name = [],
+        status, role, event_id, event_code
+// console.log(data.VISITOR)
+    if (data.VISITOR) {
+        let status_vis = "",
+            vis_html = "",
+            btn_action;
+        for (let i = 0; i < data.VISITOR.length; i++) {
+            //             btn_vis_action = `
+            //             <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject text-lg-center' data-id='${data.VISITOR[i].EID}' data-event-id='${data.ID}' data-event-code='${data.CODE}'> <i class='fa fa-trash-alt'></i> </button>
+            //             <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny text-lg-center' data-id='${data.VISITOR[i].EID}' data-event-id='${data.ID}' data-event-code='${data.CODE}'> <i class='mdi mdi-account-remove'></i> </button>
+            //             <button type='button' class='btn btn-icon waves-effect btn-success defer text-lg-center'  data-id='${data.VISITOR[i].EID}' data-event-id='${data.ID}' data-event-code='${data.CODE}'> <i class='mdi mdi-account-check'></i> </button>
+            // `
+            btn_action = `
+            <div class="action-respond" data-row-id="${data.VISITOR[i].VID}"></div>
+            `
+            if (data.VISITOR[i].VSTATUS == 1) {
+                status_vis =
+                    `<span>รอตอบรับ</span>`
+            } else if (data.VISITOR[i].VSTATUS == 2) {
+                status_vis =
+                    `<span>เข้าร่วม</span>`
+            } else if (data.VISITOR[i].VSTATUS == 3) {
+                status_vis =
+                    `<span>ปฏิเสธ</span>`
             }
-        }
-        if (key == 'visitor-name') {
-            return false
-        }
-    });
-    console.log('-------------------------------------------------------------------------')
-    $.each(updateForm, function(key, value) {
-        console.log(key + ": " + value);
+            if (data.class == 'me' || data.class == 'owner') { // my_id = session('user_emp') อยู่ใน views หลัก
+                status_vis = status_vis + `<div class="action-respond" data-row-id="${data.VISITOR[i].EID}"></div>`
+            }
 
+            vis_html = vis_html + data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME + ' ' + status_vis +
+                '<br>'
+
+            // vid[i] = data.VISITOR[i].EID
+            
+        }
+
+        user_visitor = data.VISITOR.map((item, index) => {
+            return item.EID
+        })
+        $(modal_detail).find('select[name=update-visitor]').val(user_visitor).trigger('change')
+
+        $(modal_detail).find('[data-visitor=true]').removeClass('d-none')
+        $(modal_detail).find('h5.visitor-name').html(vis_html)
+
+        // $(modal_update).find('[data-visitor=true]').removeClass('d-none')
+    }
+
+    $.each(form_detail, function(key, value) {
+        if (key == 'user-start-name') {
+            $(modal_detail).find('p.' + key).html(value)
+        } else {
+            $(modal_detail).find(key).val(value)
+        }
     });
+
+    $.each(form_update, function(key, value) {
+        // console.log(key + ": " + value);
+
+        $(modal_update).find(key).val(value)
+    });
+    btn_manage(data.STATUS_COMPLETE, data.class, data.ID, data.CODE, user_visitor)
+    // return arrayReturn
+
 }
 
+// function form_meeting_manage(data = []) {
+//     item = ['item_id',
+//         'code',
+//         'update-type-id',
+//         'update-type-name',
+//         'update-name',
+//         'update-head',
+//         'update-rooms-id',
+//         'update-rooms-name',
+//         'update-description',
+//         'update-dates',
+//         'update-datee',
+//         'update-times',
+//         'update-timee'
+//     ]
+// }
+
+// function form_rooms_manage(data = []) {
+//     let updateForm = {
+//             'item_id': data.ID,
+//             'code': data.CODE,
+//             'update-type-id': data.TYPE_ID,
+//             'update-type-name': data.TYPE_NAME,
+//             'update-name': data.EVENT_NAME,
+//             'update-head': data.STAFF_ID,
+//             'update-rooms-id': data.ROOMS_ID,
+//             'update-rooms-name': data.ROOMS_NAME,
+//             'update-description': data.EVENT_DESCRIPTION,
+//             'update-dates': data.DATE_BEGIN,
+//             'update-datee': data.DATE_END,
+//             'update-times': data.TIME_BEGIN_SHOW,
+//             'update-timee': data.TIME_END_SHOW,
+//             'update-visitor': data.VISITOR
+//         },
+//         detailForm = {
+//             'type-id': data.TYPE_ID,
+//             'detail-type': data.TYPE_NAME,
+//             'detail-name': data.EVENT_NAME,
+//             'detail-head': data.STAFF_ID,
+//             'detail-rooms-id': data.ROOMS_ID,
+//             'detail-rooms-name': data.ROOMS_NAME,
+//             'detail-description': data.EVENT_DESCRIPTION,
+//             'detail-dates': data.DATE_BEGIN,
+//             'detail-datee': data.DATE_END,
+//             'detail-times': data.TIME_BEGIN_SHOW,
+//             'detail-timee': data.TIME_END_SHOW,
+//             'detail-visitor': data.VISITOR,
+//             'visitor-name': '',
+//             'user-start-name': data.USER_START_FULLNAME
+//         },
+//         role = data.class,
+//         status = data.STATUS_COMPLETE
+//     /*
+//         console.log(detailForm);
+//         console.log(updateForm);
+//      */
+
+//     form_manage(detailForm, updateForm, status, role)
+// }
+
+// function form_car_manage(data = []) {
+
+// }
 // function form_manage(data = []) {
 //     $('.action-header').empty()
 //     $('.action-respond').empty()
@@ -472,29 +525,29 @@ function form_displayed(data = []) {
 
 //     /*********** ALL BUTTON IN 'DETAIL-MODAL' ***********/
 //     /**
-//      * 
+//      *
 //      * action_header(me(!pending),owner,child (pending,failure,canceled,doing))
 //      *  - ['header_update', 'header_delete']
-//      * 
+//      *
 //      * action_respond(me,owner (doing))
 //      *  - ['body_reject', 'body_refuse', 'body_accept']
-//      * 
+//      *
 //      * action_approval(owner (pending))
 //      *  - ['body_disapprove', 'body_approve']
-//      * 
+//      *
 //      * action_footer(child (doing))
 //      *  - ['footer_disapprove', 'footer_approve']
-//      * 
+//      *
 //      * action_footer(vis (doing))
 //      *  - ['footer_refuse', 'footer_accept']
-//      * 
+//      *
 //      * action_footer(me(doing),owner(pending,doing),child(doing))
 //      *  - ['footer_cancel', 'footer_success']
-//      * 
+//      *
 //      * action_footer(me,owner,child (failure,canceled))
 //      *  - ['footer_restore']
-//      * 
-//      * 
+//      *
+//      *
 //      */
 
 //     /*********** BUTTON TO BE DISPLAYED ON 'DETAIL-MODAL' ***********/

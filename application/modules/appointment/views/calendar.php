@@ -112,7 +112,7 @@ let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, doma
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 $(document).ready(function() {
-    
+
     // btn_manage('pending', 'owner')
     // btn_all_in_modal()
     /**
@@ -350,6 +350,7 @@ $(document).ready(function() {
             visitor = [],
             attr_error = [],
             error = 0,
+            arrayLength = 0,
             countVal = 0;
         if (type == 'insert') {
             array = ['insert-name',
@@ -369,11 +370,15 @@ $(document).ready(function() {
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error = 1
+                        error += 1
+                        attr_error = data[s].name + "<--->" + data[s].value + "<--->" + array[i]
                     }
                 }
             }
-            if (countVal >= array.length) {
+
+            arrayLength = array.length - 2
+
+            if (data.length >= arrayLength) {
                 for (let i = 0; i < data.length; i++) {
 
                     // if (data[i].name == "insert-type") {
@@ -398,6 +403,8 @@ $(document).ready(function() {
                 'update-head',
                 'update-rooms-id',
                 'update-rooms-name',
+                'update-meeting-id',
+                'update-meeting-name',
                 'update-description',
                 'update-dates',
                 'update-datee',
@@ -409,14 +416,17 @@ $(document).ready(function() {
                     if (data[s].name == array[i] && data[s].value != "") {
                         countVal++;
                     }
+                    attr_error = data[s].name + "<--->" + data[s].value + "<--->" + array[i]
+
                 }
             }
+            arrayLength = array.length - 2
 
-            if (countVal >= array.length) {
+            if (data.length >= arrayLength) {
 
-                for (var i = 0; i < array.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     if (data[i].name == "update-visitor") {
-                        visitor.push(dataAppend[i].value)
+                        visitor.push(data[i].value)
                     }
                     dataAppend.append(data[i].name, data[i].value)
                 }
@@ -425,7 +435,7 @@ $(document).ready(function() {
 
             }
         }
-        if (countVal < array.length) {
+        if (data.length < arrayLength) {
             Swal.fire('ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบก่อนบันทึก', 'error')
         }
     }
@@ -818,6 +828,6 @@ $(document).ready(function() {
 include APPPATH . "views/script/crud_modal.php";
 // include APPPATH . "views/script/modal_manages.php";
 include APPPATH . "views/script/form_manage.php";
-// include APPPATH . "views/script/btn_manage.php";
+include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
 ?>

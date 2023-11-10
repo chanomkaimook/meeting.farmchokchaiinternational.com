@@ -29,8 +29,8 @@ function createFullcalendar(url,array = []) {
                 //     modal_insert(start, end, allDay);
                 // },
                 eventClick: function(calEvent, jsEvent, view) {
-                    detail(calEvent);
-                    form_data_all(calEvent)
+                    // detail(calEvent);
+                    form_displayed(calEvent);
                     // console.log(calEvent)
                 },
             });

@@ -42,6 +42,8 @@ class CRUD_Valid
             $time_end = $data['insert-timee'];
             $rooms_id = $data['insert-rooms-id'];
             $rooms_name = $data['insert-rooms-name'];
+            $meeting_id = $data['insert-meeting-id'];
+            $meeting_name = $data['insert-meeting-name'];
             $car_id = $data['insert-car-id'];
             $car_name = $data['insert-car-name'];
             $driver_id = $data['insert-driver-id'];
@@ -93,14 +95,22 @@ class CRUD_Valid
                         'event_code' => $code,
                         'event_id' => $main['data']['id'],
                         'staff_id' => $staff_id,
-                        'rooms_id' => $rooms_id,
-                        'rooms_name' => $rooms_name,
                         'date_start' => date('Y-m-d H:i:s'),
                         'status' => 1,
 
                         'user_start' => $user_action,
                     );
 
+                    if($type_id == 1 || $type_id == 4)
+                    {
+                        $SubDataArray['rooms_id'] = $rooms_id;
+                        $SubDataArray['rooms_name'] = $rooms_name;
+                    }
+                    elseif($type_id == 3 || $type_id == 6)
+                    {
+                        $SubDataArray['rooms_id'] = $meeting_id;
+                        $SubDataArray['rooms_name'] = $meeting_name;
+                    }
                     $ci->mdl_event_meeting->insert_data($SubDataArray);
 
                 } elseif ($type_id == 2 || $type_id == 5) {
@@ -177,6 +187,8 @@ class CRUD_Valid
             $time_end = $data['update-timee'];
             $rooms_id = $data['update-rooms-id'];
             $rooms_name = $data['update-rooms-name'];
+            $meeting_id = $data['update-meeting-id'];
+            $meeting_name = $data['update-meeting-name'];
             $car_id = $data['update-car-id'];
             $car_name = $data['update-car-name'];
             $driver_id = $data['update-driver-id'];
@@ -206,7 +218,6 @@ class CRUD_Valid
 
                     $SubDataArray = array(
                         'staff_id' => $staff_id,
-                        'rooms_name' => $rooms_name,
 
                         'user_update' => $user_action,
                         'date_update' => date('Y-m-d H:i:s'),
@@ -215,10 +226,12 @@ class CRUD_Valid
                     if($type_id == 1 || $type_id == 4)
                     {
                         $SubDataArray['rooms_id'] = $rooms_id;
+                        $SubDataArray['rooms_name'] = $rooms_name;
                     }
                     elseif($type_id == 3 || $type_id == 6)
                     {
-                        $SubDataArray['rooms_id'] = null;
+                        $SubDataArray['rooms_id'] = $meeting_id;
+                        $SubDataArray['rooms_name'] = $meeting_name;
                     }
 
                     $whereArray = array(

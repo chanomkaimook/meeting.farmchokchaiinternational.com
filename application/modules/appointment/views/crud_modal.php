@@ -453,8 +453,8 @@ foreach ($staff as $val) {
                             <div class="meeting-place d-none">
                                 <label class="control-label">สถานที่</label>
                                 <input type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
-                                    placeholder="กรุณาระบุ..." name="insert-rooms-name">
-                                <input type="hidden" name="insert-rooms-id">
+                                    placeholder="กรุณาระบุ..." name="insert-meeting-name">
+                                <input type="hidden" name="insert-meeting-id">
                             </div>
                         </div>
                     </div>
@@ -592,7 +592,7 @@ foreach ($staff as $val) {
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <div class="rooms-inline d-none">
+                            <div class="update-rooms d-none">
                                 <label class="control-label">ห้องประชุม</label>
                                 <select class="form-control form-white" name="update-rooms-id">
                                     <option selected disabled>กรุณาเลือก...</option>
@@ -609,11 +609,11 @@ foreach ($staff as $val) {
                                 <input type="hidden" name="update-rooms-name">
                             </div>
 
-                            <div class="meeting-inline d-none">
+                            <div class="update-meeting-data d-none">
                                 <label class="control-label">สถานที่</label>
                                 <input type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
-                                    placeholder="กรุณาระบุ..." name="update-rooms-name">
-                                <input type="hidden" name="update-rooms-id">
+                                    placeholder="กรุณาระบุ..." name="update-meeting-name">
+                                <input type="hidden" name="update-meeting-id">
                             </div>
                         </div>
                     </div>
@@ -732,7 +732,7 @@ foreach ($time as $value) {
                     <div class="row action-header">
 
                         <!-- ************************************************************************************** -->
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <div class="cardbox text-center">
                                 <button type="button"
                                     class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting item-cardbox"
@@ -745,7 +745,7 @@ foreach ($time as $value) {
                                     class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting"
                                     data-dismiss="modal">ลบ</button>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- ************************************************************************************** -->
 
                     </div>
