@@ -4,13 +4,18 @@ function btn_manage(status, role, event_id, event_code, event_vid) {
     $('.action-respond').empty()
     $('.action-approval').addClass('d-none').empty()
     $('.action-footer').empty()
+    let btn
+    if (role == "draft") {
+        btn = btn_displayed(status, role)
+    } else {
+        btn = btn_displayed()
 
-    let btn = btn_displayed(status)
+    }
     // console.log(btn[status][role])
     btn_all_in_modal(btn[status][role], event_id, event_code, event_vid)
 }
 
-function btn_displayed(status = null) {
+function btn_displayed(status = null, role = null) {
 
     /*********** ALL BUTTON IN 'DETAIL-MODAL' ***********/
     /**
@@ -45,7 +50,7 @@ function btn_displayed(status = null) {
             me: '',
             owner: {
                 header: '.action-header',
-                body: ['.action-respond', 'respond', '.action-approval', '.approval'],
+                body: ['.action-respond', 'respond', '.action-approval', 'approval'],
                 footer: ['.action-footer', 'operation']
             },
             child: {
@@ -151,15 +156,25 @@ function btn_displayed(status = null) {
                 footer: ['.action-footer', 'respond']
             }
 
+        },
+        btn_draft = {
+            draft: {
+                header: '.action-header',
+                body: '',
+                footer: ''
+            },
         };
 
     let array = []
-
-    array[1] = btn_pending,
-        array[2] = btn_success,
-        array[3] = btn_failure,
-        array[4] = btn_canceled,
+    if (!status && !role) {
+        array[1] = btn_pending
+        array[2] = btn_success
+        array[3] = btn_failure
+        array[4] = btn_canceled
         array[5] = btn_doing
+    } else {
+        array[status] = btn_draft
+    }
 
     return array
 }
@@ -168,26 +183,24 @@ function btn_all_in_modal(data = [], event_id, event_code, event_vid = []) {
     let btn_header = `
             <div class="col-6">
                 <div class="cardbox text-center">
-                    <button type="button" class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting item-cardbox" data-dismiss="modal">แก้ไข</button>
+                    <button type="button" class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light modal-update-meeting item-cardbox" data-dismiss="modal">แก้ไข</button>
                 </div>
             </div>
             
             <div class="col-6">
                 <div class="cardbox text-center">
-                    <button type="button" class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting" data-dismiss="modal">ลบ</button>
+                    <button type="button" class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ลบ</button>
                 </div>
             </div>
             `
     // $('.action-header').html();
     btn_body = {
             approval: `
-            <div class="col-md-3 action-approval">
                 <label class="control-label">action</label>
                         <div>
                             <button type='button' class='btn btn-icon waves-effect waves-light btn-danger btn-disapprove text-lg-center' data-event-id="${event_id}" data-event-code="${event_code}"> <i class='mdi mdi-file-document-box-remove'></i> </button>
                             <button type='button' class='btn btn-icon waves-effect btn-success btn-approve text-lg-center'  data-event-id="${event_id}" data-event-code="${event_code}"> <i class='mdi mdi-file-document-box-check'></i> </button>
                         </div>
-            </div>
             `, // $('.action-approval').html(btn_body[approval]);
         },
         btn_footer = {

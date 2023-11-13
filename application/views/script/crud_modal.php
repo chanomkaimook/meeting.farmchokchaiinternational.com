@@ -19,12 +19,12 @@ $(document).ready(function() {
 
     // function modal_hidden() {
     //         console.log($('.modal[aria-hidden=true]').length)
-        $('body').on('hidden.bs.modal', function() {
+        /* $('body').on('hidden.bs.modal', function() {
             if ($('.modal[aria-hidden=true]').length > 0) {
                 $('body').addClass('modal-open');
             }
             // $('body').removeClass('modal-open');
-        })
+        }) */
     // }
 
 
@@ -47,7 +47,7 @@ $('select[name=update-rooms-id]').change(function() {
 $('.insert-car').click(function() {
 // $('button[data-modal-show=insert-car]').click(function() {
     $("#insert-modal-car").find("#insert-car").trigger("reset")
-    $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-car").modal("show")
     $("#insert-modal").modal("hide")
 })
@@ -55,7 +55,7 @@ $('.insert-car').click(function() {
 $('.insert-meeting-room').click(function() {
 // $('button[data-modal-show=insert-meeting-room]').click(function() {
     $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
-    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-meeting").find(".modal-title").html("จองห้องประชุม")
     $("#insert-modal-meeting").find("input[name=insert-rooms-id]").attr("disabled")
     $("#insert-modal-meeting").find(".meeting-room").removeClass("d-none")
@@ -75,16 +75,16 @@ $('.insert-meeting').click(function() {
     $("#insert-modal-meeting").find(".meeting-place").removeClass("d-none")
     $("#insert-modal-meeting").find("[name=insert-type-id]").val("3")
     $("#insert-modal-meeting").find("[name=insert-type-name]").val("นัดหมายกิจกรรม")
-    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-meeting").modal("show")
     $("#insert-modal").modal("hide")
 })
-
+/* 
 $('.update-meeting').click(function() {
-    $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#update-modal-meeting").modal("show")
     $("#detail-modal-meeting").modal("hide")
-})
+}) */
 
 /* ********** ADDITIONAL FUNCTION ********** */
 

@@ -30,6 +30,7 @@ function createFullcalendar(url,array = []) {
                 // },
                 eventClick: function(calEvent, jsEvent, view) {
                     // detail(calEvent);
+                    modal_show('#detail-modal-meeting')
                     form_displayed(calEvent);
                     // console.log(calEvent)
                 },

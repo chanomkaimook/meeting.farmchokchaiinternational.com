@@ -121,7 +121,7 @@ $(document).ready(function() {
      * #
      */
     createFullcalendar(url_calendar)
-    /* createDraftModal(url_draft)
+    createDraftModal(url_draft)
 
     function createDraftModal(url_draft) {
         get_data_draft(url_draft)
@@ -134,7 +134,66 @@ $(document).ready(function() {
                     detail_draft(dataDefault)
                 }
             })
-    } */
+    }
+
+    /**
+     * Modal ID
+     *
+     * #
+     * # Properties Modal
+     * 1. insert_modal = Modal insert 
+     * 2. insert_modal_car = Modal insert event car
+     * 3. update_modal_car = Modal update event car
+     * 4. detail_modal_car = Modal detail event car
+     * 5. insert_modal_meeting = Modal insert event rooms,meeting
+     * 6. update_modal_meeting = Modal update event rooms,meeting
+     * 7. detail_modal_meeting = Modal detail event rooms,meeting
+     * 8. draft_modal = Modal detail draft (datatable)
+     * 
+     *
+     */
+    let insert_modal = '#insert-modal';
+
+    let insert_modal_car = '#insert-modal-car';
+    let update_modal_car = '#update-modal-car';
+    let detail_modal_car = '#detail-modal-car';
+
+    let insert_modal_meeting = '#insert-modal-meeting';
+    let update_modal_meeting = '#update-modal-meeting';
+    let detail_modal_meeting = '#detail-modal-meeting';
+
+    let draft_modal = '#draft-modal';
+
+    /**
+     * 
+     * SHOWN.BS.MODAL
+     * 
+     */
+
+    $(insert_modal).on('shown.bs.modal', function() {
+        $(insert_modal).attr('aria-hidden', 'true')
+    });
+    $(insert_modal_car).on('shown.bs.modal', function() {
+        $(insert_modal_car).attr('aria-hidden', 'true')
+    });
+    $(update_modal_car).on('shown.bs.modal', function() {
+        $(update_modal_car).attr('aria-hidden', 'true')
+    });
+    $(detail_modal_car).on('shown.bs.modal', function() {
+        $(detail_modal_car).attr('aria-hidden', 'true')
+    });
+    $(insert_modal_meeting).on('shown.bs.modal', function() {
+        $(insert_modal_meeting).attr('aria-hidden', 'true')
+    });
+    $(update_modal_meeting).on('shown.bs.modal', function() {
+        $(update_modal_meeting).attr('aria-hidden', 'true')
+    });
+    $(detail_modal_meeting).on('shown.bs.modal', function() {
+        $(detail_modal_meeting).attr('aria-hidden', 'true')
+    });
+    $(draft_modal).on('shown.bs.modal', function() {
+        $(draft_modal).attr('aria-hidden', 'true')
+    });
 
 
     /**
@@ -142,11 +201,38 @@ $(document).ready(function() {
      * HIDDEN.BS.MODAL
      * 
      */
+
+    $(insert_modal).on('hidden.bs.modal', function() {
+        $(insert_modal).attr('aria-hidden', 'false')
+    });
+    $(insert_modal_car).on('hidden.bs.modal', function() {
+        $(insert_modal_car).attr('aria-hidden', 'false')
+    });
+    $(update_modal_car).on('hidden.bs.modal', function() {
+        $(update_modal_car).attr('aria-hidden', 'false')
+    });
+    $(detail_modal_car).on('hidden.bs.modal', function() {
+        $(detail_modal_car).attr('aria-hidden', 'false')
+    });
+    $(insert_modal_meeting).on('hidden.bs.modal', function() {
+        $(insert_modal_meeting).attr('aria-hidden', 'false')
+    });
+    $(update_modal_meeting).on('hidden.bs.modal', function() {
+        $(update_modal_meeting).attr('aria-hidden', 'false')
+    });
+    $(detail_modal_meeting).on('hidden.bs.modal', function() {
+        $(detail_modal_meeting).attr('aria-hidden', 'false')
+    });
+    $(draft_modal).on('hidden.bs.modal', function() {
+        $(draft_modal).attr('aria-hidden', 'false')
+    });
+
     $('body').on('hidden.bs.modal', function() {
-        if ($('.modal[aria-hidden=true]').length > 0) {
+        if ($('.modal[aria-hidden=true]').length) {
             $('body').addClass('modal-open');
         }
-    })
+    });
+
     /**
      * 
      */
@@ -195,16 +281,6 @@ $(document).ready(function() {
 
     /**
      *
-     * EVENT CHANGE
-     *
-     */
-
-    /**
-     *
-     */
-
-    /**
-     *
      * EVENT CLICK
      *
      * 
@@ -247,7 +323,8 @@ $(document).ready(function() {
                     data.forEach(function(item, index) {
                         dataDefault = item
                     })
-                    detail(dataDefault, '', '')
+                    modal_show("#detail-modal-meeting")
+                    form_displayed(dataDefault)
                 }
             })
     })
@@ -273,7 +350,8 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "draft"
-                    draft_to_use(dataDefault, type)
+                    form_displayed(dataDefault)
+                    modal_show("#update-modal-meeting")
                 }
             })
     })
@@ -293,13 +371,22 @@ $(document).ready(function() {
         get_data_draft(url_draft)
             .then((data) => {
                 // console.log(data)
-                let dataDefault;
+                let dataDefault, type_name = '';
                 if (data.length) {
                     data.forEach(function(item, index) {
+                        for (let i = 10; i < item['TYPE_NAME'].length; i++) {
+                            type_name += item['TYPE_NAME'][i]
+                        }
+                        item['TYPE_ID'] -= 3
+                        item['TYPE_NAME'] = type_name
+                        item['class'] = 'me'
+
                         dataDefault = item
+                        console.log(item)
                     })
                     type = "use"
-                    draft_to_use(dataDefault, type)
+                    form_displayed(dataDefault)
+                    modal_show("#update-modal-meeting")
                 }
             })
     })
@@ -312,40 +399,12 @@ $(document).ready(function() {
      *
      * ADDITIONAL FUNCTIONS
      *
+     * 
+     * # VALIDATION FUNCTION
+     * 
      */
-    function form_manage(data = []) {
-        if (data.TYPE_ID == 1 || data.TYPE_ID == 4) {
-            form_rooms_manage(data)
-        } else if (data.TYPE_ID == 2 || data.TYPE_ID == 5) {
-            form_car_manage(data)
-
-        } else if (data.TYPE_ID == 3 || data.TYPE_ID == 6) {
-            form_meeting_manage(data)
-        }
-    }
-    /* $(document).on('click','.btn-insert',function(e){
-        e.preventDefault()
-        let error = 0
-        let validvalue = [
-            '#id_input_1',
-            '#id_input_2',
-            '#id_input_3',
-        ]
-        validvalue.forEach(function(item){
-            if(!$(item).val()){
-                error = 1
-                $(item).addClass('bg-warning')
-            }
-        })
-        if(error === 0){
-            func_insert(data);
-        }
-    }) */
 
     function valid(type = null, data = []) {
-        // console.log(type)
-        // console.log(data)
-        // return false
         let dataAppend = new FormData(),
             visitor = [],
             attr_error = [],
@@ -365,26 +424,18 @@ $(document).ready(function() {
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        countVal++;
-
+                        error = 0;
+                        break;
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error += 1
-                        attr_error = data[s].name + "<--->" + data[s].value + "<--->" + array[i]
+                        error = 1
                     }
                 }
             }
 
-            arrayLength = array.length - 2
-
-            if (data.length >= arrayLength) {
+            if (!error) {
                 for (let i = 0; i < data.length; i++) {
-
-                    // if (data[i].name == "insert-type") {
-                    //     // dataAppend.append("insert-type-id", data[i].value)
-                    //     // dataAppend.append("insert-type-name", "นัดหมาย/จองห้องประชุม")
-                    // }
                     if (data[i].name == "insert-visitor") {
                         visitor.push(data[i].value)
                     }
@@ -411,18 +462,21 @@ $(document).ready(function() {
                 'update-times',
                 'update-timee'
             ]
+
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        countVal++;
+                        error = 0;
+                        break;
                     }
-                    attr_error = data[s].name + "<--->" + data[s].value + "<--->" + array[i]
 
+                    if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
+                        error = 1
+                    }
                 }
             }
-            arrayLength = array.length - 2
 
-            if (data.length >= arrayLength) {
+            if (!error) {
 
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].name == "update-visitor") {
@@ -435,7 +489,7 @@ $(document).ready(function() {
 
             }
         }
-        if (data.length < arrayLength) {
+        if (error) {
             Swal.fire('ไม่สำเร็จ', 'กรุณากรอกข้อมูลให้ครบก่อนบันทึก', 'error')
         }
     }
@@ -529,18 +583,6 @@ $(document).ready(function() {
      *
      */
 
-    /* $(btn_delete).click(function(e) {
-        e.preventDefault()
-        let data = new FormData(),
-            id = $(this).attr('data-event-id'),
-            code = $(this).attr('data-event-code')
-
-        data.append('item_id', id)
-        data.append('item_code', code)
-
-        swal_delete(data)
-    }) */
-
     $(document).on('click', btn_reject, function(e) {
         e.preventDefault()
         let data = new FormData(),
@@ -562,7 +604,8 @@ $(document).ready(function() {
             id = $(this).attr('data-event-id'),
             code = $(this).attr('data-event-code')
         // vid = $(this).attr('data-id')
-
+console.log(id)
+console.log(code)
         data.append('item_id', id)
         data.append('item_code', code)
         // data.append('item_data', '2')
@@ -812,11 +855,65 @@ $(document).ready(function() {
         autoclose: true,
     });
 
-    /**
-     * #
-     * #
-     */
+    // set Date End >= Date Start
+    $(document).on('change', '[name=insert-datee]', function() {
+        set_date('[name=insert-dates]', '[name=insert-datee]')
+    })
+    $(document).on('change', '[name=insert-dates]', function() {
+        set_date('[name=insert-dates]', '[name=insert-datee]')
+    })
 
+    $(document).on('change', '[name=update-datee]', function() {
+        set_date('[name=update-dates]', '[name=update-datee]')
+    })
+    $(document).on('change', '[name=update-dates]', function() {
+        set_date('[name=update-dates]', '[name=update-datee]')
+    })
+
+    function set_date(dates, datee) {
+        let date_start = $(dates).val()
+        let date_end = $(datee).val()
+
+        if (date_end < date_start) {
+            $(datee).datepicker('setDate', new Date(date_start));
+        }
+    }
+
+    // set Time End >= Time Start
+    $(document).on('change', '[name=insert-timee]', function() {
+        set_time('[name=insert-times]', '[name=insert-timee]')
+    })
+    $(document).on('change', '[name=insert-times]', function() {
+        set_time('[name=insert-times]', '[name=insert-timee]')
+    })
+
+    $(document).on('change', '[name=update-timee]', function() {
+        set_time('[name=update-times]', '[name=update-timee]')
+    })
+    $(document).on('change', '[name=update-times]', function() {
+        set_time('[name=update-times]', '[name=update-timee]')
+    })
+
+    function set_time(times, timee) {
+        let time_start = $(times).val()
+        let time_end = $(timee).val()
+        let time_start_option = $(times).find('option')
+        let time_end_option = $(timee).find('option')
+        let length = $(timee).find('option').length
+
+        for (let i = 0; i < length; i++) {
+
+            if (time_start) {
+                if ($(timee).find('option[data-tid=' + i + ']').val() <= time_start) {
+                    $(timee).find('option[data-tid=' + i + ']').addClass('d-none')
+                }
+            } else {
+                $(timee).find('option[data-tid=' + i + ']').removeClass('d-none')
+            }
+
+        }
+
+    }
 
     /**
      * #
@@ -825,8 +922,8 @@ $(document).ready(function() {
 })
 </script>
 <?php
-include APPPATH . "views/script/crud_modal.php";
-// include APPPATH . "views/script/modal_manages.php";
+// include APPPATH . "views/script/crud_modal.php";
+include APPPATH . "views/script/modal_manages.php";
 include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";

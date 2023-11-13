@@ -1,35 +1,5 @@
 <script>
-$(document).ready(function() {
-
-    /**
-     *
-     * ADDITIONAL FUNCTIONS
-     *
-     */
-
-    // $(document).on('click', 'button[data-modal-hide]', function() {
-    //     let modal_hide = $(this).attr('data-modal-hide')
-    //     // let modal_show = $(this).attr('data-modal-show')
-    //     console.log(modal_hide)
-    //     // console.log(modal_show)
-    //     $(modal_hide).attr('aria-hidden',false)
-    //     // $(modal_show).attr('aria-hidden',true)
-    //     // modal_hidden()
-    // })
-
-    // function modal_hidden() {
-    //         console.log($('.modal[aria-hidden=true]').length)
-    $('body').on('hidden.bs.modal', function() {
-        if ($('.modal[aria-hidden=true]').length > 0) {
-            $('body').addClass('modal-open');
-        }
-        // $('body').removeClass('modal-open');
-    })
-    // }
-
-
-})
-
+    
 /* ********** EVENT CHANGE ********** */
 $('select[name=insert-rooms-id]').change(function() {
     let id = $(this).val()
@@ -45,29 +15,33 @@ $('select[name=update-rooms-id]').change(function() {
 
 /* ********** EVENT CLICK ********** */
 $('.insert-car').click(function() {
-    // $('button[data-modal-show=insert-car]').click(function() {
+    modal_show("#insert-modal-car")
+// $('button[data-modal-show=insert-car]').click(function() {
     $("#insert-modal-car").find("#insert-car").trigger("reset")
-    $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
-    $("#insert-modal-car").modal("show")
+    // $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-car").modal("show")
     $("#insert-modal").modal("hide")
 })
 
 $('.insert-meeting-room').click(function() {
-    // $('button[data-modal-show=insert-meeting-room]').click(function() {
+    modal_show("#insert-modal-meeting")
+// $('button[data-modal-show=insert-meeting-room]').click(function() {
     $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
-    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
     $("#insert-modal-meeting").find(".modal-title").html("จองห้องประชุม")
     $("#insert-modal-meeting").find("input[name=insert-rooms-id]").attr("disabled")
     $("#insert-modal-meeting").find(".meeting-room").removeClass("d-none")
     $("#insert-modal-meeting").find(".meeting-place").addClass("d-none")
     $("#insert-modal-meeting").find("[name=insert-type-id]").val("1")
     $("#insert-modal-meeting").find("[name=insert-type-name]").val("จองห้องประชุม")
-    $("#insert-modal-meeting").modal("show")
+    // $("#insert-modal-meeting").modal("show")
     $("#insert-modal").modal("hide")
 })
 
 $('.insert-meeting').click(function() {
-    // $('button[data-modal-show=insert-meeting]').click(function() {
+    modal_show("#insert-modal-meeting")
+
+// $('button[data-modal-show=insert-meeting]').click(function() {
     $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
     $("#insert-modal-meeting").find(".modal-title").html("นัดหมายกิจกรรม")
     $("#insert-modal-meeting").find("input[name=insert-rooms-id]").removeAttr("disabled")
@@ -75,16 +49,24 @@ $('.insert-meeting').click(function() {
     $("#insert-modal-meeting").find(".meeting-place").removeClass("d-none")
     $("#insert-modal-meeting").find("[name=insert-type-id]").val("3")
     $("#insert-modal-meeting").find("[name=insert-type-name]").val("นัดหมายกิจกรรม")
-    $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
-    $("#insert-modal-meeting").modal("show")
+    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#insert-modal-meeting").modal("show")
     $("#insert-modal").modal("hide")
 })
 
-$('.update-meeting').click(function() {
-    $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
+$(document).on('click','.modal-update-meeting',function() {
+    modal_show("#update-modal-meeting")
+    $("#update-modal-meeting").find('.modal').attr('aria-hidden', 'true')
     $("#update-modal-meeting").modal("show")
     $("#detail-modal-meeting").modal("hide")
 })
+
+/* $('.btn-update-meeting').click(function() {
+    // $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
+    // $("#update-modal-meeting").modal("show")
+    $("#detail-modal-meeting").modal("hide")
+}) */
+
 
 /* ********** ADDITIONAL FUNCTION ********** */
 /**
@@ -92,8 +74,8 @@ $('.update-meeting').click(function() {
  * Component ที่ต้องการให้เห็นใน modal
  * 
  */
-function modal_show(data) {
-
+function modal_show(modal) {
+    $(modal).modal('show')
 }
 
 function swal_alert(icon, title, text) {
@@ -105,6 +87,7 @@ function swal_alert(icon, title, text) {
         // }
         $('.modal').modal('hide')
         calendarDestroy('#calendar', url_calendar)
+        // $('#modal_draft').DataTable().ajax.reload()
     })
 
 }

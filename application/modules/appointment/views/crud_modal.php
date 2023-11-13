@@ -80,7 +80,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#insert-modal-car" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -138,7 +138,7 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option value="<?=date('H:i:s', strtotime($times))?>">
+                                <option value="<?=date('H:i:s', strtotime($times))?>" data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -177,7 +177,7 @@ foreach ($time as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#update-modal-car" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <h4 class="modal-title">Booking</h4>
             </div>
             <div class="modal-body pb-0">
@@ -236,7 +236,8 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option selected value="<?=date('H:i:s', strtotime($times))?>">
+                                <option selected value="<?=date('H:i:s', strtotime($times))?>"
+                                    data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -276,7 +277,7 @@ foreach ($time as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#detail-modal-car" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">Booking</h4>
@@ -346,7 +347,8 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option selected value="<?=date('H:i:s', strtotime($times))?>">
+                                <option selected value="<?=date('H:i:s', strtotime($times))?>"
+                                    data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime("7.00"))?></option>
                                 <?php
 }
@@ -404,7 +406,7 @@ foreach ($time as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#insert-modal-meeting" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
@@ -494,7 +496,7 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option value="<?=date('H:i:s', strtotime($times))?>">
+                                <option value="<?=date('H:i:s', strtotime($times))?>" data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -515,7 +517,7 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option value="<?=date('H:i:s', strtotime($times))?>">
+                                <option value="<?=date('H:i:s', strtotime($times))?>" data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -554,8 +556,8 @@ foreach ($time as $value) {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-modal-hide="#update-modal-meeting" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">&times;</button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body pb-0">
@@ -651,7 +653,8 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option selected value="<?=date('H:i:s', strtotime($times))?>">
+                                <option selected value="<?=date('H:i:s', strtotime($times))?>"
+                                    data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -673,7 +676,8 @@ foreach ($time as $value) {
         $times = $value["START"];
     }
     ?>
-                                <option selected value="<?=date('H:i:s', strtotime($times))?>">
+                                <option selected value="<?=date('H:i:s', strtotime($times))?>"
+                                    data-tid="<?=$value["ID"]?>">
                                     <?=date('H:i', strtotime($times))?></option>
                                 <?php
 }
@@ -712,7 +716,7 @@ foreach ($time as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#detail-modal-meeting" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <!-- <div class="d-flex"> -->
                 <!-- <div>
                         <h4 class="modal-title">จองห้อง/นัดหมายการประชุม</h4>
@@ -778,6 +782,31 @@ foreach ($employee as $val) {
 ?>
                             </select>
                         </div>
+                        <!-- ************************************************************************************** -->
+                        <!-- ************************************************************************************** -->
+                            <div class="col-md-6 rooms-inline d-none">
+                                <label class="control-label">ห้องประชุม</label>
+                                <select class="form-control form-white" name="detail-rooms-id" disabled>
+                                    <option selected disabled>กรุณาเลือก...</option>
+                                    <?php
+                                foreach ($room as $value) {
+                                ?>
+                                    <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
+                                        data-rooms-branch="<?=$value->BRANCH?>">
+                                        <?=$value->ROOMS?></option>
+                                    <?php
+    }
+    ?>
+                                </select>
+                                <input type="hidden" name="detail-rooms-name">
+                            </div>
+
+                            <div class="col-md-6 meeting-inline d-none">
+                                <label class="control-label">สถานที่</label>
+                                <input type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                    placeholder="กรุณาระบุ..." name="detail-meeting-name" disabled>
+                                <input type="hidden" name="detail-meeting-id">
+                            </div>
                         <!-- ************************************************************************************** -->
                         <!-- ************************************************************************************** -->
                         <div class="status-inline d-none">
@@ -887,7 +916,7 @@ foreach ($room as $value) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-modal-hide="#draft-modal" data-dismiss="modal"
-                    aria-hidden="false">&times;</button>
+                    aria-label="Close">&times;</button>
                 <div class="d-flex">
                     <div>
                         <h4 class="modal-title">แบบร่าง</h4>

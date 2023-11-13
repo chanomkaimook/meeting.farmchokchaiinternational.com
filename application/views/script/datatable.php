@@ -130,8 +130,7 @@ function createDatatable(url, datatable) {
 } */
 
 function datatableReload(calendar, url, filter = null) {
-    $(calendar).fullCalendar('destroy');
-    $(calendar).empty();
+    $('#data_table').DataTable().ajax.reload()
     if (filter) {
         createDatatable(url, filter)
     } else {
