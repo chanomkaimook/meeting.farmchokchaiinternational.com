@@ -1,17 +1,6 @@
 <script>
 function createDatatable(url, datatable) {
-    /* console.log(array[0]['user'])
-    console.log(url)
-    console.log(datatable)
-    let dates = array[0]['dates'],
-            datee = array[0]['datee'],
-            times = array[0]['times'],
-            timee = array[0]['timee'],
-            user = array[0]['user'],
-            permit = array[0]['permit'],
-            status = array[0]['status'],
-            type = array[0]['type']
-    // return false */
+    
     $('#data_table').DataTable({
         ajax: {
             url: url,

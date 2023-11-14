@@ -11,7 +11,6 @@ function btn_manage(status, role, event_id, event_code, event_vid) {
         btn = btn_displayed()
 
     }
-    // console.log(btn[status][role])
     btn_all_in_modal(btn[status][role], event_id, event_code, event_vid)
 }
 
@@ -223,16 +222,14 @@ function btn_all_in_modal(data = [], event_id, event_code, event_vid = []) {
         className = '',
         html = '', vis_respond = []
 
-    // console.log(event_vid)
 
     if (event_vid.length) {
         event_vid.forEach(function(item) {
-            // console.log(item)
             vis_respond = `
                 <button type='button' class='btn btn-icon waves-effect waves-light btn-secondary reject text-lg-center' data-id='${item}' data-event-id='${event_id}' data-event-code='${event_code}'> <i class='fa fa-trash-alt'></i> </button>
                 <button type='button' class='btn btn-icon waves-effect waves-light btn-danger deny text-lg-center' data-id='${item}' data-event-id='${event_id}' data-event-code='${event_code}'> <i class='mdi mdi-account-remove'></i> </button>
                 <button type='button' class='btn btn-icon waves-effect btn-success defer text-lg-center'  data-id='${item}' data-event-id='${event_id}' data-event-code='${event_code}'> <i class='mdi mdi-account-check'></i> </button>
-            ` // $('.action-respond[data-row-id=]').html(btn_body[respond]);
+            `
             $('.action-respond[data-row-id=' + item + ']').html(vis_respond);
         })
 

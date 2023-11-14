@@ -137,107 +137,6 @@ $(document).ready(function() {
     }
 
     /**
-     * Modal ID
-     *
-     * #
-     * # Properties Modal
-     * 1. insert_modal = Modal insert 
-     * 2. insert_modal_car = Modal insert event car
-     * 3. update_modal_car = Modal update event car
-     * 4. detail_modal_car = Modal detail event car
-     * 5. insert_modal_meeting = Modal insert event rooms,meeting
-     * 6. update_modal_meeting = Modal update event rooms,meeting
-     * 7. detail_modal_meeting = Modal detail event rooms,meeting
-     * 8. draft_modal = Modal detail draft (datatable)
-     * 
-     *
-     */
-    let insert_modal = '#insert-modal';
-
-    let insert_modal_car = '#insert-modal-car';
-    let update_modal_car = '#update-modal-car';
-    let detail_modal_car = '#detail-modal-car';
-
-    let insert_modal_meeting = '#insert-modal-meeting';
-    let update_modal_meeting = '#update-modal-meeting';
-    let detail_modal_meeting = '#detail-modal-meeting';
-
-    let draft_modal = '#draft-modal';
-
-    /**
-     * 
-     * SHOWN.BS.MODAL
-     * 
-     */
-
-    $(insert_modal).on('shown.bs.modal', function() {
-        $(insert_modal).attr('aria-hidden', 'true')
-    });
-    $(insert_modal_car).on('shown.bs.modal', function() {
-        $(insert_modal_car).attr('aria-hidden', 'true')
-    });
-    $(update_modal_car).on('shown.bs.modal', function() {
-        $(update_modal_car).attr('aria-hidden', 'true')
-    });
-    $(detail_modal_car).on('shown.bs.modal', function() {
-        $(detail_modal_car).attr('aria-hidden', 'true')
-    });
-    $(insert_modal_meeting).on('shown.bs.modal', function() {
-        $(insert_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(update_modal_meeting).on('shown.bs.modal', function() {
-        $(update_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(detail_modal_meeting).on('shown.bs.modal', function() {
-        $(detail_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(draft_modal).on('shown.bs.modal', function() {
-        $(draft_modal).attr('aria-hidden', 'true')
-    });
-
-
-    /**
-     * 
-     * HIDDEN.BS.MODAL
-     * 
-     */
-
-    $(insert_modal).on('hidden.bs.modal', function() {
-        $(insert_modal).attr('aria-hidden', 'false')
-    });
-    $(insert_modal_car).on('hidden.bs.modal', function() {
-        $(insert_modal_car).attr('aria-hidden', 'false')
-    });
-    $(update_modal_car).on('hidden.bs.modal', function() {
-        $(update_modal_car).attr('aria-hidden', 'false')
-    });
-    $(detail_modal_car).on('hidden.bs.modal', function() {
-        $(detail_modal_car).attr('aria-hidden', 'false')
-    });
-    $(insert_modal_meeting).on('hidden.bs.modal', function() {
-        $(insert_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(update_modal_meeting).on('hidden.bs.modal', function() {
-        $(update_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(detail_modal_meeting).on('hidden.bs.modal', function() {
-        $(detail_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(draft_modal).on('hidden.bs.modal', function() {
-        $(draft_modal).attr('aria-hidden', 'false')
-    });
-
-    $('body').on('hidden.bs.modal', function() {
-        if ($('.modal[aria-hidden=true]').length) {
-            $('body').addClass('modal-open');
-        }
-    });
-
-    /**
-     * 
-     */
-
-    /**
      * Button modal
      *
      * #
@@ -424,12 +323,12 @@ $(document).ready(function() {
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        error = 0;
+                        error[array[i]] = 0;
                         break;
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error = 1
+                        error[array[i]] = 1
                     }
                 }
             }
@@ -466,12 +365,12 @@ $(document).ready(function() {
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        error = 0;
+                        error[array[i]] = 0;
                         break;
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error = 1
+                        error[array[i]] = 1
                     }
                 }
             }
@@ -485,7 +384,7 @@ $(document).ready(function() {
                     dataAppend.append(data[i].name, data[i].value)
                 }
                 dataAppend.append("visitor", visitor)
-                update_meeting(dataAppend, "calendar")
+                update_meeting(dataAppend)
 
             }
         }

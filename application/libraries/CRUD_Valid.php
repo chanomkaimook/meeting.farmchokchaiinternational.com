@@ -17,6 +17,128 @@ class CRUD_Valid
         $ci->load->model(array('mdl_event', 'mdl_event_meeting', 'mdl_visitor'));
     }
 
+    public function auto_approve($event_id = null, $event_code = null, $user_action = null)
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+        $return = [];
+        if ($event_id && $event_code && $user_action) {
+
+            $return['error'] = 0;
+
+            $optionnal['select'] = 'user_start,staff_id';
+            $get_data = $ci->mdl_event->get_dataShow($event_id, $optionnal, "row");
+            if ($get_data['user_start'] == $get_data['staff_id']) {
+
+                if ($get_data['user_start'] == $user_action || $get_data['staff_id'] == $user_action) {
+                    $return['auto_approve'] = 1;
+                } else {
+                    $return['auto_approve'] = 0;
+                }
+            } else {
+                $return['auto_approve'] = 0;
+            }
+        } else {
+            $return['error'] = 1;
+        }
+        return $return;
+    }
+
+    public function value_not_null($data = [], $type = null, $type_id = null)
+    {
+        if (count($data) && $type) {
+            $array = [];
+            $attr = [];
+            $error = [];
+            $result = [];
+            if ($type == 'insert') {
+                $array = ['insert-name',
+                    'insert-head',
+                    'insert-description',
+                    'insert-dates',
+                    'insert-datee',
+                    'insert-times',
+                    'insert-timee',
+                ];
+
+                if ($type_id == 1) {
+                    array_push($array, 'insert-rooms-id', 'insert-rooms-name');
+                } elseif ($type_id == 2) {
+                    array_push($array, 'insert-car-id', 'insert-car-name', 'insert-driver-id', 'insert-driver-name');
+                } elseif ($type_id == 3) {
+                    array_push($array, 'insert-meeting-id', 'insert-meeting-name');
+                }
+
+                for ($i = 0; $i < count($array); $i++) {
+                    foreach ($data as $key => $value) {
+                        $attr[$array[$i]] = "error";
+                        if ($key == $array[$i] && $value != "") {
+                            $attr[$array[$i]] = null;
+                            break;
+                        }
+
+                    }
+
+                }
+                foreach ($attr as $index => $item) {
+
+                    if ($item) {
+                        $error[]['error'] = $index;
+                    }
+                }
+                $result = $error;
+            } else if ($type == 'update') {
+                $array = ['item_id',
+                    'code',
+                    'update-type-id',
+                    'update-type-name',
+                    'update-name',
+                    'update-head',
+                    'update-description',
+                    'update-dates',
+                    'update-datee',
+                    'update-times',
+                    'update-timee',
+                    'user_action',
+                ];
+                if ($type_id == 1) {
+                    array_push($array, 'update-rooms-id', 'update-rooms-name');
+                } elseif ($type_id == 2) {
+                    array_push($array, 'update-car-id', 'update-car-name', 'update-driver-id', 'update-driver-name');
+                } elseif ($type_id == 3) {
+                    array_push($array, 'update-meeting-name');
+                }
+
+                for ($i = 0; $i < count($array); $i++) {
+                    foreach ($data as $key => $value) {
+                        $attr[$array[$i]] = "error";
+                        if ($key == $array[$i] && $value != "") {
+                            $attr[$array[$i]] = null;
+                            break;
+                        }
+
+                    }
+
+                }
+                foreach ($attr as $index => $item) {
+
+                    if ($item) {
+                        $error[]['error'] = $index;
+                    }
+                }
+                $result = $error;
+            }
+        } else {
+            $result = array(
+                'error' => 1,
+                'txt' => 'ไม่พบข้อมูล',
+            );
+        }
+        return $result;
+    }
+
     public function insert_data($data = [], $code)
     {
         //=     call database    =//
@@ -30,135 +152,140 @@ class CRUD_Valid
         );
 
         if (count($data) && $code) {
+            $check = $this->value_not_null($data, "insert", $data['insert-type-id']);
+            // echo "<pre>";
+            // print_r($check);
+            // echo "</pre>";die;
+            if (!$check) {
+                $type_id = $data['insert-type-id'];
+                $type_name = $data['insert-type-name'];
+                $event_name = $data['insert-name'];
+                $staff_id = $data['insert-head'];
+                $event_description = $data['insert-description'];
+                $date_begin = $data['insert-dates'];
+                $date_end = $data['insert-datee'];
+                $time_begin = $data['insert-times'];
+                $time_end = $data['insert-timee'];
+                $rooms_id = $data['insert-rooms-id'];
+                $rooms_name = $data['insert-rooms-name'];
+                $meeting_id = $data['insert-meeting-id'];
+                $meeting_name = $data['insert-meeting-name'];
+                $car_id = $data['insert-car-id'];
+                $car_name = $data['insert-car-name'];
+                $driver_id = $data['insert-driver-id'];
+                $driver_name = $data['insert-driver-name'];
+                $user_action = $data['user_action'];
 
-            $type_id = $data['insert-type-id'];
-            $type_name = $data['insert-type-name'];
-            $event_name = $data['insert-name'];
-            $staff_id = $data['insert-head'];
-            $event_description = $data['insert-description'];
-            $date_begin = $data['insert-dates'];
-            $date_end = $data['insert-datee'];
-            $time_begin = $data['insert-times'];
-            $time_end = $data['insert-timee'];
-            $rooms_id = $data['insert-rooms-id'];
-            $rooms_name = $data['insert-rooms-name'];
-            $meeting_id = $data['insert-meeting-id'];
-            $meeting_name = $data['insert-meeting-name'];
-            $car_id = $data['insert-car-id'];
-            $car_name = $data['insert-car-name'];
-            $driver_id = $data['insert-driver-id'];
-            $driver_name = $data['insert-driver-name'];
-            $user_action = $data['user_action'];
+                $visitor = $data['visitor'];
 
-            $visitor = $data['visitor'];
-
-            if ($type_id == 1 || $type_id == 4) {
-                $code = "R" . $code;
-            } elseif ($type_id == 2 || $type_id == 5) {
-                $code = "C" . $code;
-            } elseif ($type_id == 3 || $type_id == 6) {
-                $code = "M" . $code;
-            }
-
-            $dataArray = array(
-                'code' => $code,
-                'type_id' => $type_id,
-                'type_name' => $type_name,
-                'event_name' => $event_name,
-                'staff_id' => $staff_id,
-                'event_description' => $event_description,
-                'date_begin' => $date_begin,
-                'date_end' => $date_end,
-                'time_begin' => $time_begin,
-                'time_end' => $time_end,
-                /* 'status_complete' => 1,
-                'status_complete_name' => "รอดำเนินการ", */
-                'status' => 1,
-                'date_start' => date('Y-m-d H:i:s'),
-                'user_start' => $user_action,
-            );
-            if ($staff_id == $user_action) {
-                $dataArray['approve_date'] = date('Y-m-d H:i:s');
-                $dataArray['user_action'] = $user_action;
-                $dataArray['status_complete'] = 5;
-                $dataArray['status_complete_name'] = "กำลังดำเนินการ";
-            } else {
-                $dataArray['status_complete'] = 1;
-                $dataArray['status_complete_name'] = "รอดำเนินการ";
-            }
-
-            $main = $ci->mdl_event->insert_data($dataArray);
-
-            if (!$main['error']) {
-                if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
-                    $SubDataArray = array(
-                        'event_code' => $code,
-                        'event_id' => $main['data']['id'],
-                        'staff_id' => $staff_id,
-                        'date_start' => date('Y-m-d H:i:s'),
-                        'status' => 1,
-
-                        'user_start' => $user_action,
-                    );
-
-                    if($type_id == 1 || $type_id == 4)
-                    {
-                        $SubDataArray['rooms_id'] = $rooms_id;
-                        $SubDataArray['rooms_name'] = $rooms_name;
-                    }
-                    elseif($type_id == 3 || $type_id == 6)
-                    {
-                        $SubDataArray['rooms_id'] = $meeting_id;
-                        $SubDataArray['rooms_name'] = $meeting_name;
-                    }
-                    $ci->mdl_event_meeting->insert_data($SubDataArray);
-
+                if ($type_id == 1 || $type_id == 4) {
+                    $code = "R" . $code;
                 } elseif ($type_id == 2 || $type_id == 5) {
-                    $SubDataArray = array(
-                        'code' => $code,
-                        'event_id' => $main['data']['id'],
-                        'staff_id' => $staff_id,
-                        'car_id' => $car_id,
-                        'car_name' => $car_name,
-                        'driver_id' => $driver_id,
-                        'driver_name' => $driver_name,
-                        'date_start' => date('Y-m-d H:i:s'),
-                        'status' => 1,
-
-                        'user_start' => $user_action,
-                    );
-
-                    // $ci->mdl_event_car->insert_data($SubDataArray);
+                    $code = "C" . $code;
+                } elseif ($type_id == 3 || $type_id == 6) {
+                    $code = "M" . $code;
                 }
 
-                if ($visitor) {
-                    $visArray = explode(",", $visitor);
-                    $VisitorArray = '';
-                    foreach ($visArray as $sid) {
-                        $VisitorArray = array(
+                $dataArray = array(
+                    'code' => $code,
+                    'type_id' => $type_id,
+                    'type_name' => $type_name,
+                    'event_name' => $event_name,
+                    'staff_id' => $staff_id,
+                    'event_description' => $event_description,
+                    'date_begin' => $date_begin,
+                    'date_end' => $date_end,
+                    'time_begin' => $time_begin,
+                    'time_end' => $time_end,
+                    /* 'status_complete' => 1,
+                    'status_complete_name' => "รอดำเนินการ", */
+                    'status' => 1,
+                    'date_start' => date('Y-m-d H:i:s'),
+                    'user_start' => $user_action,
+                );
+                if ($staff_id == $user_action) {
+                    $dataArray['approve_date'] = date('Y-m-d H:i:s');
+                    $dataArray['user_action'] = $user_action;
+                    $dataArray['status_complete'] = 5;
+                    $dataArray['status_complete_name'] = "กำลังดำเนินการ";
+                } else {
+                    $dataArray['status_complete'] = 1;
+                    $dataArray['status_complete_name'] = "รอดำเนินการ";
+                }
+
+                $main = $ci->mdl_event->insert_data($dataArray);
+
+                if (!$main['error']) {
+                    if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
+                        $SubDataArray = array(
                             'event_code' => $code,
                             'event_id' => $main['data']['id'],
-                            'event_visitor' => $sid,
-                            'status_complete' => 1,
-                            'status' => 1,
+                            'staff_id' => $staff_id,
                             'date_start' => date('Y-m-d H:i:s'),
+                            'status' => 1,
+
                             'user_start' => $user_action,
                         );
-                        $vis = $ci->mdl_visitor->insert_data($VisitorArray);
+
+                        if ($type_id == 1 || $type_id == 4) {
+                            $SubDataArray['rooms_id'] = $rooms_id;
+                            $SubDataArray['rooms_name'] = $rooms_name;
+                        } elseif ($type_id == 3 || $type_id == 6) {
+                            $SubDataArray['rooms_id'] = $meeting_id;
+                            $SubDataArray['rooms_name'] = $meeting_name;
+                        }
+                        $ci->mdl_event_meeting->insert_data($SubDataArray);
+
+                    } elseif ($type_id == 2 || $type_id == 5) {
+                        $SubDataArray = array(
+                            'code' => $code,
+                            'event_id' => $main['data']['id'],
+                            'staff_id' => $staff_id,
+                            'car_id' => $car_id,
+                            'car_name' => $car_name,
+                            'driver_id' => $driver_id,
+                            'driver_name' => $driver_name,
+                            'date_start' => date('Y-m-d H:i:s'),
+                            'status' => 1,
+
+                            'user_start' => $user_action,
+                        );
+
+                        // $ci->mdl_event_car->insert_data($SubDataArray);
                     }
+
+                    if ($visitor) {
+                        $visArray = explode(",", $visitor);
+                        $VisitorArray = '';
+                        foreach ($visArray as $sid) {
+                            $VisitorArray = array(
+                                'event_code' => $code,
+                                'event_id' => $main['data']['id'],
+                                'event_visitor' => $sid,
+                                'status_complete' => 1,
+                                'status' => 1,
+                                'date_start' => date('Y-m-d H:i:s'),
+                                'user_start' => $user_action,
+                            );
+                            $vis = $ci->mdl_visitor->insert_data($VisitorArray);
+                        }
+                    }
+
+                    /* if ($dataArray['staff_id'] == $dataArray['user_start']) {
+                    $item = [];
+                    $item['item_id'] = $main['data']['id'];
+                    $item['item_code'] = $code;
+                    $item['item_data'] = 2;
+
+                    $this->approval($item);
+                    } */
+                    $return = $main;
                 }
-
-                /* if ($dataArray['staff_id'] == $dataArray['user_start']) {
-                $item = [];
-                $item['item_id'] = $main['data']['id'];
-                $item['item_code'] = $code;
-                $item['item_data'] = 2;
-
-                $this->approval($item);
-                } */
-                $return = $main;
+            } else {
+                $return = $check;
             }
         }
+
         return $return;
     }
 
@@ -175,121 +302,126 @@ class CRUD_Valid
         );
 
         if (count($data) && $code) {
-            $item_id = $data['item_id'];
-            $type_id = $data['update-type-id'];
-            $type_name = $data['update-type-name'];
-            $event_name = $data['update-name'];
-            $staff_id = $data['update-head'];
-            $event_description = $data['update-description'];
-            $date_begin = $data['update-dates'];
-            $date_end = $data['update-datee'];
-            $time_begin = $data['update-times'];
-            $time_end = $data['update-timee'];
-            $rooms_id = $data['update-rooms-id'];
-            $rooms_name = $data['update-rooms-name'];
-            $meeting_id = $data['update-meeting-id'];
-            $meeting_name = $data['update-meeting-name'];
-            $car_id = $data['update-car-id'];
-            $car_name = $data['update-car-name'];
-            $driver_id = $data['update-driver-id'];
-            $driver_name = $data['update-driver-name'];
-            $user_action = $data['user_action'];
+            $check = $this->value_not_null($data, "update", $data['update-type-id']);
+            // echo "<pre>";
+            // print_r($check);
+            // echo "</pre>";die;
+            if (!count($check)) {
+                $item_id = $data['item_id'];
+                $type_id = $data['update-type-id'];
+                $type_name = $data['update-type-name'];
+                $event_name = $data['update-name'];
+                $staff_id = $data['update-head'];
+                $event_description = $data['update-description'];
+                $date_begin = $data['update-dates'];
+                $date_end = $data['update-datee'];
+                $time_begin = $data['update-times'];
+                $time_end = $data['update-timee'];
+                $rooms_id = $data['update-rooms-id'];
+                $rooms_name = $data['update-rooms-name'];
+                $meeting_id = $data['update-meeting-id'];
+                $meeting_name = $data['update-meeting-name'];
+                $car_id = $data['update-car-id'];
+                $car_name = $data['update-car-name'];
+                $driver_id = $data['update-driver-id'];
+                $driver_name = $data['update-driver-name'];
+                $user_action = $data['user_action'];
 
-            $visitor = $data['visitor'];
+                $visitor = $data['visitor'];
 
-            $dataArray = array(
-                'type_id' => $type_id,
-                'type_name' => $type_name,
-                'event_name' => $event_name,
-                'staff_id' => $staff_id,
-                'event_description' => $event_description,
-                'date_begin' => $date_begin,
-                'date_end' => $date_end,
-                'time_begin' => $time_begin,
-                'time_end' => $time_end,
-                'date_update' => date('Y-m-d'),
-                'user_update' => $user_action,
-            );
+                $dataArray = array(
+                    'type_id' => $type_id,
+                    'type_name' => $type_name,
+                    'event_name' => $event_name,
+                    'staff_id' => $staff_id,
+                    'event_description' => $event_description,
+                    'date_begin' => $date_begin,
+                    'date_end' => $date_end,
+                    'time_begin' => $time_begin,
+                    'time_end' => $time_end,
+                    'date_update' => date('Y-m-d'),
+                    'user_update' => $user_action,
+                );
 
-            $main = $ci->mdl_event->update_data($dataArray, $item_id);
+                $main = $ci->mdl_event->update_data($dataArray, $item_id);
 
-            if (!$main['error']) {
-                if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
+                if (!$main['error']) {
+                    if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
 
-                    $SubDataArray = array(
-                        'staff_id' => $staff_id,
+                        $SubDataArray = array(
+                            'staff_id' => $staff_id,
 
-                        'user_update' => $user_action,
-                        'date_update' => date('Y-m-d H:i:s'),
-                    );
-                    
-                    if($type_id == 1 || $type_id == 4)
-                    {
-                        $SubDataArray['rooms_id'] = $rooms_id;
-                        $SubDataArray['rooms_name'] = $rooms_name;
-                    }
-                    elseif($type_id == 3 || $type_id == 6)
-                    {
-                        $SubDataArray['rooms_id'] = $meeting_id;
-                        $SubDataArray['rooms_name'] = $meeting_name;
-                    }
+                            'user_update' => $user_action,
+                            'date_update' => date('Y-m-d H:i:s'),
+                        );
 
-                    $whereArray = array(
-                        'event_code' => $code,
-                        'event_id' => $main['data']['id'],
-                    );
+                        if ($type_id == 1 || $type_id == 4) {
+                            $SubDataArray['rooms_id'] = $rooms_id;
+                            $SubDataArray['rooms_name'] = $rooms_name;
+                        } elseif ($type_id == 3 || $type_id == 6) {
+                            $SubDataArray['rooms_id'] = $meeting_id;
+                            $SubDataArray['rooms_name'] = $meeting_name;
+                        }
 
-                    $ci->mdl_event_meeting->update_data($SubDataArray, $whereArray);
-
-                } elseif ($type_id == 2 || $type_id == 5) {
-                    $SubDataArray = array(
-                        'staff_id' => $staff_id,
-                        'car_id' => $car_id,
-                        'car_name' => $car_name,
-                        'driver_id' => $driver_id,
-                        'driver_name' => $driver_name,
-
-                        'user_update' => $user_action,
-                        'date_update' => date('Y-m-d H:i:s'),
-                    );
-
-                    $whereArray = array(
-                        'event_code' => $code,
-                        'event_id' => $main['data']['id'],
-                    );
-
-                    // $ci->mdl_event_car->insert_data($SubDataArray, $whereArray);
-                }
-
-                if ($visitor) {
-                    $visArray = explode(",", $visitor);
-                    $VisitorArray = '';
-                    foreach ($visArray as $sid) {
-
-                        $optionnal['select'] = 'count(event_visitor) as total';
-                        $optionnal['where'] = array(
-                            'event_visitor' => $sid,
+                        $whereArray = array(
                             'event_code' => $code,
                             'event_id' => $main['data']['id'],
                         );
 
-                        $dataVis = $ci->mdl_visitor->get_dataShow(null, $optionnal);
-                        // print_r($dataVis);
-                        if (!$dataVis[0]->total) {
-                            $VisitorArray = array(
+                        $ci->mdl_event_meeting->update_data($SubDataArray, $whereArray);
+
+                    } elseif ($type_id == 2 || $type_id == 5) {
+                        $SubDataArray = array(
+                            'staff_id' => $staff_id,
+                            'car_id' => $car_id,
+                            'car_name' => $car_name,
+                            'driver_id' => $driver_id,
+                            'driver_name' => $driver_name,
+
+                            'user_update' => $user_action,
+                            'date_update' => date('Y-m-d H:i:s'),
+                        );
+
+                        $whereArray = array(
+                            'event_code' => $code,
+                            'event_id' => $main['data']['id'],
+                        );
+
+                        // $ci->mdl_event_car->insert_data($SubDataArray, $whereArray);
+                    }
+
+                    if ($visitor) {
+                        $visArray = explode(",", $visitor);
+                        $VisitorArray = '';
+                        foreach ($visArray as $sid) {
+
+                            $optionnal['select'] = 'count(event_visitor) as total';
+                            $optionnal['where'] = array(
+                                'event_visitor' => $sid,
                                 'event_code' => $code,
                                 'event_id' => $main['data']['id'],
-                                'event_visitor' => $sid,
-                                'status_complete' => 1,
-                                'status' => 1,
-                                'date_start' => date('Y-m-d H:i:s'),
-                                'user_start' => $user_action,
                             );
-                            $vis = $ci->mdl_visitor->insert_data($VisitorArray);
+
+                            $dataVis = $ci->mdl_visitor->get_dataShow(null, $optionnal);
+                            // print_r($dataVis);
+                            if (!$dataVis[0]->total) {
+                                $VisitorArray = array(
+                                    'event_code' => $code,
+                                    'event_id' => $main['data']['id'],
+                                    'event_visitor' => $sid,
+                                    'status_complete' => 1,
+                                    'status' => 1,
+                                    'date_start' => date('Y-m-d H:i:s'),
+                                    'user_start' => $user_action,
+                                );
+                                $vis = $ci->mdl_visitor->insert_data($VisitorArray);
+                            }
                         }
                     }
+                    $return = $main;
                 }
-                $return = $main;
+            } else {
+                $return = $check;
             }
         }
         return $return;
@@ -412,7 +544,7 @@ class CRUD_Valid
             $item_id = $apv['item_id'];
             $item_code = $apv['item_code'];
             $item_data = $apv['item_data'];
-            $user_action = $data['user_action'];
+            $user_action = $apv['user_action'];
 
             if ($item_data == 2) {
                 $item_field = 'approve_date';
@@ -572,10 +704,10 @@ class CRUD_Valid
             $dataArray = array(
                 'approve_date' => null,
                 'disapprove_date' => null,
-                'approve_date' => null,
+                'cancle_date' => null,
                 'status_complete' => $item_data,
                 'status_complete_name' => "รอดำเนินการ",
-                'user_action' => 1,
+                'user_action' => null,
                 'user_update' => $user_action,
                 'date_update' => date('Y-m-d H:i:s'),
             );
@@ -584,12 +716,20 @@ class CRUD_Valid
                 'id' => $item_id,
                 'code' => $item_code,
             );
-            // print_r($dataArray);
-
             $main = $ci->mdl_event->restore($dataArray, $whereArray);
 
             if (!$main['error']) {
 
+                $check_approve = $this->auto_approve($item_id, $item_code, $user_action);
+                if (!$check_approve['error']) {
+                    if ($check_approve['auto_approve']) {
+                        $apv['item_id'] = $item_id;
+                        $apv['item_code'] = $item_code;
+                        $apv['item_data'] = 2;
+                        $apv['user_action'] = $user_action;
+                        $this->approval($apv);
+                    }
+                }
                 $return = $main;
             }
         }

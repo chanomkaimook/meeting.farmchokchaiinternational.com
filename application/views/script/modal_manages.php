@@ -1,100 +1,101 @@
 <script>
+$(document).ready(function() {
+
+    $('body').on('hidden.bs.modal', function() {
+        if ($('.modal').hasClass('show')) {
+            $('body').addClass('modal-open');
+        }
+    });
     
-/* ********** EVENT CHANGE ********** */
-$('select[name=insert-rooms-id]').change(function() {
-    let id = $(this).val()
-    let name = $(this).find('option[value=' + id + ']').attr('data-rooms-name')
-    $("input[name=insert-rooms-name]").val(name)
 })
 
-$('select[name=update-rooms-id]').change(function() {
-    let id = $(this).val()
-    let name = $(this).find('option[value=' + id + ']').attr('data-rooms-name')
-    $("input[name=update-rooms-name]").val(name)
-})
+    /**
+     * Modal ID
+     *
+     * #
+     * # Properties Modal
+     * 1. insert_modal = Modal insert 
+     * 2. insert_modal_car = Modal insert event car
+     * 3. update_modal_car = Modal update event car
+     * 4. detail_modal_car = Modal detail event car
+     * 5. insert_modal_meeting = Modal insert event rooms,meeting
+     * 6. update_modal_meeting = Modal update event rooms,meeting
+     * 7. detail_modal_meeting = Modal detail event rooms,meeting
+     * 8. draft_modal = Modal detail draft (datatable)
+     * 
+     *
+     */
+    let insert_modal = '#insert-modal';
 
-/* ********** EVENT CLICK ********** */
-$('.insert-car').click(function() {
-    modal_show("#insert-modal-car")
-// $('button[data-modal-show=insert-car]').click(function() {
-    $("#insert-modal-car").find("#insert-car").trigger("reset")
-    // $("#insert-modal-car").find('.modal').attr('aria-hidden', true)
-    // $("#insert-modal-car").modal("show")
-    $("#insert-modal").modal("hide")
-})
+    let insert_modal_car = '#insert-modal-car';
+    let update_modal_car = '#update-modal-car';
+    let detail_modal_car = '#detail-modal-car';
 
-$('.insert-meeting-room').click(function() {
-    modal_show("#insert-modal-meeting")
-// $('button[data-modal-show=insert-meeting-room]').click(function() {
-    $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
-    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
-    $("#insert-modal-meeting").find(".modal-title").html("จองห้องประชุม")
-    $("#insert-modal-meeting").find("input[name=insert-rooms-id]").attr("disabled")
-    $("#insert-modal-meeting").find(".meeting-room").removeClass("d-none")
-    $("#insert-modal-meeting").find(".meeting-place").addClass("d-none")
-    $("#insert-modal-meeting").find("[name=insert-type-id]").val("1")
-    $("#insert-modal-meeting").find("[name=insert-type-name]").val("จองห้องประชุม")
-    // $("#insert-modal-meeting").modal("show")
-    $("#insert-modal").modal("hide")
-})
+    let insert_modal_meeting = '#insert-modal-meeting';
+    let update_modal_meeting = '#update-modal-meeting';
+    let detail_modal_meeting = '#detail-modal-meeting';
 
-$('.insert-meeting').click(function() {
-    modal_show("#insert-modal-meeting")
+    let draft_modal = '#draft-modal';
 
-// $('button[data-modal-show=insert-meeting]').click(function() {
-    $("#insert-modal-meeting").find("#insert-meeting").trigger("reset")
-    $("#insert-modal-meeting").find(".modal-title").html("นัดหมายกิจกรรม")
-    $("#insert-modal-meeting").find("input[name=insert-rooms-id]").removeAttr("disabled")
-    $("#insert-modal-meeting").find(".meeting-room").addClass("d-none")
-    $("#insert-modal-meeting").find(".meeting-place").removeClass("d-none")
-    $("#insert-modal-meeting").find("[name=insert-type-id]").val("3")
-    $("#insert-modal-meeting").find("[name=insert-type-name]").val("นัดหมายกิจกรรม")
-    // $("#insert-modal-meeting").find('.modal').attr('aria-hidden', true)
-    // $("#insert-modal-meeting").modal("show")
-    $("#insert-modal").modal("hide")
-})
+    /**
+     * 
+     */
 
-$(document).on('click','.modal-update-meeting',function() {
-    modal_show("#update-modal-meeting")
-    $("#update-modal-meeting").find('.modal').attr('aria-hidden', 'true')
-    $("#update-modal-meeting").modal("show")
-    $("#detail-modal-meeting").modal("hide")
-})
-
-/* $('.btn-update-meeting').click(function() {
-    // $("#update-modal-meeting").find('.modal').attr('aria-hidden', true)
-    // $("#update-modal-meeting").modal("show")
-    $("#detail-modal-meeting").modal("hide")
-}) */
-
-
-/* ********** ADDITIONAL FUNCTION ********** */
-/**
- * 
- * Component ที่ต้องการให้เห็นใน modal
- * 
- */
 function modal_show(modal) {
     $(modal).modal('show')
 }
 
+/* ********** EVENT CLICK ********** */
+$('.insert-car').click(function() {
+    modal_show("#insert-modal-car")
+
+    $("#insert-modal-car").find("#insert-car").trigger("reset")
+    $(insert_modal).modal("hide")
+})
+
+$('.insert-meeting-room').click(function() {
+    modal_show(insert_modal_meeting)
+
+    $(insert_modal_meeting).find("#insert-meeting").trigger("reset")
+    $(insert_modal_meeting).find(".modal-title").html("จองห้องประชุม")
+    $(insert_modal_meeting).find("input[name=insert-rooms-id]").removeAttr("disabled")
+    $(insert_modal_meeting).find(".meeting-room").removeClass("d-none")
+    $(insert_modal_meeting).find(".meeting-place").addClass("d-none")
+    $(insert_modal_meeting).find("[name=insert-type-id]").val("1")
+    $(insert_modal_meeting).find("[name=insert-type-name]").val("จองห้องประชุม")
+    $(insert_modal).modal("hide")
+})
+
+$('.insert-meeting').click(function() {
+    modal_show(insert_modal_meeting)
+
+    $(insert_modal_meeting).find("#insert-meeting").trigger("reset")
+    $(insert_modal_meeting).find(".modal-title").html("นัดหมายกิจกรรม")
+    $(insert_modal_meeting).find("input[name=insert-rooms-id]").attr("disabled")
+    $(insert_modal_meeting).find(".meeting-room").addClass("d-none")
+    $(insert_modal_meeting).find(".meeting-place").removeClass("d-none")
+    $(insert_modal_meeting).find("[name=insert-type-id]").val("3")
+    $(insert_modal_meeting).find("[name=insert-type-name]").val("นัดหมายกิจกรรม")
+    $(insert_modal).modal("hide")
+})
+
+$(document).on('click', '.modal-update-meeting', function() {
+    modal_show(update_modal_meeting)
+
+    $(detail_modal_meeting).modal("hide")
+})
+
+/* ********** ADDITIONAL FUNCTION ********** */
+
 function swal_alert(icon, title, text) {
     Swal.fire(title, text, icon).then((result) => {
-        // if (result.isConfirmed) {
 
-        //     // calendarDestroy()
-        //     // console.log(url_calendar)
-        // }
         $('.modal').modal('hide')
         calendarDestroy('#calendar', url_calendar)
         // $('#modal_draft').DataTable().ajax.reload()
     })
 
 }
-/* function swal_valid(icon, title, text) {
-    Swal.fire(title, text, icon)
-
-} */
 
 function swal_delete(data) {
     Swal.fire({
@@ -108,12 +109,7 @@ function swal_delete(data) {
         cancelButtonText: 'ยกเลิก'
     }).then((result) => {
         if (result.isConfirmed) {
-            // calendarDestroy()
             delete_meeting(data)
-            // if (data.vid) {
-            //     reject_visitor(data)
-            // } else {
-            // }
         }
     })
     $('.modal').modal('hide')
@@ -143,7 +139,6 @@ function swal_confirm(text, color, func, data) {
 
         }
     })
-    // calendarDestroy('#calendar')
 
     $('.modal').modal('hide')
 }
@@ -157,11 +152,13 @@ function insert_meeting(insert_data) {
         })
         .then(res => res.json())
         .then((resp) => {
-            if (resp.error) {
+            console.log(resp)
+
+            /* if (resp.error) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-            }
+            } */
         })
 }
 
@@ -173,11 +170,13 @@ function update_meeting(update_data) {
         })
         .then(res => res.json())
         .then((resp) => {
-            if (resp.error) {
+            console.log(resp)
+
+            /* if (resp.error) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-            }
+            } */
         })
 }
 

@@ -34,6 +34,10 @@ $path_script_end = 'application/views/partials/e_script_end.php';
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
     <link href="<?= base_url('') ?>asset/libs/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
+
+    <link href="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.css" rel="stylesheet" type="text/css" />
 
     <!-- Link main -->
     <?php include($path_head_link); ?>
@@ -88,6 +92,18 @@ $path_script_end = 'application/views/partials/e_script_end.php';
 
     <!-- Script Begin -->
     <?php include($path_script_begin); ?>
+    <script src="<?= base_url('') ?>asset/libs/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Buttons examples -->
+    <script src="<?= base_url('') ?>asset/plugins/datatablebutton/datatables.min.js"></script>
+
+    <!-- Responsive examples -->
+    <script src="<?= base_url('') ?>asset/libs/datatables/dataTables.responsive.min.js"></script>
+    <script src="<?= base_url('') ?>asset/libs/datatables/responsive.bootstrap4.min.js"></script>
+
+    <!-- Datatables init -->
+    <script src="<?= base_url('') ?>asset/js/pages/datatables.init.js"></script>
+
 
     <!-- plugin js -->
     <script src="<?= base_url('') ?>asset/libs/moment/moment.min.js"></script>
