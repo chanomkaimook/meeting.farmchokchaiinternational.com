@@ -48,7 +48,7 @@ class CRUD_Valid
 
     public function value_not_null($data = [], $type = null, $type_id = null)
     {
-        if (count($data) && $type) {
+        if (count($data) && $type && $type_id) {
             $array = [];
             $attr = [];
             $error = [];
@@ -69,6 +69,10 @@ class CRUD_Valid
                     array_push($array, 'insert-car-id', 'insert-car-name', 'insert-driver-id', 'insert-driver-name');
                 } elseif ($type_id == 3) {
                     array_push($array, 'insert-meeting-id', 'insert-meeting-name');
+                } else {
+                    $array = ['insert-name',
+                        'insert-head',
+                    ];
                 }
 
                 for ($i = 0; $i < count($array); $i++) {
@@ -85,7 +89,7 @@ class CRUD_Valid
                 foreach ($attr as $index => $item) {
 
                     if ($item) {
-                        $error[]['error'] = $index;
+                        $error['error'][] = $index;
                     }
                 }
                 $result = $error;
@@ -109,6 +113,14 @@ class CRUD_Valid
                     array_push($array, 'update-car-id', 'update-car-name', 'update-driver-id', 'update-driver-name');
                 } elseif ($type_id == 3) {
                     array_push($array, 'update-meeting-name');
+                } else {
+                    $array = ['item_id',
+                        'code',
+                        'update-type-id',
+                        'update-type-name',
+                        'update-name',
+                        'update-head',
+                    ];
                 }
 
                 for ($i = 0; $i < count($array); $i++) {
@@ -125,16 +137,13 @@ class CRUD_Valid
                 foreach ($attr as $index => $item) {
 
                     if ($item) {
-                        $error[]['error'] = $index;
+                        $error['error'][] = $index;
                     }
                 }
                 $result = $error;
             }
         } else {
-            $result = array(
-                'error' => 1,
-                'txt' => 'ไม่พบข้อมูล',
-            );
+            $result['error'][] = 'ไม่พบข้อมูล';
         }
         return $result;
     }
@@ -146,17 +155,14 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data) && $code) {
             $check = $this->value_not_null($data, "insert", $data['insert-type-id']);
             // echo "<pre>";
             // print_r($check);
             // echo "</pre>";die;
-            if (!$check) {
+            if (!$check['error']) {
                 $type_id = $data['insert-type-id'];
                 $type_name = $data['insert-type-name'];
                 $event_name = $data['insert-name'];
@@ -203,14 +209,19 @@ class CRUD_Valid
                     'date_start' => date('Y-m-d H:i:s'),
                     'user_start' => $user_action,
                 );
-                if ($staff_id == $user_action) {
-                    $dataArray['approve_date'] = date('Y-m-d H:i:s');
-                    $dataArray['user_action'] = $user_action;
-                    $dataArray['status_complete'] = 5;
-                    $dataArray['status_complete_name'] = "กำลังดำเนินการ";
+                if ($type_id < 4) {
+                    if ($staff_id == $user_action) {
+                        $dataArray['approve_date'] = date('Y-m-d H:i:s');
+                        $dataArray['user_action'] = $user_action;
+                        $dataArray['status_complete'] = 5;
+                        $dataArray['status_complete_name'] = "กำลังดำเนินการ";
+                    } else {
+                        $dataArray['status_complete'] = 1;
+                        $dataArray['status_complete_name'] = "รอดำเนินการ";
+                    }
                 } else {
-                    $dataArray['status_complete'] = 1;
-                    $dataArray['status_complete_name'] = "รอดำเนินการ";
+                    $dataArray['status_complete'] = 4;
+                    $dataArray['status_complete_name'] = $type_name;
                 }
 
                 $main = $ci->mdl_event->insert_data($dataArray);
@@ -296,17 +307,14 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data) && $code) {
             $check = $this->value_not_null($data, "update", $data['update-type-id']);
             // echo "<pre>";
             // print_r($check);
             // echo "</pre>";die;
-            if (!count($check)) {
+            if (!$check['error']) {
                 $item_id = $data['item_id'];
                 $type_id = $data['update-type-id'];
                 $type_name = $data['update-type-name'];
@@ -434,10 +442,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
             $item_id = $data['item_id'];
@@ -493,10 +498,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
             $item_id = $data['item_id'];
@@ -534,10 +536,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($apv)) {
 
@@ -587,10 +586,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
             $vid = $data['vid'];
@@ -636,10 +632,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
             $item_id = $data['item_id'];
@@ -690,10 +683,7 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $return = array(
-            'error' => 1,
-            'txt' => 'ไม่มีการทำรายการ',
-        );
+        $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
             $item_id = $data['item_id'];

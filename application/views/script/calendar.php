@@ -1,6 +1,6 @@
 <script>
-function createFullcalendar(url,array = []) {
-    get_data(url,array)
+function createFullcalendar(url, array = []) {
+    get_data(url, array)
         .then((data) => {
             // console.log(data)
             let dataDefault = [];
@@ -38,11 +38,17 @@ function createFullcalendar(url,array = []) {
         })
 }
 
-function calendarDestroy(calendar, url, filter = null) {
-    $(calendar).fullCalendar('destroy');
-    $(calendar).empty();
+function datatableReload(url_draft) {
+    // $('#modal_draft').DataTable().reload()
+    createDraftModal(url_draft)
+    // $('#modal_draft').DataTable().clear()
+}
+
+function reloadData(url, filter = null) {
+    $('#calendar').fullCalendar('destroy');
+    $('#calendar').empty();
     if (filter) {
-        createFullcalendar(url,filter)
+        createFullcalendar(url, filter)
     } else {
         createFullcalendar(url)
     }

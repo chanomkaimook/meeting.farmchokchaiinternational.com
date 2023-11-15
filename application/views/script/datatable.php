@@ -1,5 +1,6 @@
 <script>
-function createDatatable(url, datatable) {
+function createDatatable(url) {
+    $('#data_table').DataTable().destroy();
     
     $('#data_table').DataTable({
         ajax: {
@@ -49,28 +50,27 @@ function createDatatable(url, datatable) {
         "createdRow": function(row, data, index) {
             let table_btn_name =
                 `
-            <div class="btn-group dropdown">
-            <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                <i class="mdi mdi-dots-vertical"></i>
-            </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <!-- item-->
-                    <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-dismiss="modal">
-                        <span class="align-middle">รายละเอียด</span>
+                <div class="btn-group dropdown">
+                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
                     </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">รายละเอียด</span>
+                            </a>
 
-                    <!-- item-->
-                    <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
-                        <span class="align-middle">แก้ไข</span>
-                    </a>
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">แก้ไข</span>
+                            </a>
 
-                    <!-- item-->
-                    <a href="" data-id="${data['ID']}" class="dropdown-item btn-delete" >
-                        <span class="align-middle">ลบ</span>
-                    </a>
+                            <!-- item-->
+                            <a href="" class="dropdown-item delete-meeting" data-event-id='${data['ID']}' data-event-code='${data['CODE']}'>
+                                <span class="align-middle">ลบ</span>
+                            </a>
+                        </div>
                 </div>
-
-        </div>
 
          `
             $('td', row).eq(6).html(table_btn_name)
@@ -118,8 +118,8 @@ function createDatatable(url, datatable) {
         })
 } */
 
-function datatableReload(calendar, url, filter = null) {
-    $('#data_table').DataTable().ajax.reload()
+function reloadData(url, filter = null) {
+    // $('#data_table').DataTable().destroy()
     if (filter) {
         createDatatable(url, filter)
     } else {
@@ -127,6 +127,9 @@ function datatableReload(calendar, url, filter = null) {
     }
 }
 
+function datatableReload(url_draft) {
+    createDraftModal(url_draft)
+}
 
 /* async function get_data(url, array = []) {
     let response = await fetch(url, {

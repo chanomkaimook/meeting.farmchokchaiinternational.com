@@ -139,8 +139,8 @@ include "crud_modal.php";
 ?>
 <script>
 let my_id = $('#my-id').val();
-let url_datatable = new URL('appointment/ctl_datatable/get_data', domain);
-url_datatable.searchParams.append('id', $('#my-id').val())
+let url_main = new URL('appointment/ctl_datatable/get_data', domain);
+url_main.searchParams.append('id', $('#my-id').val())
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 var filterArray = []
@@ -156,118 +156,8 @@ filterArray.push({
 })
 $(document).ready(function() {
     // let my_id = $('#my-id').val();
-    createDatatable(url_datatable, '#data_table', filterArray)
+    createDatatable(url_main, '#data_table', filterArray)
     createDraftModal(url_draft)
-
-    function createDraftModal(url_draft) {
-        get_data_draft(url_draft)
-            .then((data) => {
-                let dataDefault = [];
-                if (data) {
-                    data.forEach(function(item, index) {
-                        dataDefault.push(item);
-                    })
-                    detail_draft(dataDefault)
-                }
-            })
-    }
-
-    /**
-     * Modal ID
-     *
-     * #
-     * # Properties Modal
-     * 1. insert_modal = Modal insert 
-     * 2. insert_modal_car = Modal insert event car
-     * 3. update_modal_car = Modal update event car
-     * 4. detail_modal_car = Modal detail event car
-     * 5. insert_modal_meeting = Modal insert event rooms,meeting
-     * 6. update_modal_meeting = Modal update event rooms,meeting
-     * 7. detail_modal_meeting = Modal detail event rooms,meeting
-     * 8. draft_modal = Modal detail draft (datatable)
-     * 
-     *
-     */
-    let insert_modal = '#insert-modal';
-
-    let insert_modal_car = '#insert-modal-car';
-    let update_modal_car = '#update-modal-car';
-    let detail_modal_car = '#detail-modal-car';
-
-    let insert_modal_meeting = '#insert-modal-meeting';
-    let update_modal_meeting = '#update-modal-meeting';
-    let detail_modal_meeting = '#detail-modal-meeting';
-
-    let draft_modal = '#draft-modal';
-
-    /**
-     * 
-     * SHOWN.BS.MODAL
-     * 
-     */
-
-    $(insert_modal).on('shown.bs.modal', function() {
-        $(insert_modal).attr('aria-hidden', 'true')
-    });
-    $(insert_modal_car).on('shown.bs.modal', function() {
-        $(insert_modal_car).attr('aria-hidden', 'true')
-    });
-    $(update_modal_car).on('shown.bs.modal', function() {
-        $(update_modal_car).attr('aria-hidden', 'true')
-    });
-    $(detail_modal_car).on('shown.bs.modal', function() {
-        $(detail_modal_car).attr('aria-hidden', 'true')
-    });
-    $(insert_modal_meeting).on('shown.bs.modal', function() {
-        $(insert_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(update_modal_meeting).on('shown.bs.modal', function() {
-        $(update_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(detail_modal_meeting).on('shown.bs.modal', function() {
-        $(detail_modal_meeting).attr('aria-hidden', 'true')
-    });
-    $(draft_modal).on('shown.bs.modal', function() {
-        $(draft_modal).attr('aria-hidden', 'true')
-    });
-
-
-    /**
-     * 
-     * HIDDEN.BS.MODAL
-     * 
-     */
-
-    $(insert_modal).on('hidden.bs.modal', function() {
-        $(insert_modal).attr('aria-hidden', 'false')
-    });
-    $(insert_modal_car).on('hidden.bs.modal', function() {
-        $(insert_modal_car).attr('aria-hidden', 'false')
-    });
-    $(update_modal_car).on('hidden.bs.modal', function() {
-        $(update_modal_car).attr('aria-hidden', 'false')
-    });
-    $(detail_modal_car).on('hidden.bs.modal', function() {
-        $(detail_modal_car).attr('aria-hidden', 'false')
-    });
-    $(insert_modal_meeting).on('hidden.bs.modal', function() {
-        $(insert_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(update_modal_meeting).on('hidden.bs.modal', function() {
-        $(update_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(detail_modal_meeting).on('hidden.bs.modal', function() {
-        $(detail_modal_meeting).attr('aria-hidden', 'false')
-    });
-    $(draft_modal).on('hidden.bs.modal', function() {
-        $(draft_modal).attr('aria-hidden', 'false')
-    });
-
-    $('body').on('hidden.bs.modal', function() {
-        if ($('.modal[aria-hidden=true]').length) {
-            $('body').addClass('modal-open');
-        }
-    });
 
     /**
      * Button modal
@@ -294,7 +184,7 @@ $(document).ready(function() {
      *
      */
 
-    let btn_insert = '.btn-save-insert'
+     let btn_insert = '.btn-save-insert'
     let btn_update = '.btn-save-update'
     let btn_draft_insert = '.btn-draft-insert'
     let btn_draft_update = '.btn-draft-update'
@@ -315,10 +205,25 @@ $(document).ready(function() {
      *
      * EVENT CLICK
      *
+     * 
+     * BTN SEARCH
      */
 
     $(btn_search).click(function() {
-        datatableReload(url_datatable, '#data_table', filterArray)
+
+        let data = new FormData()
+
+        data.append('dates', $('#hidden_dates').val())
+        data.append('datee', $('#hidden_datee').val())
+        data.append('times', $('#hidden_times').val())
+        data.append('timee', $('#hidden_timee').val())
+        data.append('user', $('#hidden_user').val())
+        data.append('permit', $('#hidden_permit').val())
+        data.append('status', $('#hidden_status').val())
+        data.append('area', $('#hidden_area').val())
+        data.append('type', $('#hidden_type').val())
+
+        calendarDestroy('#calendar', url_calendar, data)
     })
 
     /**
@@ -340,6 +245,7 @@ $(document).ready(function() {
                     data.forEach(function(item, index) {
                         dataDefault = item
                     })
+                    modal_show("#detail-modal-meeting")
                     form_displayed(dataDefault)
                 }
             })
@@ -366,7 +272,8 @@ $(document).ready(function() {
                         dataDefault = item
                     })
                     type = "draft"
-                    draft_to_use(dataDefault, type)
+                    form_displayed(dataDefault)
+                    modal_show("#update-modal-meeting")
                 }
             })
     })
@@ -386,16 +293,29 @@ $(document).ready(function() {
         get_data_draft(url_draft)
             .then((data) => {
                 // console.log(data)
-                let dataDefault;
+                let dataDefault, type_name = '';
                 if (data.length) {
                     data.forEach(function(item, index) {
+                        for (let i = 10; i < item['TYPE_NAME'].length; i++) {
+                            type_name += item['TYPE_NAME'][i]
+                        }
+                        item['TYPE_ID'] -= 3
+                        item['TYPE_NAME'] = type_name
+                        item['class'] = 'me'
+
                         dataDefault = item
+                        console.log(item)
                     })
                     type = "use"
-                    draft_to_use(dataDefault, type)
+                    form_displayed(dataDefault)
+                    modal_show("#update-modal-meeting")
                 }
             })
     })
+
+    /**
+     *
+     */
 
     /**
      *
@@ -426,12 +346,12 @@ $(document).ready(function() {
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        error = 0;
+                        error[array[i]] = 0;
                         break;
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error = 1
+                        error[array[i]] = 1
                     }
                 }
             }
@@ -468,12 +388,12 @@ $(document).ready(function() {
             for (let i = 0; i < array.length; i++) {
                 for (let s = 0; s < data.length; s++) {
                     if (data[s].name == array[i] && data[s].value != "") {
-                        error = 0;
+                        error[array[i]] = 0;
                         break;
                     }
 
                     if (data[s].name == array[i] && data[s].value == "" || data[s].name != array[i]) {
-                        error = 1
+                        error[array[i]] = 1
                     }
                 }
             }
@@ -487,7 +407,7 @@ $(document).ready(function() {
                     dataAppend.append(data[i].name, data[i].value)
                 }
                 dataAppend.append("visitor", visitor)
-                update_meeting(dataAppend, "calendar")
+                update_meeting(dataAppend)
 
             }
         }
@@ -604,13 +524,10 @@ $(document).ready(function() {
         e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
-            code = $(this).attr('data-event-code')
-        // vid = $(this).attr('data-id')
+            code = $(this).attr('data-event-code');
 
         data.append('item_id', id)
         data.append('item_code', code)
-        // data.append('item_data', '2')
-        // data.append('vid', vid)
 
         swal_delete(data)
     })
@@ -920,11 +837,12 @@ $(document).ready(function() {
      * #
      * #
      */
-
 })
+</script>
 </script>
 
 <?php
+// include APPPATH . "views/script/crud_modal.php";
 include APPPATH . "views/script/modal_manages.php";
 include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";

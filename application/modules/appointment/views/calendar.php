@@ -108,33 +108,18 @@ include "crud_modal.php";
 <script>
 let my_id = $('#my-id').val();
 
-let url_calendar = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
+let url_main = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 $(document).ready(function() {
 
-    // btn_manage('pending', 'owner')
-    // btn_all_in_modal()
     /**
      * #
      * function get data
      * #
      */
-    createFullcalendar(url_calendar)
+    createFullcalendar(url_main)
     createDraftModal(url_draft)
-
-    function createDraftModal(url_draft) {
-        get_data_draft(url_draft)
-            .then((data) => {
-                let dataDefault = [];
-                if (data) {
-                    data.forEach(function(item, index) {
-                        dataDefault.push(item);
-                    })
-                    detail_draft(dataDefault)
-                }
-            })
-    }
 
     /**
      * Button modal
@@ -200,7 +185,7 @@ $(document).ready(function() {
         data.append('area', $('#hidden_area').val())
         data.append('type', $('#hidden_type').val())
 
-        calendarDestroy('#calendar', url_calendar, data)
+        calendarDestroy('#calendar', url_main, data)
     })
 
     /**
@@ -501,14 +486,10 @@ $(document).ready(function() {
         e.preventDefault()
         let data = new FormData(),
             id = $(this).attr('data-event-id'),
-            code = $(this).attr('data-event-code')
-        // vid = $(this).attr('data-id')
-console.log(id)
-console.log(code)
+            code = $(this).attr('data-event-code');
+
         data.append('item_id', id)
         data.append('item_code', code)
-        // data.append('item_data', '2')
-        // data.append('vid', vid)
 
         swal_delete(data)
     })

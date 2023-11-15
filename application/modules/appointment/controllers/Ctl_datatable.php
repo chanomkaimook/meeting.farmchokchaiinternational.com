@@ -4,12 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Ctl_datatable extends MY_Controller
 {
     public $_title;
-
+    public $my_id;
     public function __construct()
     {
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
+        $this->my_id = $this->session->userdata('user_emp');
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
     }
@@ -702,6 +703,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
             $code = $this->generate_event_code->gen_code();
 
             $returns = $this->crud_valid->insert_data($data, $code);
@@ -714,6 +716,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
             $code = $data['code'];
 
             $returns = $this->crud_valid->update_data($data, $code);
@@ -726,6 +729,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
 
             if ($data['vid']) {
                 $returns = $this->crud_valid->reject_visitor($data);
@@ -743,6 +747,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->approval($data);
             echo json_encode($returns);
@@ -754,6 +759,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->invitation($data);
             echo json_encode($returns);
@@ -765,6 +771,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->processing($data);
             echo json_encode($returns);
@@ -776,6 +783,7 @@ class Ctl_datatable extends MY_Controller
         # code...
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $data = $this->input->post();
+            $data['user_action'] = $this->my_id;
 
             $returns = $this->crud_valid->restore($data);
             echo json_encode($returns);

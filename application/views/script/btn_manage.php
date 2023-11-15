@@ -50,7 +50,7 @@ function btn_displayed(status = null, role = null) {
             owner: {
                 header: '.action-header',
                 body: ['.action-respond', 'respond', '.action-approval', 'approval'],
-                footer: ['.action-footer', 'operation']
+                footer: ''
             },
             child: {
                 header: '.action-header',
