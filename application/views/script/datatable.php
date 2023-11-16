@@ -41,7 +41,7 @@ function createDatatable(url) {
                 "data": "USER_START_FULLNAME"
             },
             {
-                "data": "STATUS_SHOW"
+                "data": "STATUS_COMPLETE_NAME"
             },
             {
                 "data": "ID"
@@ -56,13 +56,8 @@ function createDatatable(url) {
                     </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- item-->
-                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-toggle="modal" data-dismiss="modal">
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail" data-toggle="modal" data-dismiss="modal">
                                 <span class="align-middle">รายละเอียด</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
-                                <span class="align-middle">แก้ไข</span>
                             </a>
 
                             <!-- item-->
@@ -82,56 +77,31 @@ function createDatatable(url) {
     });
 
 }
-/* function createDatatable(url,datatable,array = []) {
-    get_data(url,array)
+
+function modalShow(url)
+{
+    get_data(url)
         .then((data) => {
-            // console.log(data)
-            let dataDefault = [];
-            if (data) {
-                data.forEach(function(item, index) {
-                    dataDefault.push(item);
-                })
-            }
-            $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                editable: true,
-                eventLimit: true, // allow "more" link when too many events
-                events: dataDefault,
-                timeFormat: "H:mm",
-                // droppable: true, // this allows things to be dropped onto the calendar !!!
-                // selectable: true,
-
-                drop: function(date) {
-                    calendarDrop($(this), date);
-                },
-                // select: function(start, end, allDay) {
-                //     modal_insert(start, end, allDay);
-                // },
-                eventClick: function(calEvent, jsEvent, view) {
-                    detail(calEvent, jsEvent, view);
-                },
-            });
+            
+            modal_show('#detail-modal-meeting')
+            form_displayed(data)
         })
-} */
+}
 
-function reloadData(url, filter = null) {
-    // $('#data_table').DataTable().destroy()
-    if (filter) {
-        createDatatable(url, filter)
-    } else {
-        createDatatable(url)
-    }
+function reloadData(url) {
+    // $('#data_table').DataTable().ajax.reload()
+    createDatatable(url)
+    // if (filter) {
+    //     createDatatable(url, filter)
+    // } else {
+    // }
 }
 
 function datatableReload(url_draft) {
     createDraftModal(url_draft)
 }
 
-/* async function get_data(url, array = []) {
+async function get_data(url, array = []) {
     let response = await fetch(url, {
         method: 'post',
         body: array
@@ -139,7 +109,7 @@ function datatableReload(url_draft) {
 
     return response.json()
 }
- */
+
 async function get_data_draft(url) {
     let response = await fetch(url, {})
 

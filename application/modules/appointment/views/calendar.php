@@ -363,11 +363,17 @@ $(document).ready(function() {
             if (!error) {
 
                 for (var i = 0; i < data.length; i++) {
+                    $v = 0;
                     if (data[i].name == "update-visitor") {
-                        visitor.push(data[i].value)
+                        let vis_data = [];
+                        vis_data["id"] = data[i].value
+                        vis_data["status"] = $('[name=' + data[i].name + ']').find('option[value=' + data[i]
+                            .value + ']').attr('data-status')
+                        visitor.push(vis_data["id"] + "-" + vis_data["status"])
                     }
                     dataAppend.append(data[i].name, data[i].value)
                 }
+                // console.log(visitor)
                 dataAppend.append("visitor", visitor)
                 update_meeting(dataAppend)
 

@@ -141,6 +141,7 @@ include "crud_modal.php";
 let my_id = $('#my-id').val();
 let url_main = new URL('appointment/ctl_datatable/get_data', domain);
 url_main.searchParams.append('id', $('#my-id').val())
+
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 var filterArray = []
@@ -156,7 +157,7 @@ filterArray.push({
 })
 $(document).ready(function() {
     // let my_id = $('#my-id').val();
-    createDatatable(url_main, '#data_table', filterArray)
+    createDatatable(url_main)
     createDraftModal(url_draft)
 
     /**
@@ -184,7 +185,7 @@ $(document).ready(function() {
      *
      */
 
-     let btn_insert = '.btn-save-insert'
+    let btn_insert = '.btn-save-insert'
     let btn_update = '.btn-save-update'
     let btn_draft_insert = '.btn-draft-insert'
     let btn_draft_update = '.btn-draft-update'

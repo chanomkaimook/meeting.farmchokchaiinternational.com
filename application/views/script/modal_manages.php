@@ -104,6 +104,13 @@ $(document).on('click', '.modal-update-meeting', function() {
     $(detail_modal_meeting).modal("hide")
 })
 
+$(document).on('click', '.btn-detail', function() {
+    let event_id = $(this).attr('data-id'),
+        url = url_main
+    url.searchParams.append('event_id', event_id)
+    modalShow(url)
+})
+
 /* ********** ADDITIONAL FUNCTION ********** */
 
 function swal_error(text = [], type) {
@@ -165,12 +172,12 @@ function swal_alert(icon, title, text) {
 
         $('.modal').modal('hide')
         
+        let params = new URLSearchParams(url_main.search)
+        params.delete("event_id")
+        url_main.search = params
+        
         reloadData(url_main)
-        /* if (!url_datatable) {
-            reloadData("calendar", url_calendar)
-        } else {
-            reloadData("datatable", url_datatable)
-        } */
+
         datatableReload(url_draft)
     })
 

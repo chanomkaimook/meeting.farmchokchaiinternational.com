@@ -138,11 +138,6 @@ class Ctl_calendar extends MY_Controller
                             $state = 'child';
                         }
 
-                        // if ($dataVal['VIS_STATUS_COMPLETE']) {
-                        //     $attr = $this->status($dataVal["VIS_STATUS_COMPLETE"], $state);
-                        // } else {
-                        //     $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
-                        // }
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
 
                         $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
@@ -292,9 +287,6 @@ class Ctl_calendar extends MY_Controller
         $optionnal_c = $optionnal;
         $optionnal_v = $optionnal;
 
-        // echo "<pre>";
-        // print_r($dataShow);
-
         if ($user && $user != $this->my_id) {
             $dataShow['me'] = null;
 
@@ -317,7 +309,6 @@ class Ctl_calendar extends MY_Controller
             if ($optionnal_status['emp']) {
                 $optionnal_e['where'] = $optionnal_status['emp'];
             }
-            // $optionnal_e['where']['event.type_id <'] = 4;
             $optionnal_e['where']['event.staff_id'] = $this->my_id;
             $optionnal_e['join'] = "all";
 
@@ -329,7 +320,6 @@ class Ctl_calendar extends MY_Controller
             if ($optionnal_status['emp']) {
                 $optionnal_e['where'] = $optionnal_status['emp'];
             }
-            // $optionnal_e['where']['event.type_id <'] = 4;
             $optionnal_e['where']['event.staff_id'] = $this->my_id;
             $optionnal_e['join'] = "all";
 
@@ -363,9 +353,7 @@ class Ctl_calendar extends MY_Controller
 
         $optionnal_vis['select'] = "event_visitor.EVENT_VISITOR,event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
         $optionnal_vis['where']['event_visitor.event_visitor'] = $this->my_id;
-        /* if ($optionnal_status['vis']) {
-        $optionnal_vis['where'] = $optionnal_status['vis'];
-        } */
+
         $optionnal_vis['join'] = true;
         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
 
@@ -485,7 +473,6 @@ class Ctl_calendar extends MY_Controller
             }
         }
 
-        // echo $this->db->last_query();
         echo json_encode($Calendar);
     }
 

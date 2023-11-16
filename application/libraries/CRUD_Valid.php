@@ -163,13 +163,28 @@ class CRUD_Valid
             // print_r($check);
             // echo "</pre>";die;
             if (!$check['error']) {
+                
+                
+                $date_begin = null;
+                $date_end = null;
+
+                if($data['insert-dates'])
+                {
+                    $date_begin = $data['insert-dates'];
+                }
+                if($data['insert-datee'])
+                {
+                $date_end = $data['insert-datee'];
+                }
+                
+
                 $type_id = $data['insert-type-id'];
                 $type_name = $data['insert-type-name'];
                 $event_name = $data['insert-name'];
                 $staff_id = $data['insert-head'];
                 $event_description = $data['insert-description'];
-                $date_begin = $data['insert-dates'];
-                $date_end = $data['insert-datee'];
+                // $date_begin = $data['insert-dates'];
+                // $date_end = $data['insert-datee'];
                 $time_begin = $data['insert-times'];
                 $time_end = $data['insert-timee'];
                 $rooms_id = $data['insert-rooms-id'];
@@ -398,33 +413,43 @@ class CRUD_Valid
                         // $ci->mdl_event_car->insert_data($SubDataArray, $whereArray);
                     }
 
-                    if ($visitor) {
-                        $visArray = explode(",", $visitor);
-                        $VisitorArray = '';
-                        foreach ($visArray as $sid) {
+                    // print_r($sid);
+                    $VisitorValue = array(
+                        'status_complete' => 1,
+                        'status' => 0,
+                        'date_update' => date('Y-m-d H:i:s'),
+                        'user_update' => $user_action,
+                    );
 
-                            $optionnal['select'] = 'count(event_visitor) as total';
-                            $optionnal['where'] = array(
-                                'event_visitor' => $sid,
+                    $VisWhere = array(
+                        'event_code' => $code,
+                        'event_id' => $main['data']['id'],
+
+                    );
+                    $ci->mdl_visitor->delete_data($VisitorValue, $VisWhere);
+
+                    if ($visitor) {
+
+                        $dataVis = [];
+                        $visArray = explode(",", $visitor);
+                        $dataArray = [];
+                        foreach ($visArray as $k_sid => $sid) {
+                            $dataVis = explode("-", $sid);
+
+                            $dataArray = array(
                                 'event_code' => $code,
                                 'event_id' => $main['data']['id'],
+                                'event_visitor' => $dataVis[0],
+                                'status_complete' => $dataVis[1],
+                                'status' => 1,
+                                'date_start' => date('Y-m-d H:i:s'),
+                                'user_start' => $user_action,
                             );
+                            $ci->mdl_visitor->insert_data($dataArray);
 
-                            $dataVis = $ci->mdl_visitor->get_dataShow(null, $optionnal);
-                            // print_r($dataVis);
-                            if (!$dataVis[0]->total) {
-                                $VisitorArray = array(
-                                    'event_code' => $code,
-                                    'event_id' => $main['data']['id'],
-                                    'event_visitor' => $sid,
-                                    'status_complete' => 1,
-                                    'status' => 1,
-                                    'date_start' => date('Y-m-d H:i:s'),
-                                    'user_start' => $user_action,
-                                );
-                                $vis = $ci->mdl_visitor->insert_data($VisitorArray);
-                            }
                         }
+
+                        // print_r($visitor);
                     }
                     $return = $main;
                 }

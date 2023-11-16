@@ -137,8 +137,8 @@ function form_displayed(data) {
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.meeting-line').addClass('d-none')
 
-        $(modal_update).find('div.update-rooms').addClass('d-none')
-        $(modal_update).find('div.update-meeting-data').removeClass('d-none')
+        $(modal_update).find('div.update-rooms').removeClass('d-none')
+        $(modal_update).find('div.update-meeting-data').addClass('d-none')
 
     } else if (data.TYPE_ID == 6) {
         $(modal_detail).find('div.meeting-inline').removeClass('d-none')
@@ -564,6 +564,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
 
     $(modal_detail).find('[data-visitor=true]').addClass('d-none')
     $(modal_detail).find('h5.visitor-name').empty()
+    $('select[name=update-visitor]').find('option').attr('data-status', 1)
     let form_update = {
             '[name=item_id]': data.ID,
             '[name=code]': data.CODE,
@@ -605,10 +606,11 @@ function form_displayed_data(data, modal_detail, modal_update) {
     if (data.VISITOR) {
         let status_vis = "",
             vis_html = "",
+            vis_data = [],
             btn_action;
         for (let i = 0; i < data.VISITOR.length; i++) {
             btn_action = `
-            <div class="action-respond" data-row-id="${data.VISITOR[i].VID}"></div>
+            <div class="action-respond" data-row-id="${data.VISITOR[i].EID}"></div>
             `
             if (data.VISITOR[i].VSTATUS == 1) {
                 status_vis =
@@ -620,15 +622,19 @@ function form_displayed_data(data, modal_detail, modal_update) {
                 status_vis =
                     `<span>ปฏิเสธ</span>`
             }
+
             if (data.APPROVE_DATE && data.STATUS_COMPLETE == 5) {
-                if (data.class == 'me' || data.class == 'owner') { // my_id = session('user_emp') อยู่ใน views หลัก
-                    status_vis = status_vis + `<div class="action-respond" data-row-id="${data.VISITOR[i].EID}"></div>`
+                if (data.class == 'me' || data.class == 'owner') {
+                    status_vis = status_vis + btn_action
                 }
             }
 
 
             vis_html = vis_html + data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME + ' ' + status_vis +
                 '<br>'
+
+            $('select[name=update-visitor]').find('option[value=' + data.VISITOR[i].VID + ']').attr('data-status', data
+                .VISITOR[i].VSTATUS)
         }
 
         user_visitor = data.VISITOR.map((item, index) => {
@@ -639,6 +645,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
         })
 
         $(modal_update).find('select[name=update-visitor]').val(user_visitor).trigger('change')
+        user_visitor.forEach(element => {});
 
         $(modal_detail).find('[data-visitor=true]').removeClass('d-none')
         $(modal_detail).find('h5.visitor-name').html(vis_html)
