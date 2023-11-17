@@ -212,19 +212,7 @@ $(document).ready(function() {
 
     $(btn_search).click(function() {
 
-        let data = new FormData()
-
-        data.append('dates', $('#hidden_dates').val())
-        data.append('datee', $('#hidden_datee').val())
-        data.append('times', $('#hidden_times').val())
-        data.append('timee', $('#hidden_timee').val())
-        data.append('user', $('#hidden_user').val())
-        data.append('permit', $('#hidden_permit').val())
-        data.append('status', $('#hidden_status').val())
-        data.append('area', $('#hidden_area').val())
-        data.append('type', $('#hidden_type').val())
-
-        calendarDestroy('#calendar', url_calendar, data)
+        reloadData(url_main)
     })
 
     /**

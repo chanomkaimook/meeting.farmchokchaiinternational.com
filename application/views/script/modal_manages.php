@@ -261,12 +261,6 @@ function update_meeting(update_data) {
         .then((resp) => {
 
             if (resp.error) {
-                /*                 console.log(resp.error)
-                                resp.error.forEach(function(item) {
-                                    row_error += item + " - ไม่พบข้อมูล<br>";
-                                })
-                                console.log(row_error)
-                 */
                 swal_error(resp.error, "update")
             } else {
                 swal_alert('success', 'สำเร็จ', '')

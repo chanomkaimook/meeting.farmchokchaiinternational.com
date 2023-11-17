@@ -87,9 +87,9 @@
                 <form class="form" id="insert-car">
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
                             name="insert-type-id" />
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
                             name="insert-type-name" />
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
                             <option value="1">จองรถ</option>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="text"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="text"
                             name="insert-name" autocomplete="FALSE"/>
                     </div>
                     <div class="form-group">
@@ -121,7 +121,7 @@ foreach ($staff as $val) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">วันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" placeholder="yyyy-mm-dd"
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" placeholder="yyyy-mm-dd"
                                 name="insert-date">
                         </div>
                         <div class="col-md-6">
@@ -185,9 +185,9 @@ foreach ($time as $value) {
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
 
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="2" type="hidden"
                             name="update-type-id" />
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="จองรถ" type="hidden"
                             name="update-type-name" />
                         <select class="form-control form-white" data-placeholder="กรุณาเลือก..." disabled>
                             <option selected>จองรถ</option>
@@ -195,7 +195,7 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="text"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="update-name" />
                     </div>
                     <div class="form-group">
@@ -219,7 +219,7 @@ foreach ($time as $value) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">วันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value="2023-10-02"
                                 placeholder="yyyy-mm-dd" name="update-date">
                         </div>
                         <div class="col-md-6">
@@ -247,7 +247,7 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <!-- <input autocomplete="off"type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
+                        <!-- <input autocomplete="off" type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
                             <?php foreach ($employee as $emp) {
@@ -304,7 +304,7 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="text"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="text"
                             value="เก็บหิน สนง.ฟาร์ม" name="detail-name" disabled />
                     </div>
                     <div class="form-group">
@@ -329,7 +329,7 @@ foreach ($time as $value) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">วันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value="2023-10-02"
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value="2023-10-02"
                                 placeholder="yyyy-mm-dd" name="detail-date" disabled>
                         </div>
                         <div class="col-md-6">
@@ -358,7 +358,7 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group d-none" data-visitor="true">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <!-- <input autocomplete="off"type="text" value="" data-role="tagsinput" name="detail-visitor" disabled /> -->
+                        <!-- <input autocomplete="off" type="text" value="" data-role="tagsinput" name="detail-visitor" disabled /> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
                             <option value="1">นาย A</option>
@@ -412,13 +412,13 @@ foreach ($time as $value) {
             <div class="modal-body pb-0">
                 <form class="form" id="insert-meeting">
 
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="hidden"
                         name="insert-type-id" />
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="hidden"
                         name="insert-type-name" />
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span> </label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="text" name="insert-name"
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="text" name="insert-name"
                             required>
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
@@ -451,13 +451,13 @@ foreach ($staff as $val) {
     }
     ?>
                                 </select>
-                                <input autocomplete="off"type="hidden" name="insert-rooms-name">
+                                <input autocomplete="off" type="hidden" name="insert-rooms-name">
                             </div>
                             <div class="meeting-place d-none">
                                 <label class="control-label">สถานที่</label>
-                                <input autocomplete="off"type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                <input autocomplete="off" type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
                                     placeholder="กรุณาระบุ..." name="insert-meeting-name">
-                                <input autocomplete="off"type="hidden" name="insert-meeting-id" value="0">
+                                <input autocomplete="off" type="hidden" name="insert-meeting-id" value="0">
                             </div>
                         </div>
                     </div>
@@ -470,13 +470,13 @@ foreach ($staff as $val) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่วันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose"
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose"
                                 data-placeholder="กรุณาระบุวันที่..." value="" placeholder="yyyy-mm-dd"
                                 name="insert-dates">
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึงวันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose"
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose"
                                 data-placeholder="กรุณาระบุวันที่..." value="" placeholder="yyyy-mm-dd"
                                 name="insert-datee">
                         </div>
@@ -563,18 +563,18 @@ foreach ($time as $value) {
             </div>
             <div class="modal-body pb-0">
                 <form class="form" id="update-meeting">
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="" type="hidden"
                         name="item_id" />
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="" type="hidden"
                         name="code" />
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="" type="hidden"
                         name="update-type-id" />
-                    <input autocomplete="off"class="form-control form-white" placeholder="Enter name" value="" type="hidden"
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value="" type="hidden"
                         name="update-type-name" />
 
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter name" type="text" value=""
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter name" type="text" value=""
                             name="update-name" required />
                     </div>
 
@@ -609,14 +609,14 @@ foreach ($staff as $val) {
     }
     ?>
                                 </select>
-                                <input autocomplete="off"type="hidden" name="update-rooms-name">
+                                <input autocomplete="off" type="hidden" name="update-rooms-name">
                             </div>
 
                             <div class="update-meeting-data d-none">
                                 <label class="control-label">สถานที่</label>
-                                <input autocomplete="off"type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                <input autocomplete="off" type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
                                     placeholder="กรุณาระบุ..." name="update-meeting-name">
-                                <input autocomplete="off"type="hidden" name="update-meeting-id">
+                                <input autocomplete="off" type="hidden" name="update-meeting-id">
                             </div>
                         </div>
                     </div>
@@ -628,12 +628,12 @@ foreach ($staff as $val) {
                     <div class="form-group mb-3 d-flex flex-row">
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่วันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value=""
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="update-dates">
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึงวันที่</label>
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value=""
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="update-datee">
                         </div>
 
@@ -688,7 +688,7 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <!-- <input autocomplete="off"type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
+                        <!-- <input autocomplete="off" type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
                             <?php foreach ($employee as $emp) {
@@ -757,12 +757,12 @@ foreach ($time as $value) {
                     <div class="form-group">
                         <label class="control-label">ประเภท</label>
                         <!-- <p class="detail-type"></p> -->
-                        <input autocomplete="off"type="text" name="detail-type" class="form-control" disabled>
+                        <input autocomplete="off" type="text" name="detail-type" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
                         <!-- <p class="detail-name"></p> -->
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter topic" type="text" value=""
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter topic" type="text" value=""
                             name="detail-name" disabled />
                     </div>
                     <div class="form-group mb-3 d-flex flex-row">
@@ -799,20 +799,20 @@ foreach ($employee as $val) {
     }
     ?>
                                 </select>
-                                <input autocomplete="off"type="hidden" name="detail-rooms-name">
+                                <input autocomplete="off" type="hidden" name="detail-rooms-name">
                             </div>
 
                             <div class="col-md-6 meeting-inline d-none">
                                 <label class="control-label">สถานที่</label>
-                                <input autocomplete="off"type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
+                                <input autocomplete="off" type="text" class="form-control" data-placeholder="กรุณาระบุ..." value=""
                                     placeholder="กรุณาระบุ..." name="detail-meeting-name" disabled>
-                                <input autocomplete="off"type="hidden" name="detail-meeting-id">
+                                <input autocomplete="off" type="hidden" name="detail-meeting-id">
                             </div>
                         <!-- ************************************************************************************** -->
                         <!-- ************************************************************************************** -->
                         <div class="status-inline d-none">
                             <label class="control-label invisible">status</label>
-                            <input autocomplete="off"class="form-control" name="status-inline-text" value="" disabled>
+                            <input autocomplete="off" class="form-control" name="status-inline-text" value="" disabled>
                         </div>
                         <!-- ************************************************************************************** -->
                         <!-- ************************************************************************************** -->
@@ -837,7 +837,7 @@ foreach ($room as $value) {
 }
 ?>
                         </select>
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter topic" type="hidden" value=""
                             name="detail-rooms-name" />
                     </div>
                     <!-- ************************************************************************************** -->
@@ -845,7 +845,7 @@ foreach ($room as $value) {
                     <div class="form-group meeting-line d-none">
                         <label class="control-label">สถานที่</label>
                         <!-- <p class="detail-rooms"></p> -->
-                        <input autocomplete="off"class="form-control form-white" placeholder="Enter topic" type="text" value=""
+                        <input autocomplete="off" class="form-control form-white" placeholder="Enter topic" type="text" value=""
                             name="detail-rooms-name" disabled />
                     </div>
                     <!-- ************************************************************************************** -->
@@ -860,13 +860,13 @@ foreach ($room as $value) {
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
                             <!-- <p class="detail-dates"></p> -->
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value=""
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="detail-dates" disabled>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
                             <!-- <p class="detail-datee"></p> -->
-                            <input autocomplete="off"type="text" class="form-control datepicker-autoclose" value=""
+                            <input autocomplete="off" type="text" class="form-control datepicker-autoclose" value=""
                                 placeholder="yyyy-mm-dd" name="detail-datee" disabled>
                         </div>
                     </div>
@@ -874,13 +874,13 @@ foreach ($room as $value) {
                         <div class="col-md-6">
                             <label class="control-label">ตั้งแต่</label>
                             <!-- <p class="detail-times"></p> -->
-                            <input autocomplete="off"type="text" class="form-control" value="" placeholder="08:00" name="detail-times"
+                            <input autocomplete="off" type="text" class="form-control" value="" placeholder="08:00" name="detail-times"
                                 disabled>
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">ถึง</label>
                             <!-- <p class="detail-timee"></p> -->
-                            <input autocomplete="off"type="text" class="form-control" value="" placeholder="17:30" name="detail-timee"
+                            <input autocomplete="off" type="text" class="form-control" value="" placeholder="17:30" name="detail-timee"
                                 disabled>
                         </div>
                     </div>

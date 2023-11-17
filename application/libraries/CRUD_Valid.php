@@ -330,14 +330,27 @@ class CRUD_Valid
             // print_r($check);
             // echo "</pre>";die;
             if (!$check['error']) {
+
+                $date_begin = null;
+                $date_end = null;
+
+                if($data['update-dates'])
+                {
+                    $date_begin = $data['update-dates'];
+                }
+                if($data['update-datee'])
+                {
+                $date_end = $data['update-datee'];
+                }
+
                 $item_id = $data['item_id'];
                 $type_id = $data['update-type-id'];
                 $type_name = $data['update-type-name'];
                 $event_name = $data['update-name'];
                 $staff_id = $data['update-head'];
                 $event_description = $data['update-description'];
-                $date_begin = $data['update-dates'];
-                $date_end = $data['update-datee'];
+                // $date_begin = $data['update-dates'];
+                // $date_end = $data['update-datee'];
                 $time_begin = $data['update-times'];
                 $time_end = $data['update-timee'];
                 $rooms_id = $data['update-rooms-id'];
@@ -414,19 +427,19 @@ class CRUD_Valid
                     }
 
                     // print_r($sid);
-                    $VisitorValue = array(
+                    /* $VisitorValue = array(
                         'status_complete' => 1,
                         'status' => 0,
                         'date_update' => date('Y-m-d H:i:s'),
                         'user_update' => $user_action,
-                    );
+                    ); */
 
                     $VisWhere = array(
                         'event_code' => $code,
                         'event_id' => $main['data']['id'],
 
                     );
-                    $ci->mdl_visitor->delete_data($VisitorValue, $VisWhere);
+                    $ci->mdl_visitor->delete_data($VisWhere);
 
                     if ($visitor) {
 

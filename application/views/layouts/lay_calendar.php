@@ -6,6 +6,7 @@ $path_head_link = 'application/views/partials/e_head_link.php';
 $path_head_title = 'application/views/partials/e_head_title.php';
 $path_script_begin = 'application/views/partials/e_script_begin.php';
 $path_script_end = 'application/views/partials/e_script_end.php';
+$path_print = 'application/views/partials/print_div.php';
 ?>
 
 <!DOCTYPE html>

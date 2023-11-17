@@ -3,10 +3,10 @@
 
 <div class="d-flex flex-row justify-content-end">
     <div class="pl-1">
-        <input type="text" class="form-control datepicker-autoclose" name="dates" placeholder="ตั้งแต่วันที่">
+        <input type="text" class="form-control datepicker-autoclose" name="dates" placeholder="ตั้งแต่วันที่" autocomplete="off">
     </div>
     <div class="pl-1">
-        <input type="text" class="form-control datepicker-autoclose" name="datee" placeholder="ถึงวันที่">
+        <input type="text" class="form-control datepicker-autoclose" name="datee" placeholder="ถึงวันที่" autocomplete="off">
     </div>
 </div>
 <script>

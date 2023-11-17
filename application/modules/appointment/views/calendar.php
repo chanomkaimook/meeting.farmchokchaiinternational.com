@@ -59,27 +59,28 @@ div.table-responsive {
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
+                <button type="button" class="btn btn-primary" onclick="printDivt('calendar')">Print</button>
             </div>
 
             <div class="col-8">
                 <div class="filter-card">
                     <div class="d-flex flex-row justify-content-end">
                         <?php
-                            include APPPATH . "views/partials/dom_filter_type.php";
-                            include APPPATH . "views/partials/dom_filter_user.php";
-                            include APPPATH . "views/partials/dom_filter_status.php";
-                            include APPPATH . "views/partials/dom_filter_permit.php";
-                        ?>
+include APPPATH . "views/partials/dom_filter_type.php";
+include APPPATH . "views/partials/dom_filter_user.php";
+include APPPATH . "views/partials/dom_filter_status.php";
+include APPPATH . "views/partials/dom_filter_permit.php";
+?>
                     </div>
                     <div class="d-flex flex-row justify-content-end">
                         <?php
-                            include APPPATH . "views/partials/dom_filter_date.php";
-                        ?>
+include APPPATH . "views/partials/dom_filter_date.php";
+?>
                     </div>
                     <div class="d-flex flex-row justify-content-end">
                         <?php
-                            include APPPATH . "views/partials/dom_filter_time.php";
-                        ?>
+include APPPATH . "views/partials/dom_filter_time.php";
+?>
                         <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
                                 aria-hidden="true"></i></button>
                     </div>
@@ -91,7 +92,49 @@ div.table-responsive {
 
                 <div class="row">
                     <div class="col-lg-12">
+                        <style type="text/css">@media print {
+        body * {
+            visibility: hidden;
+            height: 0;
+        }
+
+        #calendar,
+        #calendar * {
+            visibility: visible;
+            height: auto;
+        }
+
+        #calendar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%
+        }
+    }
+                        </style>
                         <div id="calendar"></div>
+                        <div id="calendar-print" class="invisible">
+                            <div class="col-lg-12 border">
+                                <table class="table table-striped table-bordered dt-responsive nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>name</th>
+                                            <th>event</th>
+                                            <th>topic</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>3</th>
+                                            <th>4</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <!-- end col -->
                 </div>
@@ -105,6 +148,7 @@ div.table-responsive {
 <?php
 include "crud_modal.php";
 ?>
+
 <script>
 let my_id = $('#my-id').val();
 
@@ -167,7 +211,7 @@ $(document).ready(function() {
      *
      * EVENT CLICK
      *
-     * 
+     *
      * BTN SEARCH
      */
 
@@ -185,15 +229,15 @@ $(document).ready(function() {
         data.append('area', $('#hidden_area').val())
         data.append('type', $('#hidden_type').val())
 
-        calendarDestroy('#calendar', url_main, data)
+        reloadData(url_main, data)
     })
 
     /**
-     * 
-     * 
+     *
+     *
      * BTN DETAIL DRAFT
-     * 
-     * 
+     *
+     *
      */
 
     $(document).on('click', 'a.btn-detail-meeting', function() {
@@ -214,11 +258,11 @@ $(document).ready(function() {
     })
 
     /**
-     * 
-     * 
+     *
+     *
      * BTN EDIT DRAFT
-     * 
-     * 
+     *
+     *
      */
 
     $(document).on('click', 'a.btn-draft-meeting', function() {
@@ -241,11 +285,11 @@ $(document).ready(function() {
     })
 
     /**
-     * 
-     * 
+     *
+     *
      * BTN DRAFT TO USE
-     * 
-     * 
+     *
+     *
      */
 
     $(document).on('click', 'a.btn-update-meeting', function() {
@@ -283,9 +327,9 @@ $(document).ready(function() {
      *
      * ADDITIONAL FUNCTIONS
      *
-     * 
+     *
      * # VALIDATION FUNCTION
-     * 
+     *
      */
 
     function valid(type = null, data = []) {
@@ -370,8 +414,9 @@ $(document).ready(function() {
                         vis_data["status"] = $('[name=' + data[i].name + ']').find('option[value=' + data[i]
                             .value + ']').attr('data-status')
                         visitor.push(vis_data["id"] + "-" + vis_data["status"])
+                    } else {
+                        dataAppend.append(data[i].name, data[i].value)
                     }
-                    dataAppend.append(data[i].name, data[i].value)
                 }
                 // console.log(visitor)
                 dataAppend.append("visitor", visitor)
@@ -808,9 +853,11 @@ $(document).ready(function() {
 })
 </script>
 <?php
+// application/views/partials/print_div.php
 // include APPPATH . "views/script/crud_modal.php";
 include APPPATH . "views/script/modal_manages.php";
 include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
+include APPPATH . "views/script/print_div.php";
 ?>

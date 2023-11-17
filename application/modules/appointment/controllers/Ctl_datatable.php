@@ -4,14 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Ctl_datatable extends MY_Controller
 {
     public $_title;
-    public $my_id;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
-        $this->my_id = $this->session->userdata('user_emp');
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
@@ -172,7 +170,7 @@ class Ctl_datatable extends MY_Controller
         $optionnal_vis['where'] = array(
             'event_visitor.event_id' => $event_id,
         );
-        $event_vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis,"row");
+        $event_vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis, "row");
 
         if ($event_vis->EVENT_VISITOR == $this->my_id) {
             $state = 'vis';
@@ -207,9 +205,9 @@ class Ctl_datatable extends MY_Controller
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
 
                         $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                        $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp,'row');
+                        $emp = $this->mdl_employee->get_dataShow($dataVal['USER_START'], $optionnal_emp, 'row');
 
-                        $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp,'row');
+                        $head = $this->mdl_employee->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp, 'row');
 
                         $DataTable[$i] = $dataVal;
                         $DataTable[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
@@ -344,30 +342,47 @@ class Ctl_datatable extends MY_Controller
                 $area = $array['area'];
                 $type = $array['type'];
 
-                if ($dates) {
-                    $optionnal['where']['event.date_begin'] = $dates;
+                if ($dates && $datee) {
+                    $optionnal['where']['(event.date_begin BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
+                    $optionnal['where']['(event.date_end BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
+
+    
+                } else {
+
+                    if ($dates) {
+                        $optionnal['where']['event.date_begin'] = $dates;
+                    }
+
+                    if ($datee) {
+                        $optionnal['where']['event.date_end'] = $datee;
+                    }
+
                 }
 
-                if ($datee) {
-                    $optionnal['where']['event.date_end'] = $datee;
+                if ($times && $timee) {
+                    $optionnal['where']['(event.time_begin BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
+                    $optionnal['where']['(event.time_end BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
+    
+                } else {
+    
+                    if ($times) {
+                        $optionnal['where']['event.time_begin'] = $times;
+                    }
+    
+                    if ($timee) {
+                        $optionnal['where']['event.time_end'] = $timee;
+                    }
+    
                 }
-
-                if ($times) {
-                    $optionnal['where']['event.time_begin'] = $times;
-                }
-
-                if ($timee) {
-                    $optionnal['where']['event.time_end'] = $timee;
-                }
-
+                
                 if ($status) {
                     if ($area == "event") {
                         $optionnal_status['emp']['event.status_complete'] = $status;
-                        $optionnal_status['child']['event.status_complete'] = null;
-                        $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
+                        $optionnal_status['child']['event.status_complete'] = $status;
+                        $optionnal_status['vis']['event_visitor.status_complete'] = null;
                     } elseif ($area == "approve") {
                         $optionnal_status['emp']['event.status_complete'] = null;
-                        $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
+                        $optionnal_status['vis']['event_visitor.status_complete'] = null;
 
                         if (!$user) {
                             $user = $this->my_id;
@@ -386,7 +401,7 @@ class Ctl_datatable extends MY_Controller
                     } elseif ($area == "visitor") {
                         $optionnal_status['emp']['event.status_complete'] = null;
                         $optionnal_status['child']['event.status_complete'] = null;
-                        $optionnal_vis['where']['event_visitor.STATUS_COMPLETE'] = $status;
+                        $optionnal_vis['where']['event_visitor.status_complete'] = $status;
 
                         if (!$user) {
                             $optionnal['where']['event.staff_id <> '] = $this->my_id;
@@ -512,8 +527,7 @@ class Ctl_datatable extends MY_Controller
                 $DataTable = $this->foreach_loop($dataShow);
                 if ($DataTable) {
                     foreach ($DataTable as $key => $val) {
-                        if(!in_array($val,$dataReturn))
-                        {
+                        if (!in_array($val, $dataReturn)) {
                             $dataReturn[$key] = $val;
                             $dataReturn[$key]['date_datatable'] = array(
                                 "display" => $val['DATE_BEGIN_SHOW'],
@@ -523,7 +537,7 @@ class Ctl_datatable extends MY_Controller
 
                     }
                 }
-                
+
                 $result = array(
                     "recordsTotal" => count($dataReturn),
                     "recordsFiltered" => $dataall,

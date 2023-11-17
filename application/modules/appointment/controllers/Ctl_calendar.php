@@ -4,14 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Ctl_calendar extends MY_Controller
 {
     public $_title;
-    public $my_id;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
-        $this->my_id = $this->session->userdata('user_emp');
         $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
@@ -19,6 +17,7 @@ class Ctl_calendar extends MY_Controller
 
     public function index()
     {
+        // echo $this->my_id."----------------------------------------------------";
         $optionnals['where'] = array(
             'roles_focus.staff_owner = ' . $this->my_id . ' OR employee.id = ' . $this->my_id => null,
         );
@@ -218,20 +217,36 @@ class Ctl_calendar extends MY_Controller
             $area = $array['area'];
             $type = $array['type'];
 
-            if ($dates) {
-                $optionnal['where']['event.date_begin'] = $dates;
+            if ($dates && $datee) {
+                $optionnal['where']['(event.date_begin BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
+                $optionnal['where']['(event.date_end BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
+
+            } else {
+
+                if ($dates) {
+                    $optionnal['where']['event.date_begin'] = $dates;
+                }
+
+                if ($datee) {
+                    $optionnal['where']['event.date_end'] = $datee;
+                }
+
             }
 
-            if ($datee) {
-                $optionnal['where']['event.date_end'] = $datee;
-            }
+            if ($times && $timee) {
+                $optionnal['where']['(event.time_begin BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
+                $optionnal['where']['(event.time_end BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
 
-            if ($times) {
-                $optionnal['where']['event.time_begin'] = $times;
-            }
+            } else {
 
-            if ($timee) {
-                $optionnal['where']['event.time_end'] = $timee;
+                if ($times) {
+                    $optionnal['where']['event.time_begin'] = $times;
+                }
+
+                if ($timee) {
+                    $optionnal['where']['event.time_end'] = $timee;
+                }
+
             }
 
             if ($status) {

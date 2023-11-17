@@ -166,14 +166,14 @@ class Mdl_visitor extends CI_Model
     //  * 
     //  * delete data
     //  *
-    public function delete_data($data,$where)
+    public function delete_data($where)
     {
         $result = array(
             'error' => 1,
             'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (count($data)) {
+        // if (count($data)) {
             
         if (count($where)) {
             foreach ($where as $column => $value) {
@@ -181,10 +181,10 @@ class Mdl_visitor extends CI_Model
             }
         }
         
-            $this->db->update($this->table, $data);
+            $this->db->delete($this->table);
 
             // keep log
-            log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
+            log_data(array('delete ' . $this->table, 'delete', $this->db->last_query()));
 
             $result = array(
                 'error' => 0,
@@ -193,7 +193,7 @@ class Mdl_visitor extends CI_Model
                     'id' => $where['event_id'],
                 ),
             );
-        }
+        // }
 
         return $result;
     }
