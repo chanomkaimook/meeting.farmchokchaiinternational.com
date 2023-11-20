@@ -59,7 +59,7 @@ div.table-responsive {
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
                 <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button>
-                <button type="button" class="btn btn-primary" onclick="printDivt('calendar')">Print</button>
+                <button type="button" class="btn btn-primary" onclick="printDiv('calendar-print')">Print</button>
             </div>
 
             <div class="col-8">
@@ -91,56 +91,25 @@ include APPPATH . "views/partials/dom_filter_time.php";
             <div class="card-body">
 
                 <div class="row">
-                    <div class="col-lg-12">
-                        <style type="text/css">@media print {
-        body * {
-            visibility: hidden;
-            height: 0;
-        }
+                    <div id="calendar-print">
+                        <div class="col-lg-12">
+                            <style type="text/css">
+                            @media print {
 
-        #calendar,
-        #calendar * {
-            visibility: visible;
-            height: auto;
-        }
-
-        #calendar {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%
-        }
-    }
-                        </style>
-                        <div id="calendar"></div>
-                        <div id="calendar-print" class="invisible">
-                            <div class="col-lg-12 border">
-                                <table class="table table-striped table-bordered dt-responsive nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>name</th>
-                                            <th>event</th>
-                                            <th>topic</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>1</th>
-                                            <th>2</th>
-                                            <th>3</th>
-                                            <th>4</th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                @page {
+                                    size: landscape;
+                                    margin: 0;
+                                }
+                            }
+                            </style>
+                            <div id="calendar"></div>
                         </div>
+                        <!-- end col -->
                     </div>
-                    <!-- end col -->
+                    <!-- end row -->
                 </div>
-                <!-- end row -->
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
@@ -155,8 +124,12 @@ let my_id = $('#my-id').val();
 let url_main = new URL('appointment/ctl_calendar/get_data?id=' + my_id, domain);
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
+
 $(document).ready(function() {
 
+    /* html2canvas(document.body).then(function(canvas) {
+    document.body.appendChild(canvas);
+}); */
     /**
      * #
      * function get data

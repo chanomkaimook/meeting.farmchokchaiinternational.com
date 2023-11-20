@@ -90,7 +90,13 @@ div.table-responsive {
             <div class="card-body">
 
                 <br>
-
+                <style>
+                @media print {
+                    #data_table {
+                        display: none;
+                    }
+                }
+                </style>
                 <div class="row">
                     <div class="col-md-12">
                         <table id="data_table" class="table table-hover w-100">
@@ -144,17 +150,6 @@ url_main.searchParams.append('id', $('#my-id').val())
 
 let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
 
-var filterArray = []
-filterArray.push({
-    dates: null,
-    datee: null,
-    times: null,
-    timee: null,
-    user: null,
-    permit: null,
-    status: null,
-    type: null,
-})
 $(document).ready(function() {
     // let my_id = $('#my-id').val();
     createDatatable(url_main)

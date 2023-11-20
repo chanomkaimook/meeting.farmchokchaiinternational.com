@@ -72,6 +72,7 @@
     "fullcalendar": "^3.10.1",
     "gmaps": "^0.4.24",
     "handlebars": "^4.4.3",
+    "html2canvas": "^1.4.1",
     "ion-rangeslider": "^2.3.0",
     "jquery": "^3.4.1",
     "jquery-countdown": "^2.2.0",
