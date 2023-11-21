@@ -2,7 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Mdl_staff extends CI_Model
-
 {
     private $table = "staff";
 
@@ -20,7 +19,7 @@ class Mdl_staff extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  * 
+    //  *
     //  * get data
     //  *
     /**
@@ -64,7 +63,7 @@ class Mdl_staff extends CI_Model
     //  *
     //  * CRUD
     //  * read
-    //  * 
+    //  *
     //  * get data only for display (not data delete)
     //  *
     public function get_dataShow(int $id = null, array $optionnal = [], string $type = "result", bool $limit = true)
@@ -85,25 +84,18 @@ class Mdl_staff extends CI_Model
     //  *
     //  * CRUD
     //  * insert
-    //  * 
+    //  *
     //  * insert data
     //  *
-    public function insert_data()
+    public function insert_data($data)
     {
 
         $result = array(
-            'error'     => 1,
-            'txt'       => 'ไม่มีการทำรายการ',
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
         );
 
-        if (textShow($this->input->post('label_6'))) {
-            $data = array(
-                'code'  => textShow($this->input->post('label_2')),
-                'name'  => textShow($this->input->post('label_6')),
-                'workstatus'  => $this->input->post('label_1'),
-
-                'user_starts'  => $this->session->userdata('user_code'),
-            );
+        if (count($data)) {
 
             $this->db->insert($this->table, $data);
             $new_id = $this->db->insert_id();
@@ -114,15 +106,14 @@ class Mdl_staff extends CI_Model
             if ($new_id) {
 
                 $result = array(
-                    'error'     => 0,
-                    'txt'       => 'ทำรายการสำเร็จ',
-                    'data'      => array(
-                        'id'    => $new_id
-                    )
+                    'error' => 0,
+                    'txt' => 'ทำรายการสำเร็จ',
+                    'data' => array(
+                        'id' => $new_id,
+                    ),
                 );
             }
         }
-
 
         return $result;
     }
@@ -130,35 +121,29 @@ class Mdl_staff extends CI_Model
     //  *
     //  * CRUD
     //  * update
-    //  * 
+    //  *
     //  * update data
     //  *
-    public function update_data()
+    public function update_data($data, $where)
     {
-        $item_id = $this->input->post('item_id');
-
-        $data = array(
-            'code'  => textShow($this->input->post('label_2')),
-            'name'  => textShow($this->input->post('label_6')),
-            'workstatus'  => $this->input->post('label_1'),
-
-            'date_update'  => date('Y-m-d H:i:s'),
-            'user_update'  => $this->session->userdata('user_code'),
-        );
-
-        $this->db->where('id', $item_id);
-        $this->db->update($this->table, $data);
-
-        // keep log
-        log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
 
         $result = array(
-            'error'     => 0,
-            'txt'       => 'ทำรายการสำเร็จ',
-            'data'      => array(
-                'id'    => $item_id
-            )
+            'error' => 1,
+            'txt' => 'ไม่มีการทำรายการ',
         );
+        if (count($data) && count($where)) {
+            $this->db->where($where);
+            $this->db->update($this->table, $data);
+
+            // keep log
+            log_data(array('update ' . $this->table, 'update', $this->db->last_query()));
+
+            $result = array(
+                'error' => 0,
+                'txt' => 'ทำรายการสำเร็จ',
+            );
+
+        }
 
         return $result;
     }
@@ -166,7 +151,7 @@ class Mdl_staff extends CI_Model
     //  *
     //  * CRUD
     //  * delete
-    //  * 
+    //  *
     //  * delete data
     //  *
     public function delete_data()
@@ -176,7 +161,7 @@ class Mdl_staff extends CI_Model
 
         $result = array(
             'error' => 1,
-            'txt'        => 'ไม่มีการทำรายการ'
+            'txt' => 'ไม่มีการทำรายการ',
         );
 
         if (!$item_id) {
@@ -184,10 +169,10 @@ class Mdl_staff extends CI_Model
         }
 
         $data_array = array(
-            'status'      => 0,
+            'status' => 0,
 
-            'date_update'  => date('Y-m-d H:i:s'),
-            'user_update'  => $this->session->userdata('user_code'),
+            'date_update' => date('Y-m-d H:i:s'),
+            'user_update' => $this->session->userdata('user_code'),
         );
 
         if ($item_remark) {
@@ -200,8 +185,8 @@ class Mdl_staff extends CI_Model
         log_data(array('delete ' . $this->table, 'update', $this->db->last_query()));
 
         $result = array(
-            'error'     => 0,
-            'txt'       => 'ทำรายการสำเร็จ'
+            'error' => 0,
+            'txt' => 'ทำรายการสำเร็จ',
         );
 
         return $result;
@@ -211,8 +196,6 @@ class Mdl_staff extends CI_Model
     //  End CRUD
     //  =========================
     //  =========================
-
-
 
     //  =========================
     //  =========================
@@ -226,7 +209,7 @@ class Mdl_staff extends CI_Model
      * @param array $optionnal
      * @return void
      */
-    function get_sql(int $id = null, array $optionnal = [], bool $limit = true)
+    public function get_sql(int $id = null, array $optionnal = [], bool $limit = true)
     {
         $request = $_REQUEST;
 
@@ -235,8 +218,8 @@ class Mdl_staff extends CI_Model
 
         $sql = $this->db->from($this->table)
             ->join('employee', $this->table . '.employee_id=employee.id', 'left')
-            ->where('employee.id >',0);
-        
+            ->where('employee.id >', 0);
+
         if (textShow($request['hidden_datestart'])) {
             $hidden_start = textShow($request['hidden_datestart']);
         }
@@ -307,7 +290,6 @@ class Mdl_staff extends CI_Model
                 }
             }
         }
-
 
         return $sql;
     }

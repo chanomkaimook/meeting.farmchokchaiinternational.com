@@ -171,11 +171,11 @@ function swal_alert(icon, title, text) {
     Swal.fire(title, text, icon).then((result) => {
 
         $('.modal').modal('hide')
-        
+
         let params = new URLSearchParams(url_main.search)
         params.delete("event_id")
         url_main.search = params
-        
+
         reloadData(url_main)
 
         datatableReload(url_draft)
@@ -183,7 +183,7 @@ function swal_alert(icon, title, text) {
 
 }
 
-function swal_delete(data) {
+function swal_delete(data, ctl) {
     Swal.fire({
         title: 'โปรดยืนยัน',
         text: "คุณต้องการลบข้อมูลนี้?",
@@ -195,13 +195,13 @@ function swal_delete(data) {
         cancelButtonText: 'ยกเลิก'
     }).then((result) => {
         if (result.isConfirmed) {
-            delete_meeting(data)
+            delete_meeting(data, ctl)
         }
     })
     $('.modal').modal('hide')
 }
 
-function swal_confirm(text, color, func, data) {
+function swal_confirm(text, color, func, data, ctl) {
     Swal.fire({
         title: 'โปรดยืนยัน',
         text: "คุณต้องการ" + text + "ข้อมูลนี้?",
@@ -214,13 +214,13 @@ function swal_confirm(text, color, func, data) {
     }).then((result) => {
         if (result.isConfirmed) {
             if (func == "approval") {
-                approval(data)
+                approval(data, ctl)
             } else if (func == "invitation") {
-                invitation(data)
+                invitation(data, ctl)
             } else if (func == "processing") {
-                processing(data)
+                processing(data, ctl)
             } else if (func == "restore") {
-                restore(data)
+                restore(data, ctl)
             }
 
         }
@@ -233,8 +233,8 @@ function swal_confirm(text, color, func, data) {
 let row_error = "",
     txt_error = "";
 
-function insert_meeting(insert_data) {
-    let url = "insert_data"
+function insert_meeting(insert_data, ctl) {
+    let url = ctl + "/insert_data"
     fetch(url, {
             method: 'post',
             body: insert_data
@@ -251,8 +251,8 @@ function insert_meeting(insert_data) {
         })
 }
 
-function update_meeting(update_data) {
-    let url = "update_data"
+function update_meeting(update_data, ctl) {
+    let url = ctl + "/update_data"
     fetch(url, {
             method: 'post',
             body: update_data
@@ -268,8 +268,8 @@ function update_meeting(update_data) {
         })
 }
 
-function delete_meeting(delete_data) {
-    let url = "delete_data"
+function delete_meeting(delete_data, ctl) {
+    let url = ctl + "/delete_data"
     fetch(url, {
             method: 'post',
             body: delete_data
@@ -284,8 +284,8 @@ function delete_meeting(delete_data) {
         })
 }
 
-function approval(data) {
-    let url = "approval"
+function approval(data, ctl) {
+    let url = ctl + "/approval"
     fetch(url, {
             method: 'post',
             body: data
@@ -300,8 +300,8 @@ function approval(data) {
         })
 }
 
-function invitation(data) {
-    let url = "invitation"
+function invitation(data, ctl) {
+    let url = ctl + "/invitation"
     fetch(url, {
             method: 'post',
             body: data
@@ -316,8 +316,8 @@ function invitation(data) {
         })
 }
 
-function processing(data) {
-    let url = "processing"
+function processing(data, ctl) {
+    let url = ctl + "/processing"
     fetch(url, {
             method: 'post',
             body: data
@@ -332,8 +332,8 @@ function processing(data) {
         })
 }
 
-function restore(data) {
-    let url = "restore"
+function restore(data, ctl) {
+    let url = ctl + "/restore"
     fetch(url, {
             method: 'post',
             body: data

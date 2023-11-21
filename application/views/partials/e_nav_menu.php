@@ -3,7 +3,7 @@
         <div id="navigation">
             <!-- Navigation Menu-->
             <ul class="navigation-menu">
-                <li class="has-submenu">
+                <li class="has-submenu d-none">
                     <a href="<?=base_url('dashboard/ctl_dashboard/')?>"> <i
                             class="mdi mdi-tablet-dashboard"></i>Dashboard</a>
                     <!-- <ul class="submenu">
@@ -22,7 +22,7 @@
                     </ul>
                 </li>
 
-                <li class="has-submenu">
+                <li class="has-submenu d-none">
                     <a href="#">
                         <i class="mdi mdi-google-classroom"></i>Admin</a>
                     <ul class="submenu">

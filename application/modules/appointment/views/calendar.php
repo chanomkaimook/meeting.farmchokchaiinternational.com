@@ -98,7 +98,7 @@ include APPPATH . "views/partials/dom_filter_time.php";
 
                                 @page {
                                     size: landscape;
-                                    margin: 0;
+                                    /* margin: 1rem; */
                                 }
                             }
                             </style>
@@ -380,7 +380,7 @@ $(document).ready(function() {
             if (!error) {
 
                 for (var i = 0; i < data.length; i++) {
-                    $v = 0;
+                    
                     if (data[i].name == "update-visitor") {
                         let vis_data = [];
                         vis_data["id"] = data[i].value
@@ -393,7 +393,7 @@ $(document).ready(function() {
                 }
                 // console.log(visitor)
                 dataAppend.append("visitor", visitor)
-                update_meeting(dataAppend)
+                update_meeting(dataAppend,"ctl_calendar")
 
             }
         }
@@ -503,7 +503,7 @@ $(document).ready(function() {
         // data.append('item_data', '2')
         data.append('vid', vid)
 
-        swal_delete(data)
+        swal_delete(data,"ctl_calendar")
     })
 
     $(document).on('click', btn_delete, function(e) {
@@ -515,7 +515,7 @@ $(document).ready(function() {
         data.append('item_id', id)
         data.append('item_code', code)
 
-        swal_delete(data)
+        swal_delete(data,"ctl_calendar")
     })
 
     /**
@@ -540,7 +540,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '2')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -565,7 +565,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -610,7 +610,7 @@ $(document).ready(function() {
         data.append('item_data', '2')
         data.append('vid', vid)
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -637,7 +637,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     $(document).on('click', btn_deny, function(e) {
@@ -655,7 +655,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -680,7 +680,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '2')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -705,7 +705,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '4')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -730,7 +730,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '1')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_calendar")
     })
 
     /**
@@ -833,4 +833,6 @@ include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/calendar.php";
 include APPPATH . "views/script/print_div.php";
+include APPPATH . "views/script/sendMessage.php";
+include APPPATH . "views/script/pushMessage.php";
 ?>

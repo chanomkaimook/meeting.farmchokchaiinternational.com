@@ -16,7 +16,7 @@ class Ctl_login extends MY_Controller
         // $this->authorization_token->validateToken($headers['Authorization']);
         if ($this->session->userdata('user_code')) {
             // User is logged in.  Do something.
-            redirect(site_url('dashboard/ctl_dashboard'));
+            redirect(site_url('appointment/ctl_calendar'));
         }
 
         $sql = $this->db->get('project');

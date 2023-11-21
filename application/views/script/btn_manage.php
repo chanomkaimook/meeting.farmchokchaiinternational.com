@@ -1,4 +1,25 @@
 <script>
+$('button.notify').click(function() {
+    let returnData = "",
+        id = $(this).attr('data-event-id'),
+        code = $(this).attr('data-event-code'),
+        array = new FormData()
+
+    array.append('id', id)
+    array.append('code', code)
+    // array.code.push(code)
+    // array.url.push(url_main)
+
+    /* data.push(
+        'id': array['id'],
+    )
+    data.push(array['code'])
+    data.push(array['url']) */
+    // console.log(array)
+    returnData = get_userID(array)
+    console.log(returnData)
+})
+
 function btn_manage(status, role, event_id, event_code, event_vid) {
     $('.action-header').empty()
     $('.action-respond').empty()

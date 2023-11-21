@@ -14,7 +14,59 @@ class CRUD_Valid
         $ci->load->database();
         //===================//
 
-        $ci->load->model(array('mdl_event', 'mdl_event_meeting', 'mdl_visitor'));
+        $ci->load->model(array('mdl_event', 'mdl_event_meeting', 'mdl_visitor', 'mdl_staff', 'mdl_employee'));
+    }
+
+    public function token($data = [])
+    {
+        //=     call database    =//
+        $ci = &get_instance();
+        $ci->load->database();
+        //===================//
+        $result['error'][] = 'ไม่มีการทำรายการ';
+
+        if (count($data)) {
+            $emp_id = $data['employee'];
+            $userId = $data['userId'];
+            $array = [];
+            $data = [];
+            $where = [];
+            $check_data = [];
+
+            $array['where'] = array(
+                'employee_id' => $emp_id,
+            );
+
+            $check_data = $ci->mdl_staff->get_dataShow(null, $array, "row",false);
+            if ($check_data) {
+                $data = array(
+                    'user_id' => $userId,
+                    'user_update' => $emp_id,
+                    'date_update' => date('Y-m-d H:i:s')
+                );
+                $where = array(
+                    'employee_id' => $emp_id
+                );
+                $return = $ci->mdl_staff->update_data($data,$where);
+            } else {
+                $array = [];
+                $get_data = $ci->mdl_employee->get_dataShow($emp_id, $array, "row",false);
+                $data = array(
+                    'employee_id' => $emp_id,
+                    'username' => $get_data->NAME_US,
+                    'password' => md5($get_data->NAME_US),
+                    'user_id' => $userId,
+                    'user_start' => $emp_id,
+                    'date_start' => date('Y-m-d H:i:s'),
+                    'verify' => 1,
+                    'status' => 1,
+                );
+                $return = $ci->mdl_staff->insert_data($data);
+            }
+            // print_r($get_data);
+            return $return;
+
+        }
     }
 
     public function auto_approve($event_id = null, $event_code = null, $user_action = null)
@@ -163,20 +215,16 @@ class CRUD_Valid
             // print_r($check);
             // echo "</pre>";die;
             if (!$check['error']) {
-                
-                
+
                 $date_begin = null;
                 $date_end = null;
 
-                if($data['insert-dates'])
-                {
+                if ($data['insert-dates']) {
                     $date_begin = $data['insert-dates'];
                 }
-                if($data['insert-datee'])
-                {
-                $date_end = $data['insert-datee'];
+                if ($data['insert-datee']) {
+                    $date_end = $data['insert-datee'];
                 }
-                
 
                 $type_id = $data['insert-type-id'];
                 $type_name = $data['insert-type-name'];
@@ -334,13 +382,11 @@ class CRUD_Valid
                 $date_begin = null;
                 $date_end = null;
 
-                if($data['update-dates'])
-                {
+                if ($data['update-dates']) {
                     $date_begin = $data['update-dates'];
                 }
-                if($data['update-datee'])
-                {
-                $date_end = $data['update-datee'];
+                if ($data['update-datee']) {
+                    $date_end = $data['update-datee'];
                 }
 
                 $item_id = $data['item_id'];
@@ -428,10 +474,10 @@ class CRUD_Valid
 
                     // print_r($sid);
                     /* $VisitorValue = array(
-                        'status_complete' => 1,
-                        'status' => 0,
-                        'date_update' => date('Y-m-d H:i:s'),
-                        'user_update' => $user_action,
+                    'status_complete' => 1,
+                    'status' => 0,
+                    'date_update' => date('Y-m-d H:i:s'),
+                    'user_update' => $user_action,
                     ); */
 
                     $VisWhere = array(

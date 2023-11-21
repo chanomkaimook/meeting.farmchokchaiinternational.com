@@ -115,6 +115,7 @@ function form_displayed(data) {
 
     if (data.TYPE_ID == 1) {
         $(modal_detail).find('div.rooms-line').removeClass('d-none')
+        $(modal_detail).find('div.btn-notify').removeClass('d-none')
         $(modal_detail).find('div.meeting-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
@@ -124,6 +125,7 @@ function form_displayed(data) {
 
     } else if (data.TYPE_ID == 3) {
         $(modal_detail).find('div.meeting-line').removeClass('d-none')
+        $(modal_detail).find('div.btn-notify').removeClass('d-none')
         $(modal_detail).find('div.rooms-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
@@ -136,6 +138,7 @@ function form_displayed(data) {
         $(modal_detail).find('div.rooms-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.meeting-line').addClass('d-none')
+        $(modal_detail).find('div.btn-notify').addClass('d-none')
 
         $(modal_update).find('div.update-rooms').removeClass('d-none')
         $(modal_update).find('div.update-meeting-data').addClass('d-none')
@@ -145,6 +148,7 @@ function form_displayed(data) {
         $(modal_detail).find('div.meeting-line').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-line').addClass('d-none')
+        $(modal_detail).find('div.btn-notify').addClass('d-none')
 
         $(modal_update).find('div.update-rooms').addClass('d-none')
         $(modal_update).find('div.update-meeting-data').removeClass('d-none')
@@ -564,6 +568,8 @@ function form_displayed_data(data, modal_detail, modal_update) {
 
     $(modal_detail).find('[data-visitor=true]').addClass('d-none')
     $(modal_detail).find('h5.visitor-name').empty()
+    $(modal_detail).find('button.notify').attr('data-event-id',data.ID)
+    $(modal_detail).find('button.notify').attr('data-event-code',data.CODE)
     $('select[name=update-visitor]').find('option').attr('data-status', 1)
     let form_update = {
             '[name=item_id]': data.ID,

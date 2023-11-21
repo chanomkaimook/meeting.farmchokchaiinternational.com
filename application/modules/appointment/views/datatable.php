@@ -148,7 +148,7 @@ let my_id = $('#my-id').val();
 let url_main = new URL('appointment/ctl_datatable/get_data', domain);
 url_main.searchParams.append('id', $('#my-id').val())
 
-let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=', domain);
+let url_draft = new URL('appointment/ctl_datatable/get_data_draft?id=' + my_id + '&event_id=', domain);
 
 $(document).ready(function() {
     // let my_id = $('#my-id').val();
@@ -220,7 +220,7 @@ $(document).ready(function() {
 
     $(document).on('click', 'a.btn-detail-meeting', function() {
         let id = $(this).attr('data-id')
-        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+        let url_draft = new URL('appointment/ctl_datatable/get_data_draft?id=' + my_id + '&event_id=' +
             id, domain);
         get_data_draft(url_draft)
             .then((data) => {
@@ -245,7 +245,7 @@ $(document).ready(function() {
 
     $(document).on('click', 'a.btn-draft-meeting', function() {
         let id = $(this).attr('data-id')
-        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+        let url_draft = new URL('appointment/ctl_datatable/get_data_draft?id=' + my_id + '&event_id=' +
             id, domain);
         get_data_draft(url_draft)
             .then((data) => {
@@ -272,7 +272,7 @@ $(document).ready(function() {
 
     $(document).on('click', 'a.btn-update-meeting', function() {
         let id = $(this).attr('data-id')
-        let url_draft = new URL('appointment/ctl_calendar/get_data_draft?id=' + my_id + '&event_id=' +
+        let url_draft = new URL('appointment/ctl_datatable/get_data_draft?id=' + my_id + '&event_id=' +
             id, domain);
         get_data_draft(url_draft)
             .then((data) => {
@@ -310,7 +310,7 @@ $(document).ready(function() {
      * 
      */
 
-    function valid(type = null, data = []) {
+     function valid(type = null, data = []) {
         let dataAppend = new FormData(),
             visitor = [],
             attr_error = [],
@@ -385,13 +385,20 @@ $(document).ready(function() {
             if (!error) {
 
                 for (var i = 0; i < data.length; i++) {
+                    $v = 0;
                     if (data[i].name == "update-visitor") {
-                        visitor.push(data[i].value)
+                        let vis_data = [];
+                        vis_data["id"] = data[i].value
+                        vis_data["status"] = $('[name=' + data[i].name + ']').find('option[value=' + data[i]
+                            .value + ']').attr('data-status')
+                        visitor.push(vis_data["id"] + "-" + vis_data["status"])
+                    } else {
+                        dataAppend.append(data[i].name, data[i].value)
                     }
-                    dataAppend.append(data[i].name, data[i].value)
                 }
+                // console.log(visitor)
                 dataAppend.append("visitor", visitor)
-                update_meeting(dataAppend)
+                update_meeting(dataAppend,"ctl_datatable")
 
             }
         }
@@ -501,7 +508,7 @@ $(document).ready(function() {
         // data.append('item_data', '2')
         data.append('vid', vid)
 
-        swal_delete(data)
+        swal_delete(data,"ctl_datatable")
     })
 
     $(document).on('click', btn_delete, function(e) {
@@ -513,7 +520,7 @@ $(document).ready(function() {
         data.append('item_id', id)
         data.append('item_code', code)
 
-        swal_delete(data)
+        swal_delete(data,"ctl_datatable")
     })
 
     /**
@@ -538,7 +545,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '2')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -563,7 +570,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -608,7 +615,7 @@ $(document).ready(function() {
         data.append('item_data', '2')
         data.append('vid', vid)
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -635,7 +642,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     $(document).on('click', btn_deny, function(e) {
@@ -653,7 +660,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -678,7 +685,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '2')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -703,7 +710,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '4')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**
@@ -728,7 +735,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '1')
 
-        swal_confirm(text, color, func, data)
+        swal_confirm(text, color, func, data,"ctl_datatable")
     })
 
     /**

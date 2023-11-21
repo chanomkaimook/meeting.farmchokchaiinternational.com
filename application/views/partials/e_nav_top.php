@@ -118,26 +118,26 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                     <!-- item-->
-                    <div class="dropdown-header noti-title">
+                    <!-- <div class="dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome !</h6>
                     </div>
-
+ -->
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
                         <i class="fe-user"></i>
                         <span>Profile</span>
-                    </a>
+                    </a> -->
 
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <!-- <a href="javascript:void(0);" class="dropdown-item notify-item">
                         <i class="fe-lock"></i>
                         <span>Lock Screen</span>
-                    </a>
+                    </a> -->
 
-                    <div class="dropdown-divider"></div>
+                    <!-- <div class="dropdown-divider"></div> -->
 
                     <!-- item-->
-                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                    <a href="<?=base_url('login/ctl_logout/')?>" class="dropdown-item notify-item">
                         <i class="fe-log-out"></i>
                         <span>Logout</span>
                     </a>
