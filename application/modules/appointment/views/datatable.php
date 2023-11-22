@@ -349,7 +349,7 @@ $(document).ready(function() {
 
                 }
                 dataAppend.append("visitor", visitor)
-                insert_meeting(dataAppend, "calendar")
+                insert_meeting(dataAppend, "ctl_datatable")
             }
         } else if (type == 'update') {
             array = ['item_id',

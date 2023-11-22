@@ -183,6 +183,31 @@ function swal_alert(icon, title, text) {
 
 }
 
+function swal_reason(data, ctl) {
+    Swal.fire({
+        title: "กรุณาระบุเหตุผลที่ไม่เข้าร่วม",
+        input: "text",
+        inputAttributes: {
+            autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "ยืนยัน",
+        showLoaderOnConfirm: true,
+        preConfirm: async (reason) => {
+            if (!reason) {
+                Swal.showValidationMessage(`กรุณาระบุ`);
+            } else {
+                return data.append('reason', reason)
+            }
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            invitation(data, ctl)
+        }
+    });
+}
+
 function swal_delete(data, ctl) {
     Swal.fire({
         title: 'โปรดยืนยัน',
@@ -234,6 +259,7 @@ let row_error = "",
     txt_error = "";
 
 function insert_meeting(insert_data, ctl) {
+    // let url = "insert_data"
     let url = ctl + "/insert_data"
     fetch(url, {
             method: 'post',
@@ -252,6 +278,7 @@ function insert_meeting(insert_data, ctl) {
 }
 
 function update_meeting(update_data, ctl) {
+    // let url = "update_data"
     let url = ctl + "/update_data"
     fetch(url, {
             method: 'post',
@@ -269,6 +296,7 @@ function update_meeting(update_data, ctl) {
 }
 
 function delete_meeting(delete_data, ctl) {
+    // let url = "delete_data"
     let url = ctl + "/delete_data"
     fetch(url, {
             method: 'post',
@@ -285,6 +313,7 @@ function delete_meeting(delete_data, ctl) {
 }
 
 function approval(data, ctl) {
+    // let url = "approval"
     let url = ctl + "/approval"
     fetch(url, {
             method: 'post',
@@ -301,6 +330,7 @@ function approval(data, ctl) {
 }
 
 function invitation(data, ctl) {
+    // let url = "invitation"
     let url = ctl + "/invitation"
     fetch(url, {
             method: 'post',
@@ -317,6 +347,7 @@ function invitation(data, ctl) {
 }
 
 function processing(data, ctl) {
+    // let url = "processing"
     let url = ctl + "/processing"
     fetch(url, {
             method: 'post',
@@ -333,6 +364,7 @@ function processing(data, ctl) {
 }
 
 function restore(data, ctl) {
+    // let url = "restore"
     let url = ctl + "/restore"
     fetch(url, {
             method: 'post',

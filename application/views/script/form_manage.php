@@ -198,13 +198,13 @@ function form_displayed_layouts(status, role, modal_detail) {
             1: { // สถานะ pending
                 me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ pending
                 owner: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                     'div.action-respond': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่าง
                 child: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
@@ -215,7 +215,7 @@ function form_displayed_layouts(status, role, modal_detail) {
             2: { // สถานะ success
                 me: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -224,7 +224,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -233,7 +233,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 child: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -242,7 +242,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 vis: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -253,14 +253,14 @@ function form_displayed_layouts(status, role, modal_detail) {
             3: { // สถานะ failure
                 me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ failure
                 owner: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
@@ -268,7 +268,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -278,21 +278,21 @@ function form_displayed_layouts(status, role, modal_detail) {
             },
             4: { // สถานะ canceled
                 me: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
@@ -300,7 +300,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
@@ -310,20 +310,20 @@ function form_displayed_layouts(status, role, modal_detail) {
             },
             5: { // สถานะ doing
                 me: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 owner: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     // 'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
                     'div.meeting-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 child: {
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
@@ -331,7 +331,7 @@ function form_displayed_layouts(status, role, modal_detail) {
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ปิดงานได้เท่านั้น (สำเร็จ/ยกเลิก)
                 vis: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.rooms-inline': 'd-none',
@@ -345,14 +345,14 @@ function form_displayed_layouts(status, role, modal_detail) {
                 me: '', // role 'me' ประธานสร้างวาระเอง ไม่มีสถานะ pending
                 owner: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-6',
+                    'div.status-inline': 'col-6',
                     '.status-inline': 'd-none',
                     'div.action-approval': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่าง
                 child: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน อนุมัติ/ไม่อนุมัติเท่านั้น
@@ -360,19 +360,19 @@ function form_displayed_layouts(status, role, modal_detail) {
             },
             2: { // สถานะ success
                 me: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 child: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 vis: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
@@ -381,18 +381,18 @@ function form_displayed_layouts(status, role, modal_detail) {
                 me: '', // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
@@ -400,24 +400,24 @@ function form_displayed_layouts(status, role, modal_detail) {
             4: { // สถานะ canceled
                 me: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ย้อนกลับสถานะได้
                 owner: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ย้อนกลับสถานะได้
                 child: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ย้อนกลับสถานะได้
                 vis: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div[data-visitor=true]': 'd-none',
                 }, // role 'vis' เป็นผู้เข้าร่วม จะเห็นก็ต่อเมื่อ APPROVE_DATE !== null
@@ -425,26 +425,26 @@ function form_displayed_layouts(status, role, modal_detail) {
             5: { // สถานะ doing
                 me: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 owner: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-respond': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำได้ทุกอย่างยกเว้นอนุมัติซ้ำ เพราะอนุมัติไปแล้ว
                 child: {
                     'div.action-header': 'd-none',
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div.action-footer': 'd-none',
                 }, // role 'child' ผู้อื่นสร้างให้เป็นประธาน ปิดงานได้เท่านั้น (สำเร็จ/ยกเลิก)
                 vis: {
-                    'div.status-inline': 'col-md-3',
+                    'div.status-inline': 'col-3',
                     '.status-inline': 'd-none',
                     'div[data-visitor=true]': 'd-none',
                     'div.action-footer': 'd-none',
@@ -467,11 +467,11 @@ function form_displayed_layouts(status, role, modal_detail) {
                 'div.action-respond': 'd-none',
                 'div.rooms-inline': 'd-none',
                 'div.meeting-inline': 'd-none',
-                'div.status-inline': 'col-md-6',
+                'div.status-inline': 'col-6',
             }
 
             removeClass = {
-                'div.status-inline': 'col-md-3',
+                'div.status-inline': 'col-3',
                 '.status-inline': 'd-none',
                 'div.action-header': 'd-none',
                 'div.action-footer': 'd-none',
@@ -626,7 +626,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
                     `<span>เข้าร่วม</span>`
             } else if (data.VISITOR[i].VSTATUS == 3) {
                 status_vis =
-                    `<span>ปฏิเสธ</span>`
+                    `<span>ปฏิเสธ เนื่องจาก ${data.VISITOR[i].VREMARK}</span>`
             }
 
             if (data.APPROVE_DATE && data.STATUS_COMPLETE == 5) {

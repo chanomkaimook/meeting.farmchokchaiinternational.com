@@ -176,7 +176,11 @@ if ($this->session->has_userdata('user_code')) {
                     if (resp.error != 0) {
                         swal.fire('ผิดพลาด', resp.text, 'warning')
                     } else {
-                        // window.location.reload();
+                        swal.fire('ลงทะเบียนสำเร็จ', "", 'success')
+                        .then(() => {
+                            window.location.reload();
+
+                        })
                     }
                 })
         }

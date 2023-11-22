@@ -53,8 +53,8 @@ class CRUD_Valid
                 $get_data = $ci->mdl_employee->get_dataShow($emp_id, $array, "row",false);
                 $data = array(
                     'employee_id' => $emp_id,
-                    'username' => $get_data->NAME_US,
-                    'password' => md5($get_data->NAME_US),
+                    'username' => $get_data->CODE,
+                    'password' => md5($get_data->CODE),
                     'user_id' => $userId,
                     'user_start' => $emp_id,
                     'date_start' => date('Y-m-d H:i:s'),
@@ -682,7 +682,7 @@ class CRUD_Valid
             if ($item_data == 2) {
                 $remark = 'ตอบรับ';
             } elseif ($item_data == 3) {
-                $remark = 'ปฏิเสธ';
+                $remark = $data['reason'];
             }
 
             $dataArray = array(

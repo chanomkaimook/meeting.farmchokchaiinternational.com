@@ -344,7 +344,7 @@ $(document).ready(function() {
 
                 }
                 dataAppend.append("visitor", visitor)
-                insert_meeting(dataAppend, "calendar")
+                insert_meeting(dataAppend, "ctl_calendar")
             }
         } else if (type == 'update') {
             array = ['item_id',
@@ -637,7 +637,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data,"ctl_calendar")
+        swal_reason(data,"ctl_calendar")
     })
 
     $(document).on('click', btn_deny, function(e) {
@@ -655,7 +655,7 @@ $(document).ready(function() {
         data.append('item_code', code)
         data.append('item_data', '3')
 
-        swal_confirm(text, color, func, data,"ctl_calendar")
+        swal_reason(data,"ctl_calendar")
     })
 
     /**

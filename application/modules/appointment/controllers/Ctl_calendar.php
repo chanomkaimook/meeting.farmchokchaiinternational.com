@@ -201,7 +201,7 @@ class Ctl_calendar extends MY_Controller
 
         $optionnal['where']['event.date_begin <> '] = "0000-00-00";
         $optionnal['where']['event.date_end <> '] = "0000-00-00";
-        $optionnal['where']['event.type_id <'] = 4;
+        $optionnal['where']['event.type_id < '] = 4;
         $optionnal['select'] = "event.*
         ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
         ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
@@ -295,7 +295,7 @@ class Ctl_calendar extends MY_Controller
             }
 
         } else {
-            // $optionnal['where']['event.staff_id'] = $this->my_id;
+            $optionnal_status = null;
         }
 
         $optionnal_e = $optionnal;
@@ -348,6 +348,7 @@ class Ctl_calendar extends MY_Controller
             $dataChild = [];
             if (count($child)) {
 
+                $s = 0;
                 foreach ($child as $sid) {
                     if ($optionnal_status['child']) {
                         $optionnal_c['where'] = $optionnal_status['child'];
@@ -358,7 +359,8 @@ class Ctl_calendar extends MY_Controller
                     $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal_c);
                     if (count($dataChild)) {
                         for ($c = 0; $c < count($dataChild); $c++) {
-                            $dataShow['child'][$c] = (array) $dataChild[$c];
+                            $dataShow['child'][$s] = (array) $dataChild[$c];
+                            $s++;
                         }
                     }
 
