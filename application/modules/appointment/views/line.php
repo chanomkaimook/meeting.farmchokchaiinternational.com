@@ -31,22 +31,138 @@ body {
 </style>
 
 <body>
-
-
     <div class="respond">
+
+        <div class="authentication-bg authentication-bg-pattern d-flex align-items-center pb-0 vh-100">
+
+            <div class="account-pages w-100 mt-5 mb-5">
+                <div class="container">
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 col-lg-6 col-xl-5">
+                            <div class="card mb-0">
+
+                                <div class="card-body p-4 form-container">
+
+                                    <div class="account-box">
+                                        <div class="account-logo-box">
+                                            <div class="text-center">
+                                            </div>
+                                            <div class="text-center">
+                                                <h2 class="text-uppercase mb-1 text-center title">type</h2>
+                                                <h4 class="text-uppercase mb-1 text-center status-complete">status</h4>
+                                            </div>
+                                        </div>
+
+                                        <div class="account-content mt-4">
+                                            <form class="form" id="detail">
+                                                <div class="form-group">
+                                                    <h5 class="control-h5">หัวข้อ</h5>
+                                                    <input autocomplete="off" class="form-control form-white"
+                                                        placeholder="Enter topic" type="text" value="" name="name"
+                                                        readonly />
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">นำโดย</h5>
+
+                                                        <input type="text" class="form-control form-white" name="head"
+                                                            placeholder="นำโดย" readonly>
+                                                    </div>
+                                                    <!-- ************************************************************************************** -->
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5 invisible">status</h5>
+                                                        <input autocomplete="off" class="form-control"
+                                                            name="status-inline-text" value="" readonly>
+                                                    </div>
+                                                    <!-- ************************************************************************************** -->
+                                                </div>
+
+                                                <!-- ************************************************************************************** -->
+                                                <div class="form-group rooms-line d-none">
+                                                    <h5 class="control-h5">ห้องประชุม</h5>
+                                                    <input autocomplete="off" class="form-control form-white"
+                                                        placeholder="Enter topic" type="text" value=""
+                                                        name="rooms-name" />
+                                                </div>
+                                                <!-- ************************************************************************************** -->
+                                                <!-- ************************************************************************************** -->
+                                                <div class="form-group meeting-line d-none">
+                                                    <h5 class="control-h5">สถานที่</h5>
+                                                    <input autocomplete="off" class="form-control form-white"
+                                                        placeholder="Enter topic" type="text" value="" name="rooms-name"
+                                                        readonly />
+                                                </div>
+                                                <!-- ************************************************************************************** -->
+
+                                                <div class="form-group">
+                                                    <h5 class="control-h5">เนื้อหาการประชุม</h5>
+                                                    <textarea maxlength="150" placeholder="Enter name"
+                                                        class="form-control form-white" name="description" cols="30"
+                                                        rows="5" readonly></textarea>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">ตั้งแต่</h5>
+                                                        <input autocomplete="off" type="text" class="form-control"
+                                                            value="" placeholder="yyyy-mm-dd" name="dates" readonly>
+                                                    </div>
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">ถึง</h5>
+                                                        <input autocomplete="off" type="text" class="form-control"
+                                                            value="" placeholder="yyyy-mm-dd" name="datee" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">ตั้งแต่</h5>
+                                                        <input autocomplete="off" type="text" class="form-control"
+                                                            value="" placeholder="08:00" name="times" readonly>
+                                                    </div>
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">ถึง</h5>
+                                                        <input autocomplete="off" type="text" class="form-control"
+                                                            value="" placeholder="17:30" name="timee" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 mb-2 d-none" data-visitor="true">
+                                                        <h5 class="control-h5">ผู้เข้าร่วม</h5>
+                                                        <h5 class="visitor-name">
+
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-6 mb-2">
+                                                        <h5 class="control-h5">ผู้สร้างแบบฟอร์ม</h5>
+                                                        <h5 class="user-start-name">
+
+                                                        </h5>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+                    </div>
+                    <!-- end row -->
+                </div>
+                <!-- end container -->
+            </div>
+            <!-- end page -->
+        </div>
+
+
         <input type="hidden" name="id" value="<?=$_GET['id']?>">
         <input type="hidden" name="code" value="<?=$_GET['code']?>">
         <input type="hidden" name="data" value="<?=$_GET['data']?>">
         <input type="hidden" name="user_action" value="<?=$_GET['user_action']?>">
     </div>
-    <!-- <div class="respond">
-        <input type="hidden" name="icon" value="<?=$respond['icon']?>">
-        <input type="hidden" name="msg" value="<?=$respond['msg']?>">
-        <input type="hidden" name="title" value="<?=$respond['title']?>">
-    </div> -->
 
     <script src="<?=base_url('')?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
-    <!-- D:\xampp\htdocs\datacenter.com\asset\js\jquery\jquery-3.5.1.min.js -->
 
     <script>
     let domain
@@ -57,9 +173,81 @@ body {
         domain = window.location.protocol + '//' + window.location.hostname + '/'
     } // let domain = window.location.origin
     $(document).ready(function() {
-        check_role()
-        // window_close = "https://booking.chokchaiinternational.com/appointment/ctl_line?id="+$('input[name=id]').val()+"&code="+$('input[name=code]').val()+"&data="+$('input[name=data]').val()+"&user_action="+$('input[name=user_action]').val()
-        // console.log(window_close)
+        $("form#detail").find('div[data-visitor=true]').removeClass('d-none')
+        $('.form-container').addClass('d-none')
+
+        if ($('[name=data]').val()) {
+            $('.form-container').addClass('d-none')
+            check_role()
+        } else {
+            get_data()
+
+        }
+
+        function get_data() {
+            $('.form-container').removeClass('d-none')
+            let id = $('div.respond').find('input[name=id]').val(),
+                code = $('div.respond').find('input[name=code]').val(),
+                user_action = $('div.respond').find('input[name=user_action]').val(),
+                dataArray = new FormData()
+
+            dataArray.append('id', id),
+                dataArray.append('code', code),
+                dataArray.append('user_action', user_action)
+
+
+            let url = new URL("appointment/ctl_line/get_data", domain);
+            fetch(url, {
+                    method: 'post',
+                    body: dataArray
+                }).then(res => res.json())
+                .then((resp) => {
+
+                    console.log(resp)
+
+
+                    $(".account-box").find('h2.title').text(resp.TYPE)
+                    $(".account-box").find('h4.status-complete').text(resp.STATUS_COMPLETE_NAME)
+                    $("form#detail").find('[name=name]').val(resp.EVENT_NAME)
+                    $("form#detail").find('[name=head]').val(resp.HEAD_FULLNAME)
+                    $("form#detail").find('[name=status-inline-text]').val(resp.STATUS_HEAD)
+                    $("form#detail").find('[name=rooms-name]').val(resp.ROOMS_NAME)
+                    $("form#detail").find('[name=description]').val(resp.EVENT_DESCRIPTION)
+                    $("form#detail").find('[name=dates]').val(resp.DATE_BEGIN)
+                    $("form#detail").find('[name=datee]').val(resp.DATE_END)
+                    $("form#detail").find('[name=times]').val(resp.TIME_BEGIN)
+                    $("form#detail").find('[name=timee]').val(resp.TIME_END)
+                    $("form#detail").find('h5.user-start-name').text(resp.USER_START_FULLNAME)
+
+                    if (resp.VISITOR) {
+                        $("form#detail").find('div[data-visitor=true]').removeClass('d-none')
+
+                        let status_vis = "",
+                            vis_html = "",
+                            vis_data = [],
+                            btn_action;
+                        for (let i = 0; i < resp.VISITOR.length; i++) {
+                            if (resp.VISITOR[i].STATUS_COMPLETE == 1) {
+                                status_vis =
+                                    `<span>รอตอบรับ</span>`
+                            } else if (resp.VISITOR[i].STATUS_COMPLETE == 2) {
+                                status_vis =
+                                    `<span>เข้าร่วม</span>`
+                            } else if (resp.VISITOR[i].STATUS_COMPLETE == 3) {
+                                status_vis =
+                                    `<span>ปฏิเสธ เนื่องจาก ${resp.VISITOR[i].STATUS_REMARK}</span>`
+                            }
+
+                            vis_html = vis_html + resp.VISITOR[i].VNAME + ' ' + resp.VISITOR[i].VLNAME +
+                                ' ' + status_vis +
+                                '<br>'
+                        }
+
+                        $("form#detail").find('h5.visitor-name').html(vis_html)
+                    }
+                })
+        }
+
         function check_role() {
             let id = $('div.respond').find('input[name=id]').val(),
                 code = $('div.respond').find('input[name=code]').val(),
@@ -73,15 +261,13 @@ body {
                 dataArray.append('user_action', user_action)
 
 
-            // console.log(id,code,data,user_action)
             let url = new URL("appointment/ctl_line/check_role", domain);
             fetch(url, {
                     method: 'post',
                     body: dataArray
-                }).then(res => res.json())
+                })
+                .then(res => res.json())
                 .then((resp) => {
-                    // console.log(resp)
-
                     if (resp.role == 'child') {
                         dataArray.append('status', resp.status)
                         dataArray.append('role', resp.role)
@@ -123,25 +309,25 @@ body {
 
         function swal(data) {
             let url = new URL("appointment/ctl_line/url_respond", domain);
-            // console.log(data)
+            console.log(data)
             fetch(url, {
                     method: 'post',
                     body: data
                 }).then(res => res.json())
                 .then((resp) => {
-                        // console.log(resp)
+                    console.log(resp)
+
                     if (resp.error) {
                         Swal.fire("ไม่สำเร็จ", resp.txt, "error")
-                        // .then(() => {
-                        //     window.close(window_close)
-                        // });
+                            .then(() => {
+                                get_data()
+                            });
                     } else {
                         Swal.fire("สำเร็จ", "", "success")
-                        // .then(() => {
-                        //     window.close(window_close)
-                        // });
+                            .then(() => {
+                                get_data()
+                            });
                     }
-                    // Swal.fire(title, msg, icon);
                 })
         }
     })

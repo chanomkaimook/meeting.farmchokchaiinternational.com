@@ -87,7 +87,7 @@ if ($this->session->has_userdata('user_code')) {
                                                 </div>
                                             </div>
                                             <div class="text-center">
-                                                <?php echo anchor('register/ctl_register', 'หากไม่มีรหัส ลงทะเบียน', 'title="ลงทะเบียน"'); ?>
+                                                <?php echo anchor('token/ctl_token', 'หากไม่มีรหัส ลงทะเบียน', 'title="ลงทะเบียน"'); ?>
 
                                             </div>
                                         </form>

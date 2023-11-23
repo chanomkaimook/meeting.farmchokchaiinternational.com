@@ -31,12 +31,12 @@ body {
 </style>
 
 <?php
-$this->session->sess_destroy();
+/* $this->session->sess_destroy();
 if ($this->session->has_userdata('user_code')) {
 
     print_r($this->session->userdata());
 }
-
+ */
 ?>
 
 <body>
@@ -59,7 +59,7 @@ if ($this->session->has_userdata('user_code')) {
                                             </a> -->
                                         </div>
                                         <div class="text-center">
-                                            <h2 class="text-uppercase mb-1  text-center">ลงชื่อเข้าร่วมการอบรม</h2>
+                                            <h2 class="text-uppercase mb-1  text-center">ลงทะเบียน</h2>
                                             <!-- <div class="small text-center"></div> -->
                                         </div>
                                     </div>
@@ -84,13 +84,9 @@ if ($this->session->has_userdata('user_code')) {
                                                 <div class="col-12">
                                                     <button
                                                         class="btn btn-md btn-block btn-primary waves-effect waves-light"
-                                                        id="btn_login" type="button">ลงชื่อเข้าร่วมกิจกรรม</button>
+                                                        id="btn_login" type="button">ลงทะเบียน</button>
                                                 </div>
                                             </div>
-                                            <!-- <div class="text-center">
-                                                <?php echo anchor('register/ctl_register', 'หากไม่มีรหัส ลงทะเบียน', 'title="ลงทะเบียน"'); ?>
-
-                                            </div> -->
                                         </form>
                                     </div>
                                 </div>
@@ -177,10 +173,10 @@ if ($this->session->has_userdata('user_code')) {
                         swal.fire('ผิดพลาด', resp.text, 'warning')
                     } else {
                         swal.fire('ลงทะเบียนสำเร็จ', "", 'success')
-                        .then(() => {
-                            window.location.reload();
+                            .then(() => {
+                                location.href = domain;
 
-                        })
+                            })
                     }
                 })
         }

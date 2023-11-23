@@ -4,13 +4,15 @@ class MY_Controller extends CI_Controller
 {
 
     public $site_configs = array();
-    public $my_id;
+    public $user_code;
+    public $user_emp;
     public function __construct()
     {
         parent::__construct();
 
         $this->_hmvc_fixes();
-        $this->my_id = $this->session->userdata('user_code');
+        $this->user_code = $this->session->userdata('user_code');
+        $this->user_emp = $this->session->userdata('user_emp');
 
         // $this->load->model('api_model');
         // if (empty($this->input->get_post('domain'))) {

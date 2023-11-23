@@ -105,9 +105,9 @@
                         <select class="form-control form-white" name="insert-head" required>
                             <option disabled selected>กรุณาเลือก...</option>
                             <?php
-foreach ($staff as $val) {
+foreach ($staff as $key => $val) {
     ?>
-                            <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?></option>
+                            <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
                             <?php
 }
 ?>
@@ -426,13 +426,12 @@ foreach ($time as $value) {
                     <div class="row">
                         <div class="col-6 mb-2"><label class="control-label">นำโดย <span class="text-danger">*</span>
                             </label>
-
-                            <select class="form-control form-white" name="insert-head" required>
+                  <select class="form-control form-white" name="insert-head" required>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-foreach ($staff as $val) {
+foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
                                 </option>
                                 <?php
 }
@@ -445,14 +444,14 @@ foreach ($staff as $val) {
                                 <select class="form-control form-white" name="insert-rooms-id">
                                     <option selected disabled>กรุณาเลือก...</option>
                                     <?php
-    foreach ($room as $value) {
-        ?>
+foreach ($room as $value) {
+    ?>
                                     <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
                                         data-rooms-branch="<?=$value->BRANCH?>">
                                         <?=$value->ROOMS?></option>
                                     <?php
-    }
-    ?>
+}
+?>
                                 </select>
                                 <input autocomplete="off" type="hidden" name="insert-rooms-name">
                             </div>
@@ -588,9 +587,9 @@ foreach ($time as $value) {
                             <select class="form-control form-white" name="update-head" required required>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
-foreach ($staff as $val) {
+foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val->STAFF_CHILD;?>"><?=$val->NAME . " " . $val->LASTNAME;?>
+                                <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
                                 </option>
                                 <?php
 }
@@ -603,14 +602,14 @@ foreach ($staff as $val) {
                                 <select class="form-control form-white" name="update-rooms-id">
                                     <option selected disabled>กรุณาเลือก...</option>
                                     <?php
-    foreach ($room as $value) {
-        ?>
+foreach ($room as $value) {
+    ?>
                                     <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
                                         data-rooms-branch="<?=$value->BRANCH?>">
                                         <?=$value->ROOMS?></option>
                                     <?php
-    }
-    ?>
+}
+?>
                                 </select>
                                 <input autocomplete="off" type="hidden" name="update-rooms-name">
                             </div>
@@ -735,7 +734,7 @@ foreach ($time as $value) {
                 <!-- </div> -->
                 <!-- </div> -->
                 <div class="btn-notify">
-                    <button type="button" class="btn btn-primary notify" data-toggle="button" aria-pressed="false"
+                    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
                         autocomplete="off" data-event-id="" data-event-code="">
                         แจ้งเตือนผู้ที่เกี่ยวข้อง
                     </button>
@@ -745,23 +744,6 @@ foreach ($time as $value) {
             <div class="modal-body pb-0">
                 <form class="form" id="detail-meeting">
                     <div class="row action-header">
-
-                        <!-- ************************************************************************************** -->
-                        <!-- <div class="col-6">
-                            <div class="cardbox text-center">
-                                <button type="button"
-                                    class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light update-meeting item-cardbox"
-                                    data-dismiss="modal">แก้ไข</button>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="cardbox text-center">
-                                <button type="button"
-                                    class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting"
-                                    data-dismiss="modal">ลบ</button>
-                            </div>
-                        </div> -->
-                        <!-- ************************************************************************************** -->
 
                     </div>
                     <div class="form-group">
@@ -800,14 +782,14 @@ foreach ($employee as $val) {
                             <select class="form-control form-white" name="detail-rooms-id" disabled>
                                 <option selected disabled>กรุณาเลือก...</option>
                                 <?php
-                                foreach ($room as $value) {
-                                ?>
+foreach ($room as $value) {
+    ?>
                                 <option value="<?=$value->ID?>" data-rooms-name="<?=$value->ROOMS?>"
                                     data-rooms-branch="<?=$value->BRANCH?>">
                                     <?=$value->ROOMS?></option>
                                 <?php
-    }
-    ?>
+}
+?>
                             </select>
                             <input autocomplete="off" type="hidden" name="detail-rooms-name">
                         </div>
@@ -831,7 +813,7 @@ foreach ($employee as $val) {
                         </div>
                         <!-- ************************************************************************************** -->
                     </div>
-                    
+
                     <!-- ************************************************************************************** -->
                     <div class="form-group rooms-line d-none">
                         <label class="control-label">ห้องประชุม</label>

@@ -1,24 +1,12 @@
 <script>
-$('button.notify').click(function() {
+function notification(event_id) {
     let returnData = "",
-        id = $(this).attr('data-event-id'),
-        code = $(this).attr('data-event-code'),
-        array = new FormData()
+        array = new FormData();
 
-    array.append('id', id)
-    array.append('code', code)
-    // array.code.push(code)
-    // array.url.push(url_main)
-
-    /* data.push(
-        'id': array['id'],
-    )
-    data.push(array['code'])
-    data.push(array['url']) */
-    // console.log(array)
+    array.append('id', event_id)
     returnData = get_userID(array)
-    console.log(returnData)
-})
+    // console.log(returnData)
+}
 
 function btn_manage(status, role, event_id, event_code, event_vid) {
     $('.action-header').empty()
@@ -39,29 +27,29 @@ function btn_displayed(status = null, role = null) {
 
     /*********** ALL BUTTON IN 'DETAIL-MODAL' ***********/
     /**
-     * 
+     *
      * action_header(me(!pending),owner,child (pending,failure,canceled,doing))
      *  - ['header_update', 'header_delete']
-     * 
+     *
      * action_respond(me,owner (doing))
      *  - ['body_reject', 'body_refuse', 'body_accept']
-     * 
+     *
      * action_approval(owner (pending))
      *  - ['body_disapprove', 'body_approve']
-     * 
+     *
      * action_footer(child (doing))
      *  - ['footer_disapprove', 'footer_approve']
-     * 
+     *
      * action_footer(vis (doing))
      *  - ['footer_refuse', 'footer_accept']
-     * 
+     *
      * action_footer(me(doing),owner(pending,doing),child(doing))
      *  - ['footer_cancel', 'footer_success']
-     * 
+     *
      * action_footer(me,owner,child (failure,canceled))
      *  - ['footer_restore']
-     * 
-     * 
+     *
+     *
      */
 
     /*********** BUTTON TO BE DISPLAYED ON 'DETAIL-MODAL' ***********/
@@ -206,7 +194,7 @@ function btn_all_in_modal(data = [], event_id, event_code, event_vid = []) {
                     <button type="button" class="btn btn-warning btn-rounded btn-lg width-md waves-effect waves-light modal-update-meeting item-cardbox" data-dismiss="modal">แก้ไข</button>
                 </div>
             </div>
-            
+
             <div class="col-6">
                 <div class="cardbox text-center">
                     <button type="button" class="btn btn-danger btn-rounded btn-lg width-md waves-effect waves-light item-cardbox delete-meeting" data-event-id="${event_id}" data-event-code="${event_code}" data-dismiss="modal">ลบ</button>

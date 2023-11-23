@@ -239,7 +239,7 @@ function swal_confirm(text, color, func, data, ctl) {
     }).then((result) => {
         if (result.isConfirmed) {
             if (func == "approval") {
-                approval(data, ctl)
+                approval(data, text)
             } else if (func == "invitation") {
                 invitation(data, ctl)
             } else if (func == "processing") {
@@ -259,27 +259,34 @@ let row_error = "",
     txt_error = "";
 
 function insert_meeting(insert_data, ctl) {
-    // let url = "insert_data"
-    let url = ctl + "/insert_data"
+    let url = "insert_data"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/insert_data"
+    // }
+    // let url = ctl + "/insert_data"
     fetch(url, {
             method: 'post',
             body: insert_data
         })
         .then(res => res.json())
         .then((resp) => {
-            // console.log(resp)
+            console.log(resp)
 
             if (resp.error) {
                 swal_error(resp.error, "insert")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                notification(resp.data.id)
             }
         })
 }
 
 function update_meeting(update_data, ctl) {
-    // let url = "update_data"
-    let url = ctl + "/update_data"
+    let url = "update_data"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/update_data"
+    // }
+    // let url = ctl + "/update_data"
     fetch(url, {
             method: 'post',
             body: update_data
@@ -296,8 +303,10 @@ function update_meeting(update_data, ctl) {
 }
 
 function delete_meeting(delete_data, ctl) {
-    // let url = "delete_data"
-    let url = ctl + "/delete_data"
+    let url = "delete_data"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/delete_data"
+    // }
     fetch(url, {
             method: 'post',
             body: delete_data
@@ -312,9 +321,12 @@ function delete_meeting(delete_data, ctl) {
         })
 }
 
-function approval(data, ctl) {
-    // let url = "approval"
-    let url = ctl + "/approval"
+function approval(data, text) {
+    let url = "approval"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/approval"
+    // }
+    // let url = ctl + "/approval"
     fetch(url, {
             method: 'post',
             body: data
@@ -325,13 +337,19 @@ function approval(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                if (text == "อนุมัติ") {
+                    notification(resp.data.id)
+                }
             }
         })
 }
 
 function invitation(data, ctl) {
-    // let url = "invitation"
-    let url = ctl + "/invitation"
+    let url = "invitation"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/invitation"
+    // }
+    // let url = ctl + "/invitation"
     fetch(url, {
             method: 'post',
             body: data
@@ -347,8 +365,11 @@ function invitation(data, ctl) {
 }
 
 function processing(data, ctl) {
-    // let url = "processing"
-    let url = ctl + "/processing"
+    let url = "processing"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/processing"
+    // }
+    // let url = ctl + "/processing"
     fetch(url, {
             method: 'post',
             body: data
@@ -364,8 +385,11 @@ function processing(data, ctl) {
 }
 
 function restore(data, ctl) {
-    // let url = "restore"
-    let url = ctl + "/restore"
+    let url = "restore"
+    // if (ctl == "ctl_calendar") {
+    //     url = url = "ctl_calendar/restore"
+    // }
+    // let url = ctl + "/restore"
     fetch(url, {
             method: 'post',
             body: data

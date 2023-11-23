@@ -753,6 +753,9 @@ $(document).ready(function() {
      *
      */
 
+    // profile
+    $('.pro-user-name').text();
+
     // select2
     $('[data-toggle=select2]').select2({
         theme: "bootstrap"
@@ -838,4 +841,6 @@ include APPPATH . "views/script/modal_manages.php";
 include APPPATH . "views/script/form_manage.php";
 include APPPATH . "views/script/btn_manage.php";
 include APPPATH . "views/script/datatable.php";
+include APPPATH . "views/script/sendMessage.php";
+include APPPATH . "views/script/pushMessage.php";
 ?>
