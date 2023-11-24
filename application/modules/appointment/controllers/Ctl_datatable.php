@@ -10,7 +10,7 @@ class Ctl_datatable extends MY_Controller
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
-        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms'));
+        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_staff', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
     }
@@ -35,7 +35,7 @@ class Ctl_datatable extends MY_Controller
                 $optionnal_staff['where'] = array(
                     'staff.employee_id' => $val->STAFF_CHILD,
                 );
-                $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
+                $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
             }
             if ($staff) {
                 $data['staff'][] = $staff;
@@ -47,7 +47,7 @@ class Ctl_datatable extends MY_Controller
             'branch' => "สำนักงานรังสิต",
         );
         $data['room'] = $this->mdl_rooms->get_data(null, $optionnalr);
-        $data['employee'] = $this->mdl_staff->get_dataShow();
+        $data['employee'] = $this->mdl_employee->get_dataShow();
 
         $this->template->set_layout('lay_datatable');
         $this->template->title($this->_title);
@@ -170,12 +170,13 @@ class Ctl_datatable extends MY_Controller
 
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
 
-                        $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp, 'row');
+                        $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp, "row");
 
-                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp, 'row');
+                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp, "row");
 
                         $DataTable[$i] = $dataVal;
+                        $DataTable[$i]['EMP_ID'] = $head->EMP_ID;
                         $DataTable[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
                         $DataTable[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
                         $DataTable[$i]['TIME_BEGIN_SHOW'] = date('H:i', strtotime($dataVal['TIME_BEGIN']));
@@ -187,7 +188,7 @@ class Ctl_datatable extends MY_Controller
                         $DataTable[$i]['USER_START_LNAME'] = $emp->LASTNAME;
                         $DataTable[$i]['USER_START_FULLNAME'] = $emp->NAME . " " . $emp->LASTNAME;
                         $DataTable[$i]['start'] = $dataVal["DATE_BEGIN"];
-                        $DataTable[$i]['end'] = $dataVal["DATE_END"];
+                        $DataTable[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1 days"));
                         $DataTable[$i]['title'] = $dataVal["EVENT_NAME"];
                         $DataTable[$i]['className'] = $attr['color'];
                         $DataTable[$i]['STATUS_SHOW'] = $attr['status'];
@@ -204,10 +205,17 @@ class Ctl_datatable extends MY_Controller
                         if (count($visitor)) {
                             $j = 0;
                             foreach ($visitor as $vis_val) {
+
+                                $optionnal_vis['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                                $optionnal_vis['where'] = array(
+                                    'staff.employee_id' => $vis_val->EVENT_VISITOR,
+                                );
+                                $vis_emp = $this->mdl_staff->get_dataShow(null, $optionnal_vis, "row");
+
                                 $DataTable[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
                                 $DataTable[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                                $DataTable[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                                $DataTable[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                                $DataTable[$i]['VISITOR'][$j]['VNAME'] = $vis_emp->NAME;
+                                $DataTable[$i]['VISITOR'][$j]['VLNAME'] = $vis_emp->LASTNAME;
                                 $DataTable[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
                                 $DataTable[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
 
@@ -239,23 +247,24 @@ class Ctl_datatable extends MY_Controller
             $dataShow = $this->mdl_event->get_dataShow($this->input->get('event_id'), $optionnal, "row");
 
             if (count($dataShow)) {
-                $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $emp = $this->mdl_staff->get_dataShow($dataShow['USER_START'], $optionnal_emp);
+                $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                $emp = $this->mdl_staff->get_dataShow($dataShow['USER_START'], $optionnal_emp, "row");
                 $state = $this->check_role_of_card($dataShow['ID']);
                 $attr = $this->status($dataShow["STATUS_COMPLETE"], $state);
-                $head = $this->mdl_staff->get_dataShow($dataShow['STAFF_ID'], $optionnal_emp);
+                $head = $this->mdl_staff->get_dataShow($dataShow['STAFF_ID'], $optionnal_emp, "row");
 
                 $DataTable = $dataShow;
+                $DataTable['EMP_ID'] = $head->EMP_ID;
                 $DataTable['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataShow['DATE_BEGIN']);
                 $DataTable['DATE_END_SHOW'] = toThaiDateTimeString($dataShow['DATE_END']);
                 $DataTable['TIME_BEGIN_SHOW'] = date('H:i', strtotime($dataShow['TIME_BEGIN']));
                 $DataTable['TIME_END_SHOW'] = date('H:i', strtotime($dataShow['TIME_END']));
-                $DataTable['HEAD_NAME'] = $head[0]->NAME;
-                $DataTable['HEAD_LNAME'] = $head[0]->LASTNAME;
-                $DataTable['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
-                $DataTable['USER_START_NAME'] = $emp[0]->NAME;
-                $DataTable['USER_START_LNAME'] = $emp[0]->LASTNAME;
-                $DataTable['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
+                $DataTable['HEAD_NAME'] = $head->NAME;
+                $DataTable['HEAD_LNAME'] = $head->LASTNAME;
+                $DataTable['HEAD_FULLNAME'] = $head->NAME . " " . $head->LASTNAME;
+                $DataTable['USER_START_NAME'] = $emp->NAME;
+                $DataTable['USER_START_LNAME'] = $emp->LASTNAME;
+                $DataTable['USER_START_FULLNAME'] = $emp->NAME . " " . $emp->LASTNAME;
                 $DataTable['start'] = $dataShow["DATE_BEGIN"];
                 $DataTable['end'] = $dataShow["DATE_END"];
                 $DataTable['title'] = $dataShow["EVENT_NAME"];
@@ -263,19 +272,26 @@ class Ctl_datatable extends MY_Controller
                 $DataTable['STATUS_SHOW'] = $attr['status'];
                 $DataTable['class'] = $state;
 
-                $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $optionnals['join'] = true;
+                $optionnals['select'] = "event_visitor.*";
                 $optionnals['where'] = array(
                     'event_visitor.event_code' => $dataShow["CODE"],
                 );
                 $visitor = $this->mdl_visitor->get_dataShow(null, $optionnals);
+                // echo $this->db->last_query();
                 if (count($visitor)) {
                     $j = 0;
                     foreach ($visitor as $vis_val) {
+
+                        $optionnal_vis['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $optionnal_vis['where'] = array(
+                            'staff.employee_id' => $vis_val->EVENT_VISITOR,
+                        );
+                        $vis_emp = $this->mdl_staff->get_dataShow(null, $optionnal_vis, "row");
+
                         $DataTable['VISITOR'][$j]['EID'] = $vis_val->ID;
                         $DataTable['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                        $DataTable['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                        $DataTable['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                        $DataTable['VISITOR'][$j]['VNAME'] = $vis_emp->NAME;
+                        $DataTable['VISITOR'][$j]['VLNAME'] = $vis_emp->LASTNAME;
                         $DataTable['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
                         $DataTable['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
 
@@ -292,7 +308,7 @@ class Ctl_datatable extends MY_Controller
         } else {
             $optionnal['where']['event.date_begin <> '] = "0000-00-00";
             $optionnal['where']['event.date_end <> '] = "0000-00-00";
-            $optionnal['where']['event.type_id <'] = 4;
+            $optionnal['where']['event.type_id < '] = 4;
             $optionnal['select'] = "event.*
             ,event_meeting.ROOMS_ID,event_meeting.ROOMS_NAME
             ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
@@ -312,7 +328,6 @@ class Ctl_datatable extends MY_Controller
                     $optionnal['where']['(event.date_begin BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
                     $optionnal['where']['(event.date_end BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
 
-    
                 } else {
 
                     if ($dates) {
@@ -328,27 +343,27 @@ class Ctl_datatable extends MY_Controller
                 if ($times && $timee) {
                     $optionnal['where']['(event.time_begin BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
                     $optionnal['where']['(event.time_end BETWEEN "' . $times . '" AND "' . $timee . '")'] = null;
-    
+
                 } else {
-    
+
                     if ($times) {
                         $optionnal['where']['event.time_begin'] = $times;
                     }
-    
+
                     if ($timee) {
                         $optionnal['where']['event.time_end'] = $timee;
                     }
-    
+
                 }
-                
+
                 if ($status) {
                     if ($area == "event") {
                         $optionnal_status['emp']['event.status_complete'] = $status;
-                        $optionnal_status['child']['event.status_complete'] = $status;
-                        $optionnal_status['vis']['event_visitor.status_complete'] = null;
+                        $optionnal_status['child']['event.status_complete'] = null;
+                        $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
                     } elseif ($area == "approve") {
                         $optionnal_status['emp']['event.status_complete'] = null;
-                        $optionnal_status['vis']['event_visitor.status_complete'] = null;
+                        $optionnal_status['vis']['event_visitor.STATUS_COMPLETE'] = null;
 
                         if (!$user) {
                             $user = $this->user_code;
@@ -367,10 +382,11 @@ class Ctl_datatable extends MY_Controller
                     } elseif ($area == "visitor") {
                         $optionnal_status['emp']['event.status_complete'] = null;
                         $optionnal_status['child']['event.status_complete'] = null;
-                        $optionnal_vis['where']['event_visitor.status_complete'] = $status;
+                        $optionnal_vis['where']['event_visitor.STATUS_COMPLETE'] = $status;
 
                         if (!$user) {
-                            $optionnal['where']['event.staff_id <> '] = $this->user_code;
+                            $user = $this->user_code;
+                            // $optionnal['where']['event.staff_id <> '] = $this->user_code;
                         }
                     }
                 }
@@ -387,15 +403,12 @@ class Ctl_datatable extends MY_Controller
                 }
 
             } else {
-                // $optionnal['where']['event.staff_id'] = $this->user_code;
+                $optionnal_status = null;
             }
 
             $optionnal_e = $optionnal;
             $optionnal_c = $optionnal;
             $optionnal_v = $optionnal;
-
-            // echo "<pre>";
-            // print_r($dataShow);
 
             if ($user && $user != $this->user_code) {
                 $dataShow['me'] = null;
@@ -435,7 +448,7 @@ class Ctl_datatable extends MY_Controller
 
                 $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal_e);
 
-                $optionnal_child['where']['roles_focus.staff_owner'] = $this->user_code;
+                $optionnal_child['where']['roles_focus.staff_owner'] = $this->user_emp;
                 $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
                 $optionnal_child['join'] = true;
                 $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
@@ -443,17 +456,26 @@ class Ctl_datatable extends MY_Controller
                 $dataChild = [];
                 if (count($child)) {
 
+                    $s = 0;
                     foreach ($child as $sid) {
+                        $optionnal_staff['where'] = array(
+                            'staff.employee_id' => $sid->STAFF_CHILD,
+                        );
+
+                        $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
+
                         if ($optionnal_status['child']) {
                             $optionnal_c['where'] = $optionnal_status['child'];
                         }
-                        $optionnal_c['where']['event.staff_id'] = $sid->STAFF_CHILD;
+
+                        $optionnal_c['where']['event.staff_id'] = $staff->ID;
                         $optionnal_c['join'] = "all";
 
                         $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal_c);
                         if (count($dataChild)) {
                             for ($c = 0; $c < count($dataChild); $c++) {
-                                $dataShow['child'][$c] = (array) $dataChild[$c];
+                                $dataShow['child'][$s] = (array) $dataChild[$c];
+                                $s++;
                             }
                         }
 
@@ -473,6 +495,7 @@ class Ctl_datatable extends MY_Controller
                 $v = 0;
                 foreach ($vis as $key => $sid) {
                     $optionnal_v['where']['event.code'] = $sid->EVENT_CODE;
+                    $optionnal_v['where']['event.APPROVE_DATE <>'] = null;
 
                     $optionnal_v['join'] = "all";
 
@@ -530,12 +553,16 @@ class Ctl_datatable extends MY_Controller
             $dataShow[] = $this->mdl_event->get_dataShow($this->input->get('event_id'), $optionnal, "row");
 
             if (count($dataShow)) {
-                $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $emp = $this->mdl_staff->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp);
+                $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                $emp = $this->mdl_staff->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp, "row");
+                
+                
+                $head = $this->mdl_staff->get_dataShow($dataShow[0]['STAFF_ID'], $optionnal_emp, "row");
 
                 $DataTable = $dataShow;
-                $DataTable[0]['USER_START_NAME'] = $emp[0]->NAME;
-                $DataTable[0]['USER_START_LNAME'] = $emp[0]->LASTNAME;
+                $DataTable[0]['EMP_ID'] = $head->EMP_ID;
+                $DataTable[0]['USER_START_NAME'] = $emp->NAME;
+                $DataTable[0]['USER_START_LNAME'] = $emp->LASTNAME;
                 $DataTable[0]['class'] = "draft";
                 $DataTable[0]['STATUS_SHOW'] = "แบบร่าง";
 
@@ -546,10 +573,16 @@ class Ctl_datatable extends MY_Controller
                 if (count($visitor)) {
                     $j = 0;
                     foreach ($visitor as $vis_val) {
+                        $optionnal_vemp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $optionnal_vemp['where'] = array(
+                            'staff.employee_id' => $vis_val->EVENT_VISITOR,
+                        );
+                        $vis_emp = $this->mdl_staff->get_dataShow(null, $optionnal_vemp, "row");
+
                         $DataTable[0]['VISITOR'][$j]['EID'] = $vis_val->ID;
                         $DataTable[0]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                        $DataTable[0]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                        $DataTable[0]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                        $DataTable[0]['VISITOR'][$j]['VNAME'] = $vis_emp->NAME;
+                        $DataTable[0]['VISITOR'][$j]['VLNAME'] = $vis_emp->LASTNAME;
                         $DataTable[0]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
                         $DataTable[0]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
 
@@ -570,32 +603,6 @@ class Ctl_datatable extends MY_Controller
             ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
 
             $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal);
-
-            // echo $this->db->last_query();
-            $optionnal_child['where'] = array(
-                'staff_owner' => $this->user_code,
-            );
-
-            $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
-            $optionnal_child['join'] = true;
-            $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
-
-            $dataChild = [];
-            if (count($child)) {
-                foreach ($child as $sid) {
-                    $optionnal['where'] = array(
-                        'event.staff_id' => $sid->STAFF_CHILD,
-                        'event.user_start' => $this->user_code,
-                        'event.type_id >' => 3,
-                    );
-                    $optionnal['join'] = "all";
-
-                    $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal);
-                    if (count($dataChild)) {
-                        $dataShow['child'] = $dataChild;
-                    }
-                }
-            }
 
             if (count($dataShow)) {
                 $DataTable = $this->foreach_loop($dataShow);

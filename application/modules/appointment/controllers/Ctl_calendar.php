@@ -10,7 +10,7 @@ class Ctl_calendar extends MY_Controller
         parent::__construct();
 
         $this->_title = 'ตารางนัดหมาย';
-        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_staff'));
+        $this->load->model(array('mdl_calendar', 'mdl_event', 'mdl_role_focus', 'mdl_visitor', 'mdl_rooms', 'mdl_staff', 'mdl_employee'));
         $this->load->libraries(array('generate_event_code', 'crud_valid', 'format_date'));
 
     }
@@ -47,7 +47,7 @@ class Ctl_calendar extends MY_Controller
             'branch' => "สำนักงานรังสิต",
         );
         $data['room'] = $this->mdl_rooms->get_data(null, $optionnalr);
-        $data['employee'] = $this->mdl_staff->get_dataShow();
+        $data['employee'] = $this->mdl_employee->get_dataShow();
 
         $this->template->set_layout('lay_calendar');
         $this->template->title($this->_title);
@@ -155,22 +155,23 @@ class Ctl_calendar extends MY_Controller
 
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
 
-                        $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp);
+                        $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp,"row");
 
-                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp);
+                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp,"row");
 
                         $Calendar[$i] = $dataVal;
+                        $Calendar[$i]['EMP_ID'] = $head->EMP_ID;
                         $Calendar[$i]['DATE_BEGIN_SHOW'] = toThaiDateTimeString($dataVal['DATE_BEGIN']);
                         $Calendar[$i]['DATE_END_SHOW'] = toThaiDateTimeString($dataVal['DATE_END']);
                         $Calendar[$i]['TIME_BEGIN_SHOW'] = date('H:i', strtotime($dataVal['TIME_BEGIN']));
                         $Calendar[$i]['TIME_END_SHOW'] = date('H:i', strtotime($dataVal['TIME_END']));
-                        $Calendar[$i]['HEAD_NAME'] = $head[0]->NAME;
-                        $Calendar[$i]['HEAD_LNAME'] = $head[0]->LASTNAME;
-                        $Calendar[$i]['HEAD_FULLNAME'] = $head[0]->NAME . " " . $head[0]->LASTNAME;
-                        $Calendar[$i]['USER_START_NAME'] = $emp[0]->NAME;
-                        $Calendar[$i]['USER_START_LNAME'] = $emp[0]->LASTNAME;
-                        $Calendar[$i]['USER_START_FULLNAME'] = $emp[0]->NAME . " " . $emp[0]->LASTNAME;
+                        $Calendar[$i]['HEAD_NAME'] = $head->NAME;
+                        $Calendar[$i]['HEAD_LNAME'] = $head->LASTNAME;
+                        $Calendar[$i]['HEAD_FULLNAME'] = $head->NAME . " " . $head->LASTNAME;
+                        $Calendar[$i]['USER_START_NAME'] = $emp->NAME;
+                        $Calendar[$i]['USER_START_LNAME'] = $emp->LASTNAME;
+                        $Calendar[$i]['USER_START_FULLNAME'] = $emp->NAME . " " . $emp->LASTNAME;
                         $Calendar[$i]['start'] = $dataVal["DATE_BEGIN"];
                         $Calendar[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1 days"));
                         $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
@@ -179,8 +180,7 @@ class Ctl_calendar extends MY_Controller
                         $Calendar[$i]['class'] = $state;
                         // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
 
-                        $optionnals['select'] = "event_visitor.*,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                        $optionnals['join'] = true;
+                        $optionnals['select'] = "event_visitor.*";
                         $optionnals['where'] = array(
                             'event_visitor.event_code' => $dataVal["CODE"],
                         );
@@ -189,10 +189,17 @@ class Ctl_calendar extends MY_Controller
                         if (count($visitor)) {
                             $j = 0;
                             foreach ($visitor as $vis_val) {
+
+                                $optionnal_vis['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                                $optionnal_vis['where'] = array(
+                                    'staff.employee_id' => $vis_val->EVENT_VISITOR,
+                                );
+                                $vis_emp = $this->mdl_staff->get_dataShow(null, $optionnal_vis, "row");
+
                                 $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
                                 $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
-                                $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_val->NAME;
-                                $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_val->LASTNAME;
+                                $Calendar[$i]['VISITOR'][$j]['VNAME'] = $vis_emp->NAME;
+                                $Calendar[$i]['VISITOR'][$j]['VLNAME'] = $vis_emp->LASTNAME;
                                 $Calendar[$i]['VISITOR'][$j]['VSTATUS'] = $vis_val->STATUS_COMPLETE;
                                 $Calendar[$i]['VISITOR'][$j]['VREMARK'] = $vis_val->STATUS_REMARK;
 
@@ -393,7 +400,7 @@ class Ctl_calendar extends MY_Controller
         }
 
         $optionnal_vis['select'] = "event_visitor.EVENT_VISITOR,event_visitor.EVENT_CODE,event_visitor.STATUS_COMPLETE,event_visitor.STATUS_REMARK";
-        $optionnal_vis['where']['event_visitor.event_visitor'] = $this->user_code;
+        $optionnal_vis['where']['event_visitor.event_visitor'] = $this->user_emp;
 
         $optionnal_vis['join'] = true;
         $vis = $this->mdl_visitor->get_dataShow(null, $optionnal_vis);
@@ -442,12 +449,15 @@ class Ctl_calendar extends MY_Controller
             $dataShow[] = $this->mdl_event->get_dataShow($this->input->get('event_id'), $optionnal, "row");
 
             if (count($dataShow)) {
-                $optionnal_emp['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                $emp = $this->mdl_staff->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp);
+                $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
+                $emp = $this->mdl_staff->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp, "row");
+
+                $head = $this->mdl_staff->get_dataShow($dataShow[0]['STAFF_ID'], $optionnal_emp, "row");
 
                 $Calendar = $dataShow;
-                $Calendar[0]['USER_START_NAME'] = $emp[0]->NAME;
-                $Calendar[0]['USER_START_LNAME'] = $emp[0]->LASTNAME;
+                $Calendar[0]['EMP_ID'] = $head->EMP_ID;
+                $Calendar[0]['USER_START_NAME'] = $emp->NAME;
+                $Calendar[0]['USER_START_LNAME'] = $emp->LASTNAME;
                 $Calendar[0]['class'] = "draft";
                 $Calendar[0]['STATUS_SHOW'] = "แบบร่าง";
 
@@ -482,38 +492,6 @@ class Ctl_calendar extends MY_Controller
             ,event_car.CAR_ID,event_car.CAR_NAME,event_car.DRIVER_ID,event_car.DRIVER_NAME";
 
             $dataShow['me'] = $this->mdl_event->get_dataShow(null, $optionnal);
-
-            // echo $this->db->last_query();
-            $optionnal_child['where'] = array(
-                'staff_owner' => $this->user_emp,
-            );
-
-            $optionnal_child['select'] = "roles_focus.*,employee.NAME,employee.LASTNAME";
-            $optionnal_child['join'] = true;
-            $child = $this->mdl_role_focus->get_data(null, $optionnal_child);
-
-            $dataChild = [];
-            if (count($child)) {
-                foreach ($child as $sid) {
-                    $optionnal_staff['where'] = array(
-                        'staff.employee_id' => $sid->STAFF_CHILD,
-                    );
-                    
-                    $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
-                    
-                    $optionnal['where'] = array(
-                        'event.staff_id' => $staff->ID,
-                        'event.user_start' => $this->user_code,
-                        'event.type_id >' => 3,
-                    );
-                    $optionnal['join'] = "all";
-
-                    $dataChild = (array) $this->mdl_event->get_dataShow(null, $optionnal);
-                    if (count($dataChild)) {
-                        $dataShow['child'] = $dataChild;
-                    }
-                }
-            }
 
             if (count($dataShow)) {
                 $Calendar = $this->foreach_loop($dataShow);

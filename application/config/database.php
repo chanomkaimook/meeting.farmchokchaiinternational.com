@@ -83,6 +83,10 @@ $db['default'] = array(
 	// 'username' => 'db_booking',
 	// 'password' => 'r4Ca003e@',
 	// 'database' => 'db_booking',
+	
+	// 'username' => 'db_meeting',
+	// 'password' => 'oc58dX22_',
+	// 'database' => 'db_meeting',
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

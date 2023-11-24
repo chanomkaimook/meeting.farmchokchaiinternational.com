@@ -259,10 +259,8 @@ let row_error = "",
     txt_error = "";
 
 function insert_meeting(insert_data, ctl) {
-    let url = "insert_data"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/insert_data"
-    // }
+    let url = new URL('appointment/' + ctl + '/insert_data', domain);
+
     // let url = ctl + "/insert_data"
     fetch(url, {
             method: 'post',
@@ -282,10 +280,8 @@ function insert_meeting(insert_data, ctl) {
 }
 
 function update_meeting(update_data, ctl) {
-    let url = "update_data"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/update_data"
-    // }
+    let url = new URL('appointment/' + ctl + '/update_data', domain);
+
     // let url = ctl + "/update_data"
     fetch(url, {
             method: 'post',
@@ -298,15 +294,16 @@ function update_meeting(update_data, ctl) {
                 swal_error(resp.error, "update")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                if (resp.data.status == 1) {
+                    notification(resp.data.id)
+                }
             }
         })
 }
 
 function delete_meeting(delete_data, ctl) {
-    let url = "delete_data"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/delete_data"
-    // }
+    let url = new URL('appointment/' + ctl + '/delete_data', domain);
+
     fetch(url, {
             method: 'post',
             body: delete_data
@@ -322,10 +319,8 @@ function delete_meeting(delete_data, ctl) {
 }
 
 function approval(data, text) {
-    let url = "approval"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/approval"
-    // }
+    let url = new URL('appointment/' + ctl + '/approval', domain);
+
     // let url = ctl + "/approval"
     fetch(url, {
             method: 'post',
@@ -345,10 +340,8 @@ function approval(data, text) {
 }
 
 function invitation(data, ctl) {
-    let url = "invitation"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/invitation"
-    // }
+    let url = new URL('appointment/' + ctl + '/invitation', domain);
+
     // let url = ctl + "/invitation"
     fetch(url, {
             method: 'post',
@@ -365,10 +358,8 @@ function invitation(data, ctl) {
 }
 
 function processing(data, ctl) {
-    let url = "processing"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/processing"
-    // }
+    let url = new URL('appointment/' + ctl + '/processing', domain);
+
     // let url = ctl + "/processing"
     fetch(url, {
             method: 'post',
@@ -385,10 +376,8 @@ function processing(data, ctl) {
 }
 
 function restore(data, ctl) {
-    let url = "restore"
-    // if (ctl == "ctl_calendar") {
-    //     url = url = "ctl_calendar/restore"
-    // }
+    let url = new URL('appointment/' + ctl + '/restore', domain);
+
     // let url = ctl + "/restore"
     fetch(url, {
             method: 'post',
@@ -400,6 +389,7 @@ function restore(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                notification(resp.data.id)
             }
         })
 }

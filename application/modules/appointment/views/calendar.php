@@ -57,14 +57,14 @@ div.table-responsive {
                 <?//=print_r($_SESSION)?>
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
                     class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#draft-modal">แบบร่าง</button>
-                <button type="button" class="btn btn-primary" onclick="printDiv('calendar-print')">Print</button>
+                <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#draft-modal">แบบร่าง</button> -->
+                <!-- <button type="button" class="btn btn-primary" onclick="printDiv('calendar-print')">Print</button> -->
             </div>
 
             <div class="col-8">
                 <div class="filter-card">
-                    <div class="d-flex flex-row justify-content-end">
+                    <div class="row justify-content-end">
                         <?php
 include APPPATH . "views/partials/dom_filter_type.php";
 include APPPATH . "views/partials/dom_filter_user.php";
@@ -72,12 +72,12 @@ include APPPATH . "views/partials/dom_filter_status.php";
 include APPPATH . "views/partials/dom_filter_permit.php";
 ?>
                     </div>
-                    <div class="d-flex flex-row justify-content-end">
+                    <div class="row justify-content-end">
                         <?php
 include APPPATH . "views/partials/dom_filter_date.php";
 ?>
                     </div>
-                    <div class="d-flex flex-row justify-content-end">
+                    <div class="row justify-content-end">
                         <?php
 include APPPATH . "views/partials/dom_filter_time.php";
 ?>
@@ -279,6 +279,7 @@ $(document).ready(function() {
                             type_name += item['TYPE_NAME'][i]
                         }
                         item['TYPE_ID'] -= 3
+                        item['STATUS_COMPLETE'] = 1
                         item['TYPE_NAME'] = type_name
                         item['class'] = 'me'
 
@@ -456,7 +457,7 @@ $(document).ready(function() {
         }
         data.append("visitor", visitor)
         // console.log(data)
-        insert_meeting(data, "calendar")
+        insert_meeting(data, "ctl_calendar")
     })
 
     /**

@@ -9,12 +9,12 @@
 
 .item-cardbox {
     height: 3rem;
-    width: 13rem;
+    width: 100% !important;
 }
 
 .item-mod-cardbox {
     height: 4rem;
-    width: 9rem;
+    width: 100% !important;
 }
 
 .filter-card {
@@ -40,8 +40,8 @@
                 </button>
             </div>
             <div class="modal-body pb-0">
-                <div class="row">
-                    <div class="col-lg-12 d-none">
+                <div class="row justify-content-center">
+                    <div class="col-4 d-none">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-car item-mod-cardbox"
@@ -49,7 +49,7 @@
                                 data-dismiss="modal">จองรถ</button>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting item-mod-cardbox"
@@ -57,7 +57,7 @@
                                 data-dismiss="modal">นัดหมายกิจกรรม</button>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-4">
                         <div class="mod-cardbox text-center">
                             <button type="button"
                                 class="btn btn-primary btn-rounded btn-lg width-md waves-effect waves-light insert-meeting-room item-mod-cardbox"
@@ -363,13 +363,11 @@ foreach ($time as $value) {
                         <!-- <input autocomplete="off" type="text" value="" data-role="tagsinput" name="detail-visitor" disabled /> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option value="1">นาย A</option>
-                            <option value="2">นาย B</option>
-                            <option value="3">นาย C</option>
-                            <option value="4">นาย D</option>
-                            <option value="5">นาย E</option>
-                            <option value="6">นาย F</option>
-                            <option value="7">นาย G</option>
+                            <?php foreach ($employee as $emp) {
+    ?>
+                            <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
+                            <?php
+}?>
                         </select>
                     </div>
                 </form>
@@ -542,8 +540,8 @@ foreach ($time as $value) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
-                        <button type="button"
-                            class="btn btn-warning waves-effect waves-light btn-draft-insert">บันทึกเป็นแบบร่าง</button>
+                        <!-- <button type="button"
+                            class="btn btn-warning waves-effect waves-light btn-draft-insert">บันทึกเป็นแบบร่าง</button> -->
                         <button type="button"
                             class="btn btn-success waves-effect waves-light btn-save-insert">บันทึก</button>
                     </div>
@@ -573,6 +571,8 @@ foreach ($time as $value) {
                         type="hidden" name="update-type-id" />
                     <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value=""
                         type="hidden" name="update-type-name" />
+                    <input autocomplete="off" class="form-control form-white" placeholder="Enter name" value=""
+                        type="hidden" name="status_complete" />
 
                     <div class="form-group">
                         <label class="control-label">หัวข้อ <span class="text-danger">*</span></label>
@@ -733,12 +733,7 @@ foreach ($time as $value) {
                 <!-- <h4 class="modal-title-status text-orange d-none"></h4> -->
                 <!-- </div> -->
                 <!-- </div> -->
-                <div class="btn-notify">
-                    <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
-                        autocomplete="off" data-event-id="" data-event-code="">
-                        แจ้งเตือนผู้ที่เกี่ยวข้อง
-                    </button>
-                </div>
+                
             </div>
 
             <div class="modal-body pb-0">

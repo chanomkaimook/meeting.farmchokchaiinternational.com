@@ -26,8 +26,8 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $emp_id = $data['employee'];
-            $userId = $data['userId'];
+            $emp_id = textShow($data['employee']);
+            $userId = textShow($data['userId']);
             $array = [];
             $data = [];
             $where = [];
@@ -37,20 +37,20 @@ class CRUD_Valid
                 'employee_id' => $emp_id,
             );
 
-            $check_data = $ci->mdl_staff->get_dataShow(null, $array, "row",false);
+            $check_data = $ci->mdl_staff->get_dataShow(null, $array, "row", false);
             if ($check_data) {
                 $data = array(
                     'user_id' => $userId,
                     'user_update' => $emp_id,
-                    'date_update' => date('Y-m-d H:i:s')
+                    'date_update' => date('Y-m-d H:i:s'),
                 );
                 $where = array(
-                    'employee_id' => $emp_id
+                    'employee_id' => $emp_id,
                 );
-                $return = $ci->mdl_staff->update_data($data,$where);
+                $return = $ci->mdl_staff->update_data($data, $where);
             } else {
                 $array = [];
-                $get_data = $ci->mdl_employee->get_dataShow($emp_id, $array, "row",false);
+                $get_data = $ci->mdl_employee->get_dataShow($emp_id, $array, "row", false);
                 $data = array(
                     'employee_id' => $emp_id,
                     'username' => $get_data->CODE,
@@ -69,14 +69,14 @@ class CRUD_Valid
         }
     }
 
-    public function auto_approve($event_id = null, $event_code = null, $user_action = null)
+    public function auto_approve($event_id = null, $user_action = null)
     {
         //=     call database    =//
         $ci = &get_instance();
         $ci->load->database();
         //===================//
         $return = [];
-        if ($event_id && $event_code && $user_action) {
+        if ($event_id && $user_action) {
 
             $return['error'] = 0;
 
@@ -220,30 +220,31 @@ class CRUD_Valid
                 $date_end = null;
 
                 if ($data['insert-dates']) {
-                    $date_begin = $data['insert-dates'];
+                    $date_begin = textShow($data['insert-dates']);
                 }
                 if ($data['insert-datee']) {
-                    $date_end = $data['insert-datee'];
+                    $date_end = textShow($data['insert-datee']);
                 }
-
-                $type_id = $data['insert-type-id'];
-                $type_name = $data['insert-type-name'];
-                $event_name = $data['insert-name'];
-                $staff_id = $data['insert-head'];
-                $event_description = $data['insert-description'];
-                // $date_begin = $data['insert-dates'];
-                // $date_end = $data['insert-datee'];
-                $time_begin = $data['insert-times'];
-                $time_end = $data['insert-timee'];
-                $rooms_id = $data['insert-rooms-id'];
-                $rooms_name = $data['insert-rooms-name'];
-                $meeting_id = $data['insert-meeting-id'];
-                $meeting_name = $data['insert-meeting-name'];
-                $car_id = $data['insert-car-id'];
-                $car_name = $data['insert-car-name'];
-                $driver_id = $data['insert-driver-id'];
-                $driver_name = $data['insert-driver-name'];
-                $user_action = $data['user_action'];
+/* textShow(
+) */
+                $type_id = textShow($data['insert-type-id']);
+                $type_name = textShow($data['insert-type-name']);
+                $event_name = textShow($data['insert-name']);
+                $staff_id = textShow($data['insert-head']);
+                $event_description = textShow($data['insert-description']);
+                // $date_begin = textShow($data['insert-dates']);
+                // $date_end = textShow($data['insert-datee']);
+                $time_begin = textShow($data['insert-times']);
+                $time_end = textShow($data['insert-timee']);
+                $rooms_id = textShow($data['insert-rooms-id']);
+                $rooms_name = textShow($data['insert-rooms-name']);
+                $meeting_id = textShow($data['insert-meeting-id']);
+                $meeting_name = textShow($data['insert-meeting-name']);
+                $car_id = textShow($data['insert-car-id']);
+                $car_name = textShow($data['insert-car-name']);
+                $driver_id = textShow($data['insert-driver-id']);
+                $driver_name = textShow($data['insert-driver-name']);
+                $user_action = textShow($data['user_action']);
 
                 $visitor = $data['visitor'];
 
@@ -383,31 +384,31 @@ class CRUD_Valid
                 $date_end = null;
 
                 if ($data['update-dates']) {
-                    $date_begin = $data['update-dates'];
+                    $date_begin = textShow($data['update-dates']);
                 }
                 if ($data['update-datee']) {
-                    $date_end = $data['update-datee'];
+                    $date_end = textShow($data['update-datee']);
                 }
 
-                $item_id = $data['item_id'];
-                $type_id = $data['update-type-id'];
-                $type_name = $data['update-type-name'];
-                $event_name = $data['update-name'];
-                $staff_id = $data['update-head'];
-                $event_description = $data['update-description'];
-                // $date_begin = $data['update-dates'];
-                // $date_end = $data['update-datee'];
-                $time_begin = $data['update-times'];
-                $time_end = $data['update-timee'];
-                $rooms_id = $data['update-rooms-id'];
-                $rooms_name = $data['update-rooms-name'];
-                $meeting_id = $data['update-meeting-id'];
-                $meeting_name = $data['update-meeting-name'];
-                $car_id = $data['update-car-id'];
-                $car_name = $data['update-car-name'];
-                $driver_id = $data['update-driver-id'];
-                $driver_name = $data['update-driver-name'];
-                $user_action = $data['user_action'];
+                $item_id = textShow($data['item_id']);
+                $type_id = textShow($data['update-type-id']);
+                $type_name = textShow($data['update-type-name']);
+                $event_name = textShow($data['update-name']);
+                $staff_id = textShow($data['update-head']);
+                $event_description = textShow($data['update-description']);
+                // $date_begin = textShow($data['update-dates']);
+                $status_complete = textShow($data['status_complete']);
+                $time_begin = textShow($data['update-times']);
+                $time_end = textShow($data['update-timee']);
+                $rooms_id = textShow($data['update-rooms-id']);
+                $rooms_name = textShow($data['update-rooms-name']);
+                $meeting_id = textShow($data['update-meeting-id']);
+                $meeting_name = textShow($data['update-meeting-name']);
+                $car_id = textShow($data['update-car-id']);
+                $car_name = textShow($data['update-car-name']);
+                $driver_id = textShow($data['update-driver-id']);
+                $driver_name = textShow($data['update-driver-name']);
+                $user_action = textShow($data['user_action']);
 
                 $visitor = $data['visitor'];
 
@@ -428,6 +429,37 @@ class CRUD_Valid
                 $main = $ci->mdl_event->update_data($dataArray, $item_id);
 
                 if (!$main['error']) {
+                    
+                    if ($status_complete == 1) {
+                        $check_approve = $this->auto_approve($item_id, $user_action);
+                        if (!$check_approve['error']) {
+                            if ($check_approve['auto_approve']) {
+                                $apv['item_id'] = $item_id;
+                                $apv['item_code'] = $code;
+                                $apv['item_data'] = 2;
+                                $apv['user_action'] = $user_action;
+                                $this->approval($apv);
+                                $main['data']['status'] = 5;
+                            } else {
+                                $main['data']['status'] = $status_complete;
+                            }
+                        }
+                    } else {
+                        if ($status_complete == 2) {
+                            $statusWhere['status_complete_name'] = "ดำเนินการสำเร็จ";
+                        } elseif ($status_complete == 3) {
+                            $statusWhere['status_complete_name'] = "ดำเนินการไม่สำเร็จ";
+                        } elseif ($status_complete == 4) {
+                            $statusWhere['status_complete_name'] = "ยกเลิก";
+                        } elseif ($status_complete == 5) {
+                            $statusWhere['status_complete_name'] = "กำลังดำเนินการ";
+                        }
+                        
+                        $main['data']['status'] = $status_complete;
+                    }
+                    $statusWhere['status_complete'] = $status_complete;
+                    $ci->mdl_event->update_data($statusWhere, $item_id);
+                    
                     if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
 
                         $SubDataArray = array(
@@ -529,9 +561,9 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $user_action = $data['user_action'];
+            $item_id = textShow($data['item_id']);
+            $item_code = textShow($data['item_code']);
+            $user_action = textShow($data['user_action']);
 
             $dataArray = array(
                 'status' => 0,
@@ -585,10 +617,10 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $vid = $data['vid'];
-            $user_action = $data['user_action'];
+            $item_id = textShow($data['item_id']);
+            $item_code = textShow($data['item_code']);
+            $vid = textShow($data['vid']);
+            $user_action = textShow($data['user_action']);
 
             $dataArray = array(
                 'status' => 0,
@@ -624,10 +656,10 @@ class CRUD_Valid
 
         if (count($apv)) {
 
-            $item_id = $apv['item_id'];
-            $item_code = $apv['item_code'];
-            $item_data = $apv['item_data'];
-            $user_action = $apv['user_action'];
+            $item_id = textShow($apv['item_id']);
+            $item_code = textShow($apv['item_code']);
+            $item_data = textShow($apv['item_data']);
+            $user_action = textShow($apv['user_action']);
 
             if ($item_data == 2) {
                 $item_field = 'approve_date';
@@ -673,16 +705,16 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $vid = $data['vid'];
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $item_data = $data['item_data'];
-            $user_action = $data['user_action'];
+            $vid = textShow($data['vid']);
+            $item_id = textShow($data['item_id']);
+            $item_code = textShow($data['item_code']);
+            $item_data = textShow($data['item_data']);
+            $user_action = textShow($data['user_action']);
 
             if ($item_data == 2) {
                 $remark = 'ตอบรับ';
             } elseif ($item_data == 3) {
-                $remark = $data['reason'];
+                $remark = textShow($data['reason']);
             }
 
             $dataArray = array(
@@ -719,10 +751,10 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $item_data = $data['item_data'];
-            $user_action = $data['user_action'];
+            $item_id = textShow($data['item_id']);
+            $item_code = textShow($data['item_code']);
+            $item_data = textShow($data['item_data']);
+            $user_action = textShow($data['user_action']);
 
             if ($item_data == 2) {
                 $item_field = 'date_update';
@@ -770,10 +802,10 @@ class CRUD_Valid
         $result['error'][] = 'ไม่มีการทำรายการ';
 
         if (count($data)) {
-            $item_id = $data['item_id'];
-            $item_code = $data['item_code'];
-            $item_data = $data['item_data'];
-            $user_action = $data['user_action'];
+            $item_id = textShow($data['item_id']);
+            $item_code = textShow($data['item_code']);
+            $item_data = textShow($data['item_data']);
+            $user_action = textShow($data['user_action']);
 
             $dataArray = array(
                 'approve_date' => null,

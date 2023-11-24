@@ -4,7 +4,7 @@ function notification(event_id) {
         array = new FormData();
 
     array.append('id', event_id)
-    returnData = get_userID(array)
+    get_userID(array)
     // console.log(returnData)
 }
 

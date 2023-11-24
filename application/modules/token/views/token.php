@@ -88,6 +88,10 @@ if ($this->session->has_userdata('user_code')) {
                                                 </div>
                                             </div>
                                         </form>
+
+                                        <div class="img d-none">
+                                            <img src="<?=base_url('asset/images/qrcode-addfriend.png')?>">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -132,23 +136,7 @@ if ($this->session->has_userdata('user_code')) {
             // e.preventDefault()
             return false;
         })
-        /* $(document).on('submit', '#login', function() {
-            // login()
-            e.preventDefault()
-            let dataDefault = [],
-                data = new FormData(),
-				dataArray = []
-
-                dataArray = $('#login').serializeArray()
-
-				console.log(dataArray)
-            dataArray.forEach(function(item, index) {
-                dataDefault.push(item);
-            })
-
-            return false;
-        }) */
-
+        
         function token() {
             let url_check_token = new URL('token/ctl_token/update_data', domain);
 
@@ -174,7 +162,8 @@ if ($this->session->has_userdata('user_code')) {
                     } else {
                         swal.fire('ลงทะเบียนสำเร็จ', "", 'success')
                             .then(() => {
-                                location.href = domain;
+                                // location.href = new URL('token/ctl_token/', domain);
+                                
 
                             })
                     }

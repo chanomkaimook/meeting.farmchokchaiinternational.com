@@ -115,7 +115,6 @@ function form_displayed(data) {
 
     if (data.TYPE_ID == 1) {
         $(modal_detail).find('div.rooms-line').removeClass('d-none')
-        $(modal_detail).find('div.btn-notify').removeClass('d-none')
         $(modal_detail).find('div.meeting-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
@@ -125,7 +124,6 @@ function form_displayed(data) {
 
     } else if (data.TYPE_ID == 3) {
         $(modal_detail).find('div.meeting-line').removeClass('d-none')
-        $(modal_detail).find('div.btn-notify').removeClass('d-none')
         $(modal_detail).find('div.rooms-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
@@ -138,7 +136,6 @@ function form_displayed(data) {
         $(modal_detail).find('div.rooms-line').addClass('d-none')
         $(modal_detail).find('div.meeting-inline').addClass('d-none')
         $(modal_detail).find('div.meeting-line').addClass('d-none')
-        $(modal_detail).find('div.btn-notify').addClass('d-none')
 
         $(modal_update).find('div.update-rooms').removeClass('d-none')
         $(modal_update).find('div.update-meeting-data').addClass('d-none')
@@ -148,7 +145,6 @@ function form_displayed(data) {
         $(modal_detail).find('div.meeting-line').addClass('d-none')
         $(modal_detail).find('div.rooms-inline').addClass('d-none')
         $(modal_detail).find('div.rooms-line').addClass('d-none')
-        $(modal_detail).find('div.btn-notify').addClass('d-none')
 
         $(modal_update).find('div.update-rooms').addClass('d-none')
         $(modal_update).find('div.update-meeting-data').removeClass('d-none')
@@ -568,9 +564,8 @@ function form_displayed_data(data, modal_detail, modal_update) {
 
     $(modal_detail).find('[data-visitor=true]').addClass('d-none')
     $(modal_detail).find('h5.visitor-name').empty()
-    $(modal_detail).find('button.notify').attr('data-event-id',data.ID)
-    $(modal_detail).find('button.notify').attr('data-event-code',data.CODE)
     $('select[name=update-visitor]').find('option').attr('data-status', 1)
+    
     let form_update = {
             '[name=item_id]': data.ID,
             '[name=code]': data.CODE,
@@ -585,6 +580,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
             '[name=update-description]': data.EVENT_DESCRIPTION,
             '[name=update-dates]': data.DATE_BEGIN,
             '[name=update-datee]': data.DATE_END,
+            '[name=status_complete]': data.STATUS_COMPLETE,
             'select[name=update-times]': data.TIME_BEGIN,
             'select[name=update-timee]': data.TIME_END,
             '.modal-title': data.TYPE_NAME
@@ -593,7 +589,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
             '[name=type-id]': data.TYPE_ID,
             '[name=detail-type]': data.TYPE_NAME,
             '[name=detail-name]': data.EVENT_NAME,
-            '[name=detail-head]': data.STAFF_ID,
+            '[name=detail-head]': data.EMP_ID,
             '[name=detail-rooms-id]': data.ROOMS_ID,
             '[name=detail-rooms-name]': data.ROOMS_NAME,
             '[name=detail-description]': data.EVENT_DESCRIPTION,
