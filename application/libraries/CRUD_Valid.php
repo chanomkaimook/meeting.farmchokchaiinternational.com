@@ -28,6 +28,15 @@ class CRUD_Valid
         if (count($data)) {
             $emp_id = textShow($data['employee']);
             $userId = textShow($data['userId']);
+
+            if (!$emp_id) {
+                $result = array(
+                    'error' => 1,
+                    'txt' => 'ไม่พบข้อมูลผู้ลงทะเบียน',
+                );
+                return $result;
+            }
+
             $array = [];
             $data = [];
             $where = [];
@@ -38,6 +47,7 @@ class CRUD_Valid
             );
 
             $check_data = $ci->mdl_staff->get_dataShow(null, $array, "row", false);
+
             if ($check_data) {
                 $data = array(
                     'user_id' => $userId,
@@ -48,6 +58,7 @@ class CRUD_Valid
                     'employee_id' => $emp_id,
                 );
                 $return = $ci->mdl_staff->update_data($data, $where);
+
             } else {
                 $array = [];
                 $get_data = $ci->mdl_employee->get_dataShow($emp_id, $array, "row", false);
@@ -62,10 +73,17 @@ class CRUD_Valid
                     'status' => 1,
                 );
                 $return = $ci->mdl_staff->insert_data($data);
+
+                if($return['data']['id']){
+                    $data = array(
+                        'check_line' => '1',
+                    );
+                    $ci->db->where('id', $emp_id);
+                    $ci->db->update('employee', $data);
+                }
             }
             // print_r($get_data);
             return $return;
-
         }
     }
 
@@ -106,7 +124,8 @@ class CRUD_Valid
             $error = [];
             $result = [];
             if ($type == 'insert') {
-                $array = ['insert-name',
+                $array = [
+                    'insert-name',
                     'insert-head',
                     'insert-description',
                     'insert-dates',
@@ -122,7 +141,8 @@ class CRUD_Valid
                 } elseif ($type_id == 3) {
                     array_push($array, 'insert-meeting-id', 'insert-meeting-name');
                 } else {
-                    $array = ['insert-name',
+                    $array = [
+                        'insert-name',
                         'insert-head',
                     ];
                 }
@@ -134,9 +154,7 @@ class CRUD_Valid
                             $attr[$array[$i]] = null;
                             break;
                         }
-
                     }
-
                 }
                 foreach ($attr as $index => $item) {
 
@@ -146,7 +164,8 @@ class CRUD_Valid
                 }
                 $result = $error;
             } else if ($type == 'update') {
-                $array = ['item_id',
+                $array = [
+                    'item_id',
                     'code',
                     'update-type-id',
                     'update-type-name',
@@ -166,7 +185,8 @@ class CRUD_Valid
                 } elseif ($type_id == 3) {
                     array_push($array, 'update-meeting-name');
                 } else {
-                    $array = ['item_id',
+                    $array = [
+                        'item_id',
                         'code',
                         'update-type-id',
                         'update-type-name',
@@ -182,9 +202,7 @@ class CRUD_Valid
                             $attr[$array[$i]] = null;
                             break;
                         }
-
                     }
-
                 }
                 foreach ($attr as $index => $item) {
 
@@ -225,8 +243,7 @@ class CRUD_Valid
                 if ($data['insert-datee']) {
                     $date_end = textShow($data['insert-datee']);
                 }
-/* textShow(
-) */
+
                 $type_id = textShow($data['insert-type-id']);
                 $type_name = textShow($data['insert-type-name']);
                 $event_name = textShow($data['insert-name']);
@@ -310,7 +327,6 @@ class CRUD_Valid
                             $SubDataArray['rooms_name'] = $meeting_name;
                         }
                         $ci->mdl_event_meeting->insert_data($SubDataArray);
-
                     } elseif ($type_id == 2 || $type_id == 5) {
                         $SubDataArray = array(
                             'code' => $code,
@@ -429,7 +445,7 @@ class CRUD_Valid
                 $main = $ci->mdl_event->update_data($dataArray, $item_id);
 
                 if (!$main['error']) {
-                    
+
                     if ($status_complete == 1) {
                         $check_approve = $this->auto_approve($item_id, $user_action);
                         if (!$check_approve['error']) {
@@ -454,12 +470,12 @@ class CRUD_Valid
                         } elseif ($status_complete == 5) {
                             $statusWhere['status_complete_name'] = "กำลังดำเนินการ";
                         }
-                        
+
                         $main['data']['status'] = $status_complete;
                     }
                     $statusWhere['status_complete'] = $status_complete;
                     $ci->mdl_event->update_data($statusWhere, $item_id);
-                    
+
                     if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
 
                         $SubDataArray = array(
@@ -483,7 +499,6 @@ class CRUD_Valid
                         );
 
                         $ci->mdl_event_meeting->update_data($SubDataArray, $whereArray);
-
                     } elseif ($type_id == 2 || $type_id == 5) {
                         $SubDataArray = array(
                             'staff_id' => $staff_id,
@@ -537,7 +552,6 @@ class CRUD_Valid
                                 'user_start' => $user_action,
                             );
                             $ci->mdl_visitor->insert_data($dataArray);
-
                         }
 
                         // print_r($visitor);
@@ -602,7 +616,6 @@ class CRUD_Valid
 
                 $return = $main;
             }
-
         }
         return $return;
     }
@@ -640,7 +653,6 @@ class CRUD_Valid
 
                 $return = $main;
             }
-
         }
         return $return;
     }
@@ -690,7 +702,6 @@ class CRUD_Valid
 
                 $return = $main;
             }
-
         }
         return $return;
     }
@@ -736,7 +747,6 @@ class CRUD_Valid
 
                 $return = $main;
             }
-
         }
         return $return;
     }
@@ -787,7 +797,6 @@ class CRUD_Valid
 
                 $return = $main;
             }
-
         }
         return $return;
     }

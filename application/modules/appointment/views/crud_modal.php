@@ -151,6 +151,7 @@ foreach ($time as $value) {
                         <label class="control-label">ผู้เข้าร่วม</label>
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="insert-visitor">
+                            <option value="">ระบูรายชื่อ</option>
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
@@ -252,6 +253,7 @@ foreach ($time as $value) {
                         <!-- <input autocomplete="off" type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
+                            <option value="">ระบูรายชื่อ</option>
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
@@ -363,6 +365,7 @@ foreach ($time as $value) {
                         <!-- <input autocomplete="off" type="text" value="" data-role="tagsinput" name="detail-visitor" disabled /> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
+                            <option value="">ระบูรายชื่อ</option>
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
@@ -529,8 +532,8 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
-                            name="insert-visitor">
+                        <select name="insert-visitor" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>
@@ -694,6 +697,7 @@ foreach ($time as $value) {
                         <!-- <input autocomplete="off" type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
+                            <option value="">ระบูรายชื่อ</option>
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>

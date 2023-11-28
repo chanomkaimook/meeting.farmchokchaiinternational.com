@@ -145,7 +145,6 @@ if ($this->session->has_userdata('user_code')) {
 
             // dataArray = 
 
-            console.log(dataArray)
             dataArray.forEach(function(item, index) {
                 data.append(item.name, item.value)
             })
@@ -158,13 +157,12 @@ if ($this->session->has_userdata('user_code')) {
                 .then(res => res.json())
                 .then((resp) => {
                     if (resp.error != 0) {
-                        swal.fire('ผิดพลาด', resp.text, 'warning')
+                        swal.fire('ผิดพลาด', resp.txt, 'warning')
                     } else {
                         swal.fire('ลงทะเบียนสำเร็จ', "", 'success')
                             .then(() => {
                                 // location.href = new URL('token/ctl_token/', domain);
-                                
-
+                                window.location.replace('/login/ctl_login/',domain)
                             })
                     }
                 })

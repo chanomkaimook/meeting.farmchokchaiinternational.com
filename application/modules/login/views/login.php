@@ -90,6 +90,11 @@ if ($this->session->has_userdata('user_code')) {
                                                 <?php echo anchor('token/ctl_token', 'หากไม่มีรหัส ลงทะเบียน', 'title="ลงทะเบียน"'); ?>
 
                                             </div>
+
+                                            <div class="text-center">
+                                                <img class="avatar-xl" src="https://qr-official.line.me/sid/L/886whswd.png" alt="qrcode">
+                                                <p>สแกน QR CODE เพื่อรับข้อความ</p>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>

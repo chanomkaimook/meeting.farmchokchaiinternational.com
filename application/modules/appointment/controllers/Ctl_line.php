@@ -246,6 +246,7 @@ class Ctl_line extends MY_Controller
         $return = [];
         $userId = [];
         $array = [];
+        print_r($this->input->post());
 
         $array = $this->input->post();
         if ($forward) {
@@ -253,7 +254,18 @@ class Ctl_line extends MY_Controller
         }
         if (count($array)) {
 
-            $optionnalm['select'] = "event.id as ID,event.code as CODE,event.type_id as TYPE_ID,event.event_name as TOPIC,event.event_description as DETAIL,event.staff_id as HEAD,event.user_start as OWN,event.date_begin as DBEGIN,event.date_end as DEND,event.time_begin as TBEGIN,event.time_end as TEND,event.status_complete as STATUS";
+            $optionnalm['select'] = "event.id as ID,
+            event.code as CODE,
+            event.type_id as TYPE_ID,
+            event.event_name as TOPIC,
+            event.event_description as DETAIL,
+            event.staff_id as HEAD,
+            event.user_start as OWN,
+            event.date_begin as DBEGIN,
+            event.date_end as DEND,
+            event.time_begin as TBEGIN,
+            event.time_end as TEND,
+            event.status_complete as STATUS";
 
             $optionnalm['join'] = "all";
             $optionnalm['where']['event.id'] = $array['id'];
@@ -280,12 +292,20 @@ class Ctl_line extends MY_Controller
             }
 
             if ($eventData['HEAD'] == $eventData['OWN'] || $eventData['STATUS'] == 5) {
-                $this->get_userID_all($array['id'], $eventData);
+                echo "allllllllllll";
+                print_r('all');
+                // $this->get_userID_all($array['id'], $eventData);
             } else {
-                $this->line_push_message($userId, $eventData);
+                echo "test";
+                print_r('test');
+
+                // $this->line_push_message($userId, $eventData);
             }
 
         } else {
+            echo "false";
+            print_r('false');
+
             $return = array(
                 'txt' => 'ไม่พบข้อมูล',
             );
@@ -371,6 +391,9 @@ class Ctl_line extends MY_Controller
                 }
             }
         }
+print_r($userId);
+echo "=======end";
+        die;
         if (count($userId)) {
             $return = $this->line_push_message($userId, $eventData);
         } else {
