@@ -109,9 +109,6 @@ class Ctl_line extends MY_Controller
             $return = [];
             $optionnal['select'] = "event.staff_id as HEAD,event.user_start as OWN,event.status_complete as STATUS";
 
-            // $optionnal['where']['event.id'] = $array['id'];
-            // $optionnal['where']['event.code'] = $array['code'];
-
             $event_main = $this->mdl_event->get_dataShow($array['id'], $optionnal, "row");
 
             $optionnals['select'] = "event_visitor.id as VID ,event_visitor.event_visitor as VISITOR ";
@@ -125,13 +122,22 @@ class Ctl_line extends MY_Controller
             $return['item_data'] = $array['data'];
             $return['user_action'] = $array['user_action'];
 
-            if ($array['user_action'] == $event_main['HEAD'] && $array['user_action'] != $event_main['OWN']) {
+            // เช็คว่าเป็นใครใน card
+            if ($array['user_action'] == $event_main['HEAD']) { // ประธาน
+                $return['role'] = 'head'; 
+                $return['status'] = $event_main['STATUS'];
+            } elseif ($event_vis->VISITOR) { // ผู้เข้าร่วม
+                $return['role'] = 'vis';
+                $return['vid'] = $event_vis->VID;
+            }
+
+            /* if ($array['user_action'] == $event_main['HEAD'] && $array['user_action'] != $event_main['OWN']) {
                 $return['role'] = 'child';
                 $return['status'] = $event_main['STATUS'];
             } elseif ($event_vis->VISITOR) {
                 $return['role'] = 'vis';
                 $return['vid'] = $event_vis->VID;
-            }
+            } */
 
         }
 
@@ -142,7 +148,6 @@ class Ctl_line extends MY_Controller
     public function url_respond()
     {
         $array = $this->input->post();
-        // $return['error'] = 1;
         if (count($array)) {
             $data = [];
             $return = [];
@@ -151,7 +156,7 @@ class Ctl_line extends MY_Controller
             $data['item_data'] = $array['data'];
             $data['user_action'] = $array['user_action'];
 
-            if ($array['role'] == 'child') {
+            /* if ($array['role'] == 'child') {
                 if ($array['status'] == 1) {
                     $return = $this->crud_valid->approval($data);
 
@@ -170,7 +175,28 @@ class Ctl_line extends MY_Controller
                     );
                     echo json_encode($return);
                 }
-            } elseif ($array['role'] == 'vis') {
+            } */
+
+            if ($array['role'] == 'head') { // ถ้าเป็นประธาน
+                if ($array['status'] == 1) {
+                    $return = $this->crud_valid->approval($data);
+
+                    $this->get_userID_respond($array, $return);
+
+                    if ($array['data'] == 3) {
+                        echo json_encode($return);
+                    } else {
+                        $this->get_userID($array['id']);
+                    }
+
+                } else {
+                    $return = array(
+                        'error' => 1,
+                        'txt' => 'ไม่สามารถทำรายการซ้ำได้',
+                    );
+                    echo json_encode($return);
+                }
+            } elseif ($array['role'] == 'vis') { // ถ้าเป็นผู้เข้าร่วม
                 $data['vid'] = $array['vid'];
                 if ($array['reason']) {
                     $data['reason'] = $array['reason'];
@@ -246,7 +272,7 @@ class Ctl_line extends MY_Controller
         $return = [];
         $userId = [];
         $array = [];
-        print_r($this->input->post());
+        // print_r($this->input->post());
 
         $array = $this->input->post();
         if ($forward) {
@@ -268,9 +294,9 @@ class Ctl_line extends MY_Controller
             event.status_complete as STATUS";
 
             $optionnalm['join'] = "all";
-            $optionnalm['where']['event.id'] = $array['id'];
+            // $optionnalm['where']['event.id'] = $array['id'];
 
-            $eventData = (array) $this->mdl_event->get_dataShow(null, $optionnalm, "row");
+            $eventData = (array) $this->mdl_event->get_dataShow($array['id'], $optionnalm, "row");
 
             $optionnale['select'] = 'staff.user_id as userId';
 
@@ -292,6 +318,13 @@ class Ctl_line extends MY_Controller
             }
 
             if ($eventData['HEAD'] == $eventData['OWN'] || $eventData['STATUS'] == 5) {
+                $this->flex_message_head($userId, $eventData);
+                $this->get_userID_all($array['id'], $eventData);
+            } else {
+                $this->line_push_message($userId, $eventData);
+            }
+/* 
+            if ($eventData['HEAD'] == $eventData['OWN'] || $eventData['STATUS'] == 5) {
                 echo "allllllllllll";
                 print_r('all');
                 // $this->get_userID_all($array['id'], $eventData);
@@ -301,10 +334,10 @@ class Ctl_line extends MY_Controller
 
                 // $this->line_push_message($userId, $eventData);
             }
-
+ */
         } else {
-            echo "false";
-            print_r('false');
+            // echo "false";
+            // print_r('false');
 
             $return = array(
                 'txt' => 'ไม่พบข้อมูล',
@@ -342,6 +375,9 @@ class Ctl_line extends MY_Controller
 
                 }
             }
+            /* print_r($userId);
+            return $userId;
+            die; */
         } else {
             $array = $this->input->post();
             if (count($array)) {
@@ -391,9 +427,7 @@ class Ctl_line extends MY_Controller
                 }
             }
         }
-print_r($userId);
-echo "=======end";
-        die;
+
         if (count($userId)) {
             $return = $this->line_push_message($userId, $eventData);
         } else {
@@ -444,6 +478,236 @@ echo "=======end";
             $messages['messages'][] = $decode;
             $encode = json_encode($messages);
             $this->sentMessage($encode, $datas);
+        }
+        return $return;
+    }
+
+    public function flex_message_head($userId = [], $eventData = [])
+    {
+        $return['error'] = "ไม่พบข้อมูล";
+        // die;
+        if (count($userId) && count($eventData)) {
+            if ($eventData['TYPE_ID'] < 4) {
+
+                $return['error'] = null;
+                $return['msg'] = 'สำเร็จ';
+                $return = [];
+                $id = $eventData['ID'];
+                $code = $eventData['CODE'];
+                $head = $eventData['HEAD'];
+                $head_name = $eventData['HEAD_NAME'];
+                $topic_full = $eventData['TOPIC'];
+                $msg = $eventData['TYPE'];
+                $detail_full = $eventData['DETAIL'];
+
+                if (strlen($topic_full) > 25) {
+                    $topic = substr($topic_full, 0, 25) . "...";
+                } else {
+                    $topic = $topic_full;
+                }
+
+                if (strlen($detail_full) > 100) {
+                    $detail = substr($detail_full, 0, 100) . "...";
+                } else {
+                    $detail = $detail_full;
+                }
+
+                if ($eventData['DBEGIN'] == $eventData['DEND']) {
+                    $date = date('d/m/Y', strtotime($eventData['DBEGIN']));
+                } else {
+                    $date = date('d/m/Y', strtotime($eventData['DBEGIN'])) . " - " . date('d/m/Y', strtotime($eventData['DEND']));
+                }
+
+                $time = date('H:i', strtotime($eventData['TBEGIN'])) . " - " . date('H:i', strtotime($eventData['TEND'])) . " น.";
+
+                foreach ($userId as $key => $val) {
+                    $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line?id=" . $id . "&code=" . $code . "&user_action=" . $key;
+                    // $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line?id=" . $id . "&code=" . $code . "&user_action=" . $key;
+                    $JsonData = '{
+                "type": "flex",
+                "altText": "' . $msg . '",
+                "contents": {
+                  "type": "carousel",
+                  "contents": [
+                    {
+                        "type": "bubble",
+                        "body": {
+                          "type": "box",
+                          "layout": "vertical",
+                          "spacing": "md",
+                          "contents": [
+                            {
+                              "type": "text",
+                              "text": "' . $msg . '",
+                              "weight": "bold",
+                              "size": "xl",
+                              "gravity": "center",
+                              "wrap": true,
+                              "contents": []
+                            },
+                            {
+                              "type": "box",
+                              "layout": "vertical",
+                              "spacing": "sm",
+                              "margin": "lg",
+                              "contents": [
+                                {
+                                  "type": "box",
+                                  "layout": "baseline",
+                                  "spacing": "sm",
+                                  "contents": [
+                                    {
+                                      "type": "text",
+                                      "text": "หัวข้อ",
+                                      "size": "sm",
+                                      "color": "#AAAAAA",
+                                      "flex": 1,
+                                      "contents": []
+                                    },
+                                    {
+                                      "type": "text",
+                                      "text": "' . $topic . '",
+                                      "size": "sm",
+                                      "color": "#666666",
+                                      "flex": 1,
+                                      "wrap": true,
+                                      "contents": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "box",
+                                  "layout": "baseline",
+                                  "spacing": "sm",
+                                  "contents": [
+                                    {
+                                      "type": "text",
+                                      "text": "เนื้อหา",
+                                      "size": "sm",
+                                      "color": "#AAAAAA",
+                                      "flex": 1,
+                                      "contents": []
+                                    },
+                                    {
+                                      "type": "text",
+                                      "text": "' . $detail . '",
+                                      "size": "sm",
+                                      "color": "#666666",
+                                      "flex": 1,
+                                      "wrap": true,
+                                      "contents": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "box",
+                                  "layout": "baseline",
+                                  "spacing": "sm",
+                                  "contents": [
+                                    {
+                                      "type": "text",
+                                      "text": "นำโดย",
+                                      "size": "sm",
+                                      "color": "#AAAAAA",
+                                      "flex": 1,
+                                      "contents": []
+                                    },
+                                    {
+                                      "type": "text",
+                                      "text": "' . $head_name . '",
+                                      "size": "sm",
+                                      "color": "#666666",
+                                      "flex": 1,
+                                      "wrap": true,
+                                      "contents": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "box",
+                                  "layout": "baseline",
+                                  "spacing": "sm",
+                                  "contents": [
+                                    {
+                                      "type": "text",
+                                      "text": "วันที่",
+                                      "size": "sm",
+                                      "color": "#AAAAAA",
+                                      "flex": 1,
+                                      "contents": []
+                                    },
+                                    {
+                                      "type": "text",
+                                      "text": "' . $date . '",
+                                      "size": "sm",
+                                      "color": "#666666",
+                                      "flex": 1,
+                                      "wrap": true,
+                                      "contents": []
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "box",
+                                  "layout": "baseline",
+                                  "spacing": "sm",
+                                  "contents": [
+                                    {
+                                      "type": "text",
+                                      "text": "เวลา",
+                                      "size": "sm",
+                                      "color": "#AAAAAA",
+                                      "flex": 2,
+                                      "contents": []
+                                    },
+                                    {
+                                      "type": "text",
+                                      "text": "' . $time . '",
+                                      "size": "sm",
+                                      "color": "#666666",
+                                      "flex": 2,
+                                      "wrap": true,
+                                      "contents": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "footer": {
+                          "type": "box",
+                          "layout": "vertical",
+                          "spacing": "md",
+                          "contents": [
+                            
+                            {
+                              "type": "button",
+                              "style": "link",
+                              "height": "sm",
+                              "action": {
+                                "type": "uri",
+                                "label": "ตรวจสอบข้อมูล",
+                                "uri": "' . $uri1 . '"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                  ]
+                }
+              }';
+
+                    $decode = json_decode($JsonData, true);
+                    $datas['url'] = "https://api.line.me/v2/bot/message/push";
+                    // $datas['token'] = "02ejLbhxaoS4P7XL4JNk0jXGlVC3cXaBOGOGz4YGUahQs/87sipArCHt9AWUL+MsQBADAp4Lnn4kdT/xI8GdbpRf4msSrV85qGm/Sb3AlRrZdaDXAHMoTHa0Wb2bkQK5BpuXOIp8ZZJIiM/JYMnGZgdB04t89/1O/w1cDnyilFU=";
+                    $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU=";
+                    $messages['to'] = $val;
+                    $messages['messages'][] = $decode;
+                    $encode = json_encode($messages);
+                    $this->sentMessage($encode, $datas);
+                }
+            }
         }
         return $return;
     }

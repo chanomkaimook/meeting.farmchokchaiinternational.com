@@ -107,7 +107,7 @@
                             <?php
 foreach ($staff as $key => $val) {
     ?>
-                            <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
+                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
                             <?php
 }
 ?>
@@ -432,7 +432,7 @@ foreach ($time as $value) {
                                 <?php
 foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
+                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
                                 </option>
                                 <?php
 }
@@ -587,12 +587,12 @@ foreach ($time as $value) {
                         <div class="col-6 mb-2">
                             <label class="control-label">นำโดย <span class="text-danger">*</span> </label>
 
-                            <select class="form-control form-white" name="update-head" required required>
+                            <select class="form-control form-white" name="update-head" required>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
 foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val->ID;?>"><?=$val->staff_name;?>
+                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
                                 </option>
                                 <?php
 }
@@ -697,7 +697,7 @@ foreach ($time as $value) {
                         <!-- <input autocomplete="off" type="text" value="นาย A,นาย C,นาย E" data-role="tagsinput" name="detail-visitor"/> -->
                         <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple"
                             name="update-visitor">
-                            <option value="">ระบูรายชื่อ</option>
+                            <!-- <option value="">ระบูรายชื่อ</option> -->
                             <?php foreach ($employee as $emp) {
     ?>
                             <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?></option>

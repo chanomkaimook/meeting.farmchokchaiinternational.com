@@ -73,8 +73,9 @@ $('.insert-car').click(function() {
 $('.insert-meeting-room').click(function() {
     modal_show(insert_modal_meeting)
 
+    $(insert_modal_meeting).find('select[name=insert-visitor]').val(null).trigger('change');
     $(insert_modal_meeting).find("#insert-meeting").trigger("reset")
-    $(insert_modal_meeting).find("ul.select2-selection__rendered").empty()
+    // $(insert_modal_meeting).find("ul.select2-selection__rendered").empty()
     $(insert_modal_meeting).find(".modal-title").html("จองห้องประชุม")
     $(insert_modal_meeting).find("input[name=insert-rooms-id]").removeAttr("disabled")
     $(insert_modal_meeting).find(".meeting-room").removeClass("d-none")
@@ -86,9 +87,10 @@ $('.insert-meeting-room').click(function() {
 
 $('.insert-meeting').click(function() {
     modal_show(insert_modal_meeting)
-
+// console.log(123)
+    $(insert_modal_meeting).find('select[name=insert-visitor]').val(null).trigger('change');
     $(insert_modal_meeting).find("#insert-meeting").trigger("reset")
-    $(insert_modal_meeting).find("ul.select2-selection__rendered").empty()
+    // $(insert_modal_meeting).find("ul.select2-selection__rendered").empty()
     $(insert_modal_meeting).find(".modal-title").html("นัดหมายกิจกรรม")
     $(insert_modal_meeting).find("input[name=insert-rooms-id]").attr("disabled")
     $(insert_modal_meeting).find(".meeting-room").addClass("d-none")
@@ -239,7 +241,7 @@ function swal_confirm(text, color, func, data, ctl) {
     }).then((result) => {
         if (result.isConfirmed) {
             if (func == "approval") {
-                approval(data, text)
+                approval(data, text, ctl)
             } else if (func == "invitation") {
                 invitation(data, ctl)
             } else if (func == "processing") {
@@ -282,7 +284,6 @@ function insert_meeting(insert_data, ctl) {
 function update_meeting(update_data, ctl) {
     let url = new URL('appointment/' + ctl + '/update_data', domain);
 
-    // let url = ctl + "/update_data"
     fetch(url, {
             method: 'post',
             body: update_data
@@ -294,9 +295,9 @@ function update_meeting(update_data, ctl) {
                 swal_error(resp.error, "update")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                if (resp.data.status == 1) {
-                    notification(resp.data.id)
-                }
+                notification(resp.data.id)
+                // if (resp.data.status == 1) {
+                // }
             }
         })
 }
@@ -318,7 +319,7 @@ function delete_meeting(delete_data, ctl) {
         })
 }
 
-function approval(data, text) {
+function approval(data, text, ctl) {
     let url = new URL('appointment/' + ctl + '/approval', domain);
 
     // let url = ctl + "/approval"

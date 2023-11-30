@@ -42,13 +42,13 @@ body {
                         <div class="col-md-8 col-lg-6 col-xl-5">
                             <div class="card mb-0">
 
-                                <div class="card-body p-4 form-container">
+                                <div class="card-body pt-20 form-container">
 
                                     <div class="account-box">
                                         <div class="account-logo-box">
                                             <div class="text-center">
                                             </div>
-                                            <div class="text-center">
+                                            <div class="text-center" style="padding-top:10rem;">
                                                 <h2 class="text-uppercase mb-1 text-center title">type</h2>
                                                 <h4 class="text-uppercase mb-1 text-center status-complete">status</h4>
                                             </div>
@@ -125,211 +125,206 @@ body {
                                                             value="" placeholder="17:30" name="timee" readonly>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-6 mb-2 d-none" data-visitor="true">
-                                                        <h5 class="control-h5">ผู้เข้าร่วม</h5>
-                                                        <h5 class="visitor-name">
+                                                <div class="form-group" data-visitor="true">
+                                                    <h5 class="control-h5">ผู้เข้าร่วม</h5>
+                                                    <p class="visitor-name">
 
-                                                        </h5>
-                                                    </div>
-                                                    <div class="col-6 mb-2">
-                                                        <h5 class="control-h5">ผู้สร้างแบบฟอร์ม</h5>
-                                                        <h5 class="user-start-name">
+                                                    </p>
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="control-h5">ผู้สร้างแบบฟอร์ม</h5>
+                                                    <h5 class="user-start-name">
 
-                                                        </h5>
-                                                    </div>
+                                                    </h5>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
+                                <!-- end card-body -->
                             </div>
-                            <!-- end card-body -->
+                            <!-- end card -->
                         </div>
-                        <!-- end card -->
+                        <!-- end row -->
                     </div>
-                    <!-- end row -->
+                    <!-- end container -->
                 </div>
-                <!-- end container -->
+                <!-- end page -->
             </div>
-            <!-- end page -->
+
+
+            <input type="hidden" name="id" value="<?=$_GET['id']?>">
+            <input type="hidden" name="code" value="<?=$_GET['code']?>">
+            <input type="hidden" name="data" value="<?=$_GET['data']?>">
+            <input type="hidden" name="user_action" value="<?=$_GET['user_action']?>">
         </div>
 
+        <script src="<?=base_url('')?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
 
-        <input type="hidden" name="id" value="<?=$_GET['id']?>">
-        <input type="hidden" name="code" value="<?=$_GET['code']?>">
-        <input type="hidden" name="data" value="<?=$_GET['data']?>">
-        <input type="hidden" name="user_action" value="<?=$_GET['user_action']?>">
-    </div>
-
-    <script src="<?=base_url('')?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
-
-    <script>
-    let domain
-    if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
-        domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[
-            1] + '/'
-    } else {
-        domain = window.location.protocol + '//' + window.location.hostname + '/'
-    } // let domain = window.location.origin
-    $(document).ready(function() {
-        $("form#detail").find('div[data-visitor=true]').removeClass('d-none')
-        $('.form-container').addClass('d-none')
-
-        if ($('[name=data]').val()) {
-            $('.form-container').addClass('d-none')
-            check_role()
+        <script>
+        let domain
+        if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
+            domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split(
+                '/')[
+                1] + '/'
         } else {
-            get_data()
+            domain = window.location.protocol + '//' + window.location.hostname + '/'
+        } // let domain = window.location.origin
+        $(document).ready(function() {
+            $("form#detail").find('div[data-visitor=true]').addClass('d-none')
+            $('.form-container').addClass('d-none')
 
-        }
+            if ($('[name=data]').val()) {
+                $('.form-container').addClass('d-none')
+                check_role()
+            } else {
+                get_data()
 
-        function get_data() {
-            $('.form-container').removeClass('d-none')
-            let id = $('div.respond').find('input[name=id]').val(),
-                code = $('div.respond').find('input[name=code]').val(),
-                user_action = $('div.respond').find('input[name=user_action]').val(),
-                dataArray = new FormData()
+            }
 
-            dataArray.append('id', id),
-                dataArray.append('code', code),
-                dataArray.append('user_action', user_action)
+            function get_data() {
+                $('.form-container').removeClass('d-none')
+                let id = $('div.respond').find('input[name=id]').val(),
+                    code = $('div.respond').find('input[name=code]').val(),
+                    user_action = $('div.respond').find('input[name=user_action]').val(),
+                    dataArray = new FormData()
 
-
-            let url = new URL("appointment/ctl_line/get_data", domain);
-            fetch(url, {
-                    method: 'post',
-                    body: dataArray
-                }).then(res => res.json())
-                .then((resp) => {
-
-                    console.log(resp)
+                dataArray.append('id', id),
+                    dataArray.append('code', code),
+                    dataArray.append('user_action', user_action)
 
 
-                    $(".account-box").find('h2.title').text(resp.TYPE)
-                    $(".account-box").find('h4.status-complete').text(resp.STATUS_COMPLETE_NAME)
-                    $("form#detail").find('[name=name]').val(resp.EVENT_NAME)
-                    $("form#detail").find('[name=head]').val(resp.HEAD_FULLNAME)
-                    $("form#detail").find('[name=status-inline-text]').val(resp.STATUS_HEAD)
-                    $("form#detail").find('[name=rooms-name]').val(resp.ROOMS_NAME)
-                    $("form#detail").find('[name=description]').val(resp.EVENT_DESCRIPTION)
-                    $("form#detail").find('[name=dates]').val(resp.DATE_BEGIN)
-                    $("form#detail").find('[name=datee]').val(resp.DATE_END)
-                    $("form#detail").find('[name=times]').val(resp.TIME_BEGIN)
-                    $("form#detail").find('[name=timee]').val(resp.TIME_END)
-                    $("form#detail").find('h5.user-start-name').text(resp.USER_START_FULLNAME)
+                let url = new URL("appointment/ctl_line/get_data", domain);
+                fetch(url, {
+                        method: 'post',
+                        body: dataArray
+                    }).then(res => res.json())
+                    .then((resp) => {
 
-                    if (resp.VISITOR) {
-                        $("form#detail").find('div[data-visitor=true]').removeClass('d-none')
+                        $(".account-box").find('h2.title').text(resp.TYPE)
+                        $(".account-box").find('h4.status-complete').text(resp.STATUS_COMPLETE_NAME)
+                        $("form#detail").find('[name=name]').val(resp.EVENT_NAME)
+                        $("form#detail").find('[name=head]').val(resp.HEAD_FULLNAME)
+                        $("form#detail").find('[name=status-inline-text]').val(resp.STATUS_HEAD)
+                        $("form#detail").find('[name=rooms-name]').val(resp.ROOMS_NAME)
+                        $("form#detail").find('[name=description]').val(resp.EVENT_DESCRIPTION)
+                        $("form#detail").find('[name=dates]').val(resp.DATE_BEGIN)
+                        $("form#detail").find('[name=datee]').val(resp.DATE_END)
+                        $("form#detail").find('[name=times]').val(resp.TIME_BEGIN)
+                        $("form#detail").find('[name=timee]').val(resp.TIME_END)
+                        $("form#detail").find('h5.user-start-name').text(resp.USER_START_FULLNAME)
 
-                        let status_vis = "",
-                            vis_html = "",
-                            vis_data = [],
-                            btn_action;
-                        for (let i = 0; i < resp.VISITOR.length; i++) {
-                            if (resp.VISITOR[i].STATUS_COMPLETE == 1) {
-                                status_vis =
-                                    `<span>รอตอบรับ</span>`
-                            } else if (resp.VISITOR[i].STATUS_COMPLETE == 2) {
-                                status_vis =
-                                    `<span>เข้าร่วม</span>`
-                            } else if (resp.VISITOR[i].STATUS_COMPLETE == 3) {
-                                status_vis =
-                                    `<span>ปฏิเสธ เนื่องจาก ${resp.VISITOR[i].STATUS_REMARK}</span>`
+                        if (resp.VISITOR) {
+                            $("form#detail").find('div[data-visitor=true]').removeClass('d-none')
+
+                            let vis_data = "",
+                                vis_html = "",
+                                btn_action;
+                            
+                            for (let i = 0; i < resp.VISITOR.length; i++) {
+                                j = i + 1
+                                if (resp.VISITOR[i].STATUS_COMPLETE == 1) {
+                                    vis_data =
+                                        `<p class="h5" style="color: #888;">${j+'. '+resp.VISITOR[i].VNAME + ' ' + resp.VISITOR[i].VLNAME} <span> รอตอบรับ</span></p>`
+                                } else if (resp.VISITOR[i].STATUS_COMPLETE == 2) {
+                                    vis_data =
+                                        `<p class="h5">${j+'. '+resp.VISITOR[i].VNAME + ' ' + resp.VISITOR[i].VLNAME} <span> เข้าร่วม</span></p>`
+                                } else if (resp.VISITOR[i].STATUS_COMPLETE == 3) {
+                                    vis_data =
+                                        `<p class="h5 text-danger">${j+'. '+resp.VISITOR[i].VNAME + ' ' + resp.VISITOR[i].VLNAME} <span>ปฏิเสธ เนื่องจาก ${resp.VISITOR[i].STATUS_REMARK}</span></p>`
+                                }
+
+                                vis_html = vis_html + vis_data
                             }
 
-                            vis_html = vis_html + resp.VISITOR[i].VNAME + ' ' + resp.VISITOR[i].VLNAME +
-                                ' ' + status_vis +
-                                '<br>'
+                            $("form#detail").find('p.visitor-name').html(vis_html)
+                        }
+                    })
+            }
+
+            function check_role() {
+                let id = $('div.respond').find('input[name=id]').val(),
+                    code = $('div.respond').find('input[name=code]').val(),
+                    data = $('div.respond').find('input[name=data]').val(),
+                    user_action = $('div.respond').find('input[name=user_action]').val(),
+                    dataArray = new FormData()
+
+                dataArray.append('id', id),
+                    dataArray.append('code', code),
+                    dataArray.append('data', data),
+                    dataArray.append('user_action', user_action)
+
+
+                let url = new URL("appointment/ctl_line/check_role", domain);
+                fetch(url, {
+                        method: 'post',
+                        body: dataArray
+                    })
+                    .then(res => res.json())
+                    .then((resp) => {
+                        if (resp.role == 'head') {
+                            dataArray.append('status', resp.status)
+                            dataArray.append('role', resp.role)
+                        } else {
+                            dataArray.append('role', resp.role)
+                            dataArray.append('vid', resp.vid)
                         }
 
-                        $("form#detail").find('h5.visitor-name').html(vis_html)
-                    }
-                })
-        }
+                        if (data == 3 && resp.role == 'vis') {
+                            swal_reason(dataArray)
+                        } else {
+                            swal(dataArray)
+                        }
+                    })
+            }
 
-        function check_role() {
-            let id = $('div.respond').find('input[name=id]').val(),
-                code = $('div.respond').find('input[name=code]').val(),
-                data = $('div.respond').find('input[name=data]').val(),
-                user_action = $('div.respond').find('input[name=user_action]').val(),
-                dataArray = new FormData()
+            function swal_reason(data) {
+                Swal.fire({
+                    title: "กรุณาระบุเหตุผลที่ไม่เข้าร่วม",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "ยืนยัน",
+                    showLoaderOnConfirm: true,
+                    preConfirm: async (reason) => {
+                        if (!reason) {
+                            Swal.showValidationMessage(`กรุณาระบุ`);
+                        } else {
+                            return data.append('reason', reason)
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    swal(data)
+                });
+            }
 
-            dataArray.append('id', id),
-                dataArray.append('code', code),
-                dataArray.append('data', data),
-                dataArray.append('user_action', user_action)
+            function swal(data) {
+                let url = new URL("appointment/ctl_line/url_respond", domain);
+                // console.log(data)
+                fetch(url, {
+                        method: 'post',
+                        body: data
+                    }).then(res => res.json())
+                    .then((resp) => {
+                        console.log(resp)
 
-
-            let url = new URL("appointment/ctl_line/check_role", domain);
-            fetch(url, {
-                    method: 'post',
-                    body: dataArray
-                })
-                .then(res => res.json())
-                .then((resp) => {
-                    if (resp.role == 'child') {
-                        dataArray.append('status', resp.status)
-                        dataArray.append('role', resp.role)
-                    } else {
-                        dataArray.append('role', resp.role)
-                        dataArray.append('vid', resp.vid)
-                    }
-
-                    if (data == 3 && resp.role == 'vis') {
-                        swal_reason(dataArray)
-                    } else {
-                        swal(dataArray)
-                    }
-                })
-        }
-
-        function swal_reason(data) {
-            Swal.fire({
-                title: "กรุณาระบุเหตุผลที่ไม่เข้าร่วม",
-                input: "text",
-                inputAttributes: {
-                    autocapitalize: "off"
-                },
-                showCancelButton: true,
-                confirmButtonText: "ยืนยัน",
-                showLoaderOnConfirm: true,
-                preConfirm: async (reason) => {
-                    if (!reason) {
-                        Swal.showValidationMessage(`กรุณาระบุ`);
-                    } else {
-                        return data.append('reason', reason)
-                    }
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-                swal(data)
-            });
-        }
-
-        function swal(data) {
-            let url = new URL("appointment/ctl_line/url_respond", domain);
-            console.log(data)
-            fetch(url, {
-                    method: 'post',
-                    body: data
-                }).then(res => res.json())
-                .then((resp) => {
-                    console.log(resp)
-
-                    if (resp.error) {
-                        Swal.fire("ไม่สำเร็จ", resp.txt, "error")
-                            .then(() => {
-                                get_data()
-                            });
-                    } else {
-                        Swal.fire("สำเร็จ", "", "success")
-                            .then(() => {
-                                get_data()
-                            });
-                    }
-                })
-        }
-    })
-    </script>
+                        if (resp.error) {
+                            Swal.fire("ไม่สำเร็จ", resp.txt, "error")
+                                .then(() => {
+                                    get_data()
+                                });
+                        } else {
+                            Swal.fire("สำเร็จ", "", "success")
+                                .then(() => {
+                                    get_data()
+                                });
+                        }
+                    })
+            }
+        })
+        </script>
 </body>

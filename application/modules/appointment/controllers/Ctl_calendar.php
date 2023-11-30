@@ -24,7 +24,7 @@ class Ctl_calendar extends MY_Controller
             'staff.employee_id' => $this->user_emp,
         );
 
-        $data['staff'] = $this->mdl_staff->get_dataShow(null, $optionnal_staff);
+        $staff[] = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
 
         $optionnal_role['where'] = array(
             'staff_owner' => $this->user_emp,
@@ -32,15 +32,18 @@ class Ctl_calendar extends MY_Controller
         $role_focus = $this->mdl_role_focus->get_data(null, $optionnal_role);
         if (count($role_focus)) {
             foreach ($role_focus as $key => $val) {
-                $optionnal_staff['where'] = array(
+                $optionnal_rolef['where'] = array(
                     'staff.employee_id' => $val->STAFF_CHILD,
                 );
-                $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
-            }
-            if ($staff) {
-                $data['staff'][] = $staff;
+                $staff1 = (array) $this->mdl_staff->get_dataShow(null, $optionnal_rolef, "row");
+                if ($staff1) {
+                    $staff[] = $staff1;
+                }
             }
         }
+
+        $data['staff'] = $staff;
+
         $data['time'] = $this->mdl_calendar->get_time();
 
         $optionnalr['where'] = array(
@@ -156,9 +159,9 @@ class Ctl_calendar extends MY_Controller
                         $attr = $this->status($dataVal["STATUS_COMPLETE"], $state);
 
                         $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
-                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp,"row");
+                        $emp = $this->mdl_staff->get_dataShow($dataVal['USER_START'], $optionnal_emp, "row");
 
-                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp,"row");
+                        $head = $this->mdl_staff->get_dataShow($dataVal['STAFF_ID'], $optionnal_emp, "row");
 
                         $Calendar[$i] = $dataVal;
                         $Calendar[$i]['EMP_ID'] = $head->EMP_ID;
@@ -192,9 +195,9 @@ class Ctl_calendar extends MY_Controller
 
                                 $optionnal_vis['select'] = "employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                                 $optionnal_vis['where'] = array(
-                                    'staff.employee_id' => $vis_val->EVENT_VISITOR,
+                                    'employee.id' => $vis_val->EVENT_VISITOR,
                                 );
-                                $vis_emp = $this->mdl_staff->get_dataShow(null, $optionnal_vis, "row");
+                                $vis_emp = $this->mdl_employee->get_dataShow(null, $optionnal_vis, "row");
 
                                 $Calendar[$i]['VISITOR'][$j]['EID'] = $vis_val->ID;
                                 $Calendar[$i]['VISITOR'][$j]['VID'] = $vis_val->EVENT_VISITOR;
@@ -377,8 +380,8 @@ class Ctl_calendar extends MY_Controller
                     $optionnal_staff['where'] = array(
                         'staff.employee_id' => $sid->STAFF_CHILD,
                     );
-                    
-                    $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
+
+                    $staff = $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
 
                     if ($optionnal_status['child']) {
                         $optionnal_c['where'] = $optionnal_status['child'];

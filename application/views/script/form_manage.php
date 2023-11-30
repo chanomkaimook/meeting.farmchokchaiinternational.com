@@ -653,7 +653,8 @@ function form_displayed_data(data, modal_detail, modal_update) {
         $(modal_detail).find('h5.visitor-name').html(vis_html)
 
     } else {
-        $(modal_update).find("ul.select2-selection__rendered").empty()
+        // $(modal_update).find("ul.select2-selection__rendered").empty()
+        $(modal_update).find('select[name=update-visitor]').val(null).trigger('change');
 
     }
 
