@@ -74,7 +74,7 @@ if ($this->session->has_userdata('user_code')) {
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-12">
-                                                    <a class="text-muted float-right"><small>ลืมรหัสผ่าน?</small></a>
+                                                    <!-- <a class="text-muted float-right"><small>ลืมรหัสผ่าน?</small></a> -->
                                                     <label for="password">รหัสผ่าน</label>
                                                     <input type="password" id="password" name="password" class="form-control" placeholder="รหัสผ่าน" required>
 
@@ -86,10 +86,10 @@ if ($this->session->has_userdata('user_code')) {
                                                     <button class="btn btn-md btn-block btn-primary waves-effect waves-light" id="btn_login" type="submit">เข้าสู่ระบบ</button>
                                                 </div>
                                             </div>
-                                            <div class="text-center">
+                                            <h5 class="text-center">
                                                 <?php echo anchor('token/ctl_token', 'หากไม่มีรหัส ลงทะเบียน', 'title="ลงทะเบียน"'); ?>
 
-                                            </div>
+                                            </h5>
 
                                             <div class="text-center">
                                                 <img class="avatar-xl" src="https://qr-official.line.me/sid/L/886whswd.png" alt="qrcode">

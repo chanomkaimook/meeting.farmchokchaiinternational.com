@@ -101,7 +101,7 @@ function swal_setConfirm(title = 'ยืนยันการลบ', text = '�
     return {
         title: title,
         text: text,
-        type: 'question',
+        icon: 'question',
         showCancelButton: true,
         confirmButtonColor: swal_confirmButton,
         cancelButtonColor: swal_cancelButton,
@@ -115,7 +115,7 @@ function swal_setConfirmInput(title = 'ยืนยันการลบ', text 
     return {
         title: title,
         text: text,
-        type: 'question',
+        icon: 'question',
         input: 'textarea',
         inputAttributes: {
             autocapitalize: 'off'
@@ -149,7 +149,7 @@ function swalalert(type = 'success', text = 'ทำรายการสำเ�
     }
 
     return Swal.fire({
-        type: type,
+        icon: type,
         title: title,
         text: text,
         timer: timeclose_total,

@@ -154,7 +154,7 @@ $(document).ready(function() {
     // let my_id = $('#my-id').val();
     createDatatable(url_main)
     createDraftModal(url_draft)
-
+    
     /**
      * Button modal
      *

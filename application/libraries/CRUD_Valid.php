@@ -74,7 +74,7 @@ class CRUD_Valid
                 );
                 $return = $ci->mdl_staff->insert_data($data);
 
-                if($return['data']['id']){
+                if ($return['data']['id']) {
                     $data = array(
                         'check_line' => '1',
                     );
@@ -308,6 +308,7 @@ class CRUD_Valid
                 $main = $ci->mdl_event->insert_data($dataArray);
 
                 if (!$main['error']) {
+                    $main['data']['user_action'] = $user_action;
                     if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
                         $SubDataArray = array(
                             'event_code' => $code,
@@ -445,6 +446,7 @@ class CRUD_Valid
                 $main = $ci->mdl_event->update_data($dataArray, $item_id);
 
                 if (!$main['error']) {
+                    $main['data']['user_action'] = $user_action;
 
                     if ($status_complete == 1) {
                         $check_approve = $this->auto_approve($item_id, $user_action);
@@ -593,6 +595,7 @@ class CRUD_Valid
             $main = $ci->mdl_event->delete_data($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $main['data']['user_action'] = $user_action;
 
                 $SubwhereArray = array(
                     'event_id' => $item_id,
@@ -650,6 +653,7 @@ class CRUD_Valid
             $main = $ci->mdl_visitor->delete_data($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $main['data']['user_action'] = $user_action;
 
                 $return = $main;
             }
@@ -699,6 +703,7 @@ class CRUD_Valid
             $main = $ci->mdl_event->approval($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $main['data']['user_action'] = $user_action;
 
                 $return = $main;
             }
@@ -744,6 +749,19 @@ class CRUD_Valid
             $main = $ci->mdl_visitor->invitation($dataArray, $whereArray);
 
             if (!$main['error']) {
+
+                $array_opt['select'] = 'event_visitor.event_visitor as VISITOR';
+                $vise = (array) $ci->mdl_visitor->get_dataShow($vid, $array_opt, "row");
+
+                $opt['select'] = "staff.id as SID";
+                $opt['where']['staff.employee_id'] = $vise['VISITOR'];
+                $viss = (array) $ci->mdl_staff->get_dataShow(null, $opt, "row");
+
+                $main['data']['eid'] = $vise['VISITOR'];
+                $main['data']['sid'] = $viss['SID'];
+                $main['data']['user_action'] = $user_action;
+                $main['data']['data'] = $item_data;
+                $main['data']['remark'] = $remark;
 
                 $return = $main;
             }
@@ -794,6 +812,7 @@ class CRUD_Valid
             $main = $ci->mdl_event->processing($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $main['data']['user_action'] = $user_action;
 
                 $return = $main;
             }
@@ -834,6 +853,7 @@ class CRUD_Valid
             $main = $ci->mdl_event->restore($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $main['data']['user_action'] = $user_action;
 
                 $check_approve = $this->auto_approve($item_id, $item_code, $user_action);
                 if (!$check_approve['error']) {

@@ -1,12 +1,5 @@
 <script>
-function notification(event_id) {
-    let returnData = "",
-        array = new FormData();
 
-    array.append('id', event_id)
-    get_userID(array)
-    // console.log(returnData)
-}
 
 function btn_manage(status, role, event_id, event_code, event_vid) {
     $('.action-header').empty()

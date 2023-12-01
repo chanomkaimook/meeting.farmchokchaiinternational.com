@@ -25,10 +25,10 @@ class Ctl_token extends MY_Controller
         // $this->template->set_layout('lay_main');
         // $this->template->title($this->_title);
         // $this->template->build('token');
-        $optional['where'] = array(
+        /* $optional['where'] = array(
             'check_line is null' => null
-        );
-        $data['employee'] = $this->mdl_employee->get_dataShow(null,$optional);
+        ); */
+        $data['employee'] = $this->mdl_employee->get_dataShow();//null,$optional
 
         $this->load->view('token',$data);
 

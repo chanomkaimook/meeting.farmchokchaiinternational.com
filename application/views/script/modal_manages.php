@@ -87,7 +87,7 @@ $('.insert-meeting-room').click(function() {
 
 $('.insert-meeting').click(function() {
     modal_show(insert_modal_meeting)
-// console.log(123)
+    // console.log(123)
     $(insert_modal_meeting).find('select[name=insert-visitor]').val(null).trigger('change');
     $(insert_modal_meeting).find("#insert-meeting").trigger("reset")
     // $(insert_modal_meeting).find("ul.select2-selection__rendered").empty()
@@ -172,7 +172,7 @@ function swal_error(text = [], type) {
 function swal_alert(icon, title, text) {
     Swal.fire(title, text, icon).then((result) => {
 
-        $('.modal').modal('hide')
+        // $('.modal').modal('hide')
 
         let params = new URLSearchParams(url_main.search)
         params.delete("event_id")
@@ -186,6 +186,7 @@ function swal_alert(icon, title, text) {
 }
 
 function swal_reason(data, ctl) {
+    
     Swal.fire({
         title: "กรุณาระบุเหตุผลที่ไม่เข้าร่วม",
         input: "text",
@@ -199,7 +200,7 @@ function swal_reason(data, ctl) {
             if (!reason) {
                 Swal.showValidationMessage(`กรุณาระบุ`);
             } else {
-                return data.append('reason', reason)
+                data.append('reason', reason)
             }
         },
         allowOutsideClick: () => !Swal.isLoading()
@@ -208,6 +209,7 @@ function swal_reason(data, ctl) {
             invitation(data, ctl)
         }
     });
+    $('#swal2-input').focus()
 }
 
 function swal_delete(data, ctl) {
@@ -270,13 +272,11 @@ function insert_meeting(insert_data, ctl) {
         })
         .then(res => res.json())
         .then((resp) => {
-            console.log(resp)
-
             if (resp.error) {
                 swal_error(resp.error, "insert")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                notification(resp.data.id)
+                get_userID(resp.data.id, resp.data.user_action)
             }
         })
 }
@@ -295,7 +295,7 @@ function update_meeting(update_data, ctl) {
                 swal_error(resp.error, "update")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                notification(resp.data.id)
+                get_userID(resp.data.id, resp.data.user_action)
                 // if (resp.data.status == 1) {
                 // }
             }
@@ -334,7 +334,7 @@ function approval(data, text, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 if (text == "อนุมัติ") {
-                    notification(resp.data.id)
+                    get_userID(resp.data.id, resp.data.user_action)
                 }
             }
         })
@@ -354,6 +354,11 @@ function invitation(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                let array = [];
+                array.push(resp.data.data)
+                array.push(resp.data.remark)
+                array.push(resp.data.sid)
+                get_userID(resp.data.id, resp.data.user_action, array)
             }
         })
 }
@@ -390,7 +395,7 @@ function restore(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                notification(resp.data.id)
+                get_userID(resp.data.id, resp.data.user_action)
             }
         })
 }

@@ -195,7 +195,7 @@ body {
                     dataArray.append('user_action', user_action)
 
 
-                let url = new URL("appointment/ctl_line/get_data", domain);
+                let url = new URL("appointment/ctl_line_data/get_data", domain);
                 fetch(url, {
                         method: 'post',
                         body: dataArray
@@ -256,13 +256,14 @@ body {
                     dataArray.append('user_action', user_action)
 
 
-                let url = new URL("appointment/ctl_line/check_role", domain);
+                let url = new URL("appointment/ctl_line_data/check_role", domain);
                 fetch(url, {
                         method: 'post',
                         body: dataArray
                     })
                     .then(res => res.json())
                     .then((resp) => {
+                        // console.log(resp)
                         if (resp.role == 'head') {
                             dataArray.append('status', resp.status)
                             dataArray.append('role', resp.role)
@@ -293,17 +294,17 @@ body {
                         if (!reason) {
                             Swal.showValidationMessage(`กรุณาระบุ`);
                         } else {
-                            return data.append('reason', reason)
+                            data.append('reason', reason)
                         }
                     },
                     allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
+                }).then(() => {
                     swal(data)
                 });
             }
 
             function swal(data) {
-                let url = new URL("appointment/ctl_line/url_respond", domain);
+                let url = new URL("appointment/ctl_line_data/url_respond", domain);
                 // console.log(data)
                 fetch(url, {
                         method: 'post',
