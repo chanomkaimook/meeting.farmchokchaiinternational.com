@@ -1,12 +1,14 @@
 <script>
-function get_userId(event_id, user_action, reply = []) {
+function get_userId(eventData = []) {
     let returnData = "",
         array_userAction = [],
         array_userId = [],
         array_flex = new FormData(),
+        array_reply = new FormData(),
         array = new FormData();
-
-    array.append('id', event_id)
+    // console.log(eventData)
+    // return false
+    array.append('id', eventData['id'])
 
     let url = new URL('appointment/ctl_line_data/get_userId', domain);
     fetch(url, {
@@ -30,76 +32,103 @@ function get_userId(event_id, user_action, reply = []) {
                 array_flex.append('HEAD_NAME', resp.eventData.HEAD_NAME)
                 array_flex.append('TYPE', resp.eventData.TYPE)
 
-                if (!reply.length) {
+                let entries = Object.entries(resp.eventData.userId),
+                    userId = "",
+                    arrayUserId = [],
+                    arrayVID = [];
+
+                entries.forEach(id => {
                     if (resp.eventData.STATUS == 1) {
-
-                        resp.userId.forEach(indexData => {
-                            if (indexData.endsWith(resp.eventData.HEAD)) {
-                                let userId = indexData.split(" ")
-                                array_flex.append('userId', userId[0])
-                                array_userId.push(userId[0])
-                                // flex_head(array_flex)
-
-                            }
-                            // let userId = indexData.split(" ")
-                        });
-
-                        array_flex.append('user_action', resp.eventData.HEAD)
-                        array_flex.append('userId', array_userId)
-                        flex_action(array_flex)
-
-                    } else if (resp.eventData.STATUS == 5) {
-                        resp.userId.forEach(indexData => {
-                            if (indexData.endsWith(resp.eventData.HEAD)) {
-                                let head_userId = indexData.split(" ")
-                                array_flex.append('userId', head_userId[0])
-                                flex_head(array_flex)
-
-                            } else {
-                                let userId = indexData.split(" "),
-                                    vis_userId = [];
-                                vis_userId.push(userId[0])
-                            }
-                        });
-                        array_flex.append('userId', vis_userId)
-                        flex_action(array_flex)
-                    }
-                } else {
-                    // console.log(reply)
-                    let txt = new FormData(),
-                        msg = '';
-                    if (reply[0] == 2) {
-                        msg = "คุณได้เข้าร่วมการ" + resp.eventData.TYPE + " สำเร็จแล้ว";
-                        // txt.append("msg", msg)
-                    } else {
-                        msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE + " เนื่องจาก " + reply[1] +
-                            " สำเร็จแล้ว";
-                    }
-                    if (reply[2] != user_action) {
-                        msg += " โดยผู้สร้างแบบฟอร์ม";
-                    }
-
-                    resp.userId.forEach(indexData => {
-                        if (indexData.endsWith(reply[2])) {
-                            let userId = indexData.split(" ")
-                            txt.append('userId', userId[0])
-
-                            console.log(userId[0])
+                        console.log(id[0])
+                        if (id[0] == resp.eventData.HEAD) {
+                            userId = id[1] + ","
+                            array_flex.append('userId', userId)
+                            array_flex.append('role', "head")
+                            flex_action(array_flex)
+                            return false
                         }
-                    });
-                    console.log(reply)
-                    console.log(msg)
-                    txt.append("msg", msg)
-                    // txt.append('userId', userId)
+                    }
+                    if (resp.eventData.STATUS == 5) {
+                        if (id[0] == resp.eventData.HEAD) {
+                            array_flex.append('userId', id[1])
+                            flex_head(array_flex)
+                        } else {
+                            array_flex.append('role', "visitor")
+                            // console.log(id[1])
+                            if (!eventData['data']) {
+                                arrayVID.push(id[0])
+                                arrayUserId.push(id[1])
+                            } else if (eventData['data']) {
+                                if (id[0] == eventData['sid']) {
+                                    let msg = '';
+                                    if (eventData['data'] == 2) {
+                                        msg = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
+                                            "สำเร็จแล้ว"
+                                    } else if (eventData['data'] == 2) {
+                                        msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
+                                            " เนื่องจาก" + $eventData['remark'] +
+                                            "สำเร็จแล้ว"
+                                    }
 
-                    flex_reply(txt)
+                                    if (eventData['sid'] != eventData['user_action']) {
+                                        msg += "โดยผู้สร้างแบบฟอร์ม";
+                                    }
+                                    array_reply.append('userId', id[1])
+                                    array_reply.append('msg', msg)
+                                    flex_reply(array_reply)
+                                }
+                            }
+                        }
+                    } else {
+                            array_reply.delete('msg')
+                            let msg = '';
+                        if (resp.eventData.STATUS != 1 && resp.eventData.STATUS != 5) {
+                            if (resp.eventData.STATUS == 2) {
+                                msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                    " ดำเนินการสำเร็จแล้ว"
+                            } else if (resp.eventData.STATUS == 3) {
+                                msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                    " ดำเนินการไม่สำเร็จ"
+                            } else if (resp.eventData.STATUS == 4) {
+                                msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                    " ถูกยกเลิกแล้ว"
+                        if (eventData['sid'] != eventData['user_action']) {
+                            msg += " โดยผู้สร้างแบบฟอร์ม";
+                        }
+                            }
+                        }
+
+                        array_reply.append('msg', msg)
+                        if (!resp.eventData.APPROVE) {
+                            array_reply.delete('userId')
+                            if (id[0] == resp.eventData.HEAD) {
+                                array_reply.append('userId', id[1])
+                                flex_reply(array_reply)
+                            }
+                        } else {
+                            array_reply.delete('userId')
+                            array_reply.append('userId', id[1])
+                            flex_reply(array_reply)
+                        }
+                    }
+                });
+
+                if (arrayUserId.length && arrayVID.length) {
+                    // console.log(arrayVID)
+                    array_flex.delete('userId')
+                    array_flex.append('userId', arrayUserId)
+                    array_flex.append('vid', arrayVID)
+                    flex_action(array_flex)
                 }
             }
+
+
 
         })
 }
 
 function flex_reply(data) {
+    // return false
 
     let url = new URL('appointment/ctl_flex_message/flex_message_reply', domain);
     fetch(url, {
@@ -116,7 +145,8 @@ function flex_reply(data) {
 }
 
 function flex_action(data) {
-
+    // return false
+    // console.log(data)
     let url = new URL('appointment/ctl_flex_message/flex_message_action', domain);
     fetch(url, {
             method: 'post',
@@ -132,6 +162,7 @@ function flex_action(data) {
 }
 
 function flex_head(data) {
+    // return false
 
     let url = new URL('appointment/ctl_flex_message/flex_message_head', domain);
     fetch(url, {

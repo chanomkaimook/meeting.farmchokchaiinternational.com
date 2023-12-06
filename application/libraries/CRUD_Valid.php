@@ -309,6 +309,7 @@ class CRUD_Valid
 
                 if (!$main['error']) {
                     $main['data']['user_action'] = $user_action;
+                    $main['data']['status'] = $dataArray['status_complete'];
                     if ($type_id == 1 || $type_id == 4 || $type_id == 3 || $type_id == 6) {
                         $SubDataArray = array(
                             'event_code' => $code,
@@ -703,7 +704,19 @@ class CRUD_Valid
             $main = $ci->mdl_event->approval($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $array_opt['select'] = 'event.staff_id as head';
+                $hid = (array) $ci->mdl_event->get_dataShow($main['data']['id'], $array_opt, "row");
+
+                /* $opt['select'] = "staff.id as SID";
+                $opt['where']['staff.id'] = $vise['VISITOR'];
+                $viss = (array) $ci->mdl_staff->get_dataShow(null, $opt, "row"); */
+
+                $main['data']['sid'] = $hid['head'];
                 $main['data']['user_action'] = $user_action;
+                $main['data']['data'] = $item_data;
+                $main['data']['remark'] = $status_complete_name;
+                $main['data']['status'] = $status_complete;
+
 
                 $return = $main;
             }

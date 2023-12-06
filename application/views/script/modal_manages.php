@@ -276,7 +276,7 @@ function insert_meeting(insert_data, ctl) {
                 swal_error(resp.error, "insert")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                get_userID(resp.data.id, resp.data.user_action)
+                get_userId(resp.data)
             }
         })
 }
@@ -295,7 +295,7 @@ function update_meeting(update_data, ctl) {
                 swal_error(resp.error, "update")
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                get_userID(resp.data.id, resp.data.user_action)
+                get_userId(resp.data)
                 // if (resp.data.status == 1) {
                 // }
             }
@@ -334,7 +334,7 @@ function approval(data, text, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 if (text == "อนุมัติ") {
-                    get_userID(resp.data.id, resp.data.user_action)
+                    get_userId(resp.data)
                 }
             }
         })
@@ -354,11 +354,8 @@ function invitation(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                let array = [];
-                array.push(resp.data.data)
-                array.push(resp.data.remark)
-                array.push(resp.data.sid)
-                get_userID(resp.data.id, resp.data.user_action, array)
+                console.log(resp.data)
+                // get_userId(resp.data)
             }
         })
 }
@@ -395,7 +392,7 @@ function restore(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                get_userID(resp.data.id, resp.data.user_action)
+                get_userId(resp.data)
             }
         })
 }

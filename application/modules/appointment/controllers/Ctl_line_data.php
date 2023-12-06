@@ -11,7 +11,7 @@ class Ctl_line_data extends MY_Controller
 
         // $this->_title = 'ตารางนัดหมาย';
         $this->load->model(array('mdl_event', 'mdl_staff', 'mdl_visitor'));
-        $this->load->library(array('crud_valid','Flex_message'));
+        $this->load->library(array('crud_valid', 'Flex_message'));
         // $this->load->library();
 
         // $this->load->model('mdl_user');
@@ -145,7 +145,7 @@ class Ctl_line_data extends MY_Controller
 
     }
 
-    public function get_userId($id = null, $user_action = null)
+    public function get_userId($id = null, $callback = false)
     {
         $data = [];
         $eventData = [];
@@ -169,6 +169,7 @@ class Ctl_line_data extends MY_Controller
             event.date_end as DEND,
             event.time_begin as TBEGIN,
             event.time_end as TEND,
+            event.approve_date as APPROVE,
             event.status_complete as STATUS";
 
             $optionnalm['join'] = "all";
@@ -178,12 +179,9 @@ class Ctl_line_data extends MY_Controller
             $optionnale['select'] = 'staff.user_id as userId,staff.id as ID';
 
             $data = (array) $this->mdl_staff->get_dataShow($eventData['HEAD'], $optionnale, "row");
+
             if ($data['userId']) {
-              if($user_action)
-              {
-                $eventData['userId'] = $data['userId'];
-              }
-                $userId[] = $data['userId'] . " " . $eventData['HEAD'];
+                $userId[$eventData['HEAD']] = $data['userId'];
             }
 
             $optionnalv['select'] = "event_visitor.event_visitor as VISITOR";
@@ -195,7 +193,7 @@ class Ctl_line_data extends MY_Controller
                     $optionnale['where']['staff.employee_id'] = $value->VISITOR;
                     $visitor_userId = (array) $this->mdl_staff->get_dataShow(null, $optionnale, "row");
                     if ($visitor_userId['userId']) {
-                        $userId[] = $visitor_userId['userId'] . " " . $visitor_userId['ID'];
+                        $userId[$visitor_userId['ID']] = $visitor_userId['userId'];
                     }
                 }
             }
@@ -212,57 +210,29 @@ class Ctl_line_data extends MY_Controller
                 $eventData['TYPE'] = "นัดหมาย #" . $eventData['CODE'];
             }
 
-            /* $eventData['user_action_code'] = $this->user_code;
-            $eventData['user_action_emp'] = $this->user_emp; */
-
+            $eventData['userId'] = $userId;
             $return = array(
                 'error' => 0,
-                'userId' => $userId,
+                'step' => 1,
                 'eventData' => $eventData,
             );
 
         } else {
             $return = array(
                 'error' => 1,
+                'step' => 2,
                 'txt' => 'ไม่พบข้อมูล',
             );
         }
-        if (!$user_action) {
-            echo json_encode($return);
-          } else {
-            
-            $return = $this->flex_message->flex_message_head($eventData);
-            echo json_encode($return);
 
+        if ($callback == true) {
+            return $return;
+        } else {
+            echo json_encode($return);
         }
 
     }
-    /* public function flex_reply()
-    {
-    $data = [];
-    $event_id = $this->input->post('id');
-    if ($event_id) {
-    $data = $this->get_userId($event_id);
-    echo json_encode($data);
-    }
-    }
-    public function flex_action()
-    {
-    $event_id = $this->input->post('id');
-    if ($event_id) {
-    $data = $this->get_userId($event_id);
-    echo json_encode($data);
-    }
-    }
-    public function flex_head()
-    {
-    $event_id = $this->input->post('id');
-    if ($event_id) {
-    $data = $this->get_userId($event_id);
-    echo json_encode($data);
-    }
-    }
-     */
+
     public function url_respond()
     {
         $array = $this->input->post();
@@ -278,12 +248,50 @@ class Ctl_line_data extends MY_Controller
                 if ($array['status'] == 1) {
                     $return = $this->crud_valid->approval($data);
 
-                    // $this->get_userId_respond($array, $return);
-
                     if ($array['data'] == 3) {
                         echo json_encode($return);
                     } else {
-                        $this->get_userId($array['id'], $array['user_action']);
+                        $event = $this->get_userId($array['id'], true);
+                        $eventData = $event['eventData'];
+                        $eventData['user_action'] = $array['user_action'];
+                        if ($eventData['userId'] && count($eventData['userId'])) {
+                            // echo "11111-------------------------------";
+                            $userId = $eventData['userId'];
+                            $head_userId = '';
+                            $visitor_userId = '';
+                            $VID = '';
+                            foreach ($userId as $key => $val) {
+                                if (!empty($val)) {
+                                    if ($key == $array['user_action']) {
+                                        // echo "44444-------------------------------";
+                                        $head_userId = $val;
+                                        // print_r($eventData);
+                                    } else {
+                                        // echo "55555-------------------------------";
+                                        $visitor_userId = $val . " " . $key . " " . $visitor_userId;
+                                        $VID = $key . " " . $VID;
+
+                                    }
+                                }
+                            }
+
+                            echo $VID."<br>";
+                            echo $visitor_userId."<br>";
+                            if ($head_userId) {
+                                $eventData['userId'] = null;
+                                $eventData['userId'] = $head_userId;
+                                $eventData['role'] = "head";
+                                // $this->flex_message->flex_message_head($eventData);
+                            }
+
+                            if ($visitor_userId && $VID) {
+                                $eventData['userId'] = null;
+                                $eventData['userId'] = textShow($visitor_userId);
+                                $eventData['vid'] = textShow($VID);
+                                $eventData['role'] = "visitor";
+                                // $this->flex_message->flex_message_action($eventData);
+                            }
+                        }
                     }
 
                 } else {
@@ -358,100 +366,97 @@ class Ctl_line_data extends MY_Controller
                 }
                 $this->flex_message->flex_message_reply($userId, $eventData['DETAIL']);
             }
-            // print_r($array);
-            // print_r($eventData);
-            // die;
         }
         // echo json_encode($return);
     }
 
-    public function get_userId_all($event_id = null, $eventData = [])
-    {
-        $event_vis = [];
-        $data = [];
-        $return = [];
-        $userId = [];
-        $array = [];
-        if ($event_id && count($eventData)) {
+    // public function get_userId_all($event_id = null, $eventData = [])
+    // {
+    //     $event_vis = [];
+    //     $data = [];
+    //     $return = [];
+    //     $userId = [];
+    //     $array = [];
+    //     if ($event_id && count($eventData)) {
 
-            $optionnals['select'] = "event_visitor.event_visitor as VISITOR";
-            $optionnals['where']['event_visitor.event_id'] = $event_id;
-            $event_vis = (array) $this->mdl_visitor->get_dataShow(null, $optionnals);
+    //         $optionnals['select'] = "event_visitor.event_visitor as VISITOR";
+    //         $optionnals['where']['event_visitor.event_id'] = $event_id;
+    //         $event_vis = (array) $this->mdl_visitor->get_dataShow(null, $optionnals);
 
-            if ($event_vis) {
-                foreach ($event_vis as $key => $value) {
-                    $optionnale['select'] = 'staff.user_id as userId';
-                    $optionnale['where'] = array(
-                        'staff.employee_id' => $value->VISITOR,
-                    );
+    //         if ($event_vis) {
+    //             foreach ($event_vis as $key => $value) {
+    //                 $optionnale['select'] = 'staff.user_id as userId';
+    //                 $optionnale['where'] = array(
+    //                     'staff.employee_id' => $value->VISITOR,
+    //                 );
 
-                    $data = $this->mdl_staff->get_dataShow(null, $optionnale, "row");
-                    if ($data->userId) {
-                        $userId[$value->VISITOR] = $data->userId;
-                    }
+    //                 $data = $this->mdl_staff->get_dataShow(null, $optionnale, "row");
+    //                 if ($data->userId) {
+    //                     $userId[$value->VISITOR] = $data->userId;
+    //                 }
 
-                }
-            }
-        } else {
-            $array = $this->input->post();
-            if (count($array)) {
+    //             }
+    //         }
+    //     } else {
+    //         $array = $this->input->post();
+    //         if (count($array)) {
 
-                $optionnalm['select'] = "event.id as ID,event.code as CODE,event.type_id as TYPE_ID,event.event_name as TOPIC,event.event_description as DETAIL,event.staff_id as HEAD,event.user_start as OWN,event.date_begin as DBEGIN,event.date_end as DEND,event.time_begin as TBEGIN,event.time_end as TEND";
+    //             $optionnalm['select'] = "event.id as ID,event.code as CODE,event.type_id as TYPE_ID,event.event_name as TOPIC,event.event_description as DETAIL,event.staff_id as HEAD,event.user_start as OWN,event.date_begin as DBEGIN,event.date_end as DEND,event.time_begin as TBEGIN,event.time_end as TEND";
 
-                $optionnalm['join'] = "all";
+    //             $optionnalm['join'] = "all";
 
-                $eventData = (array) $this->mdl_event->get_dataShow($array['id'], $optionnalm, "row");
+    //             $eventData = (array) $this->mdl_event->get_dataShow($array['id'], $optionnalm, "row");
 
-                $optionnale['select'] = 'staff.user_id as userId';
+    //             $optionnale['select'] = 'staff.user_id as userId';
 
-                $data = $this->mdl_staff->get_dataShow($eventData['HEAD'], $optionnale, "row");
-                if ($data->userId) {
-                    $userId[$eventData['HEAD']] = $data->userId;
-                }
+    //             $data = $this->mdl_staff->get_dataShow($eventData['HEAD'], $optionnale, "row");
+    //             if ($data->userId) {
+    //                 $eventData['userId'] = $eventData['userId'] . "," . $data->userId;
+    //             }
 
-                $optionnals['select'] = "event_visitor.event_visitor as VISITOR";
-                $optionnals['where']['event_visitor.event_id'] = $array['id'];
-                $event_vis = (array) $this->mdl_visitor->get_dataShow(null, $optionnals);
+    //             $optionnals['select'] = "event_visitor.event_visitor as VISITOR";
+    //             $optionnals['where']['event_visitor.event_id'] = $array['id'];
+    //             $event_vis = (array) $this->mdl_visitor->get_dataShow(null, $optionnals);
 
-                if ($event_vis) {
-                    foreach ($event_vis as $key => $value) {
-                        $optionnale['select'] = 'staff.user_id as userId';
-                        $optionnale['where'] = array(
-                            'staff.employee_id' => $value->VISITOR,
-                        );
+    //             if ($event_vis) {
+    //                 foreach ($event_vis as $key => $value) {
+    //                     $optionnale['select'] = 'staff.user_id as userId';
+    //                     $optionnale['where'] = array(
+    //                         'staff.employee_id' => $value->VISITOR,
+    //                     );
 
-                        $data = $this->mdl_staff->get_dataShow(null, $optionnale, "row");
-                        if ($data->userId) {
-                            $userId[$value->VISITOR] = $data->userId;
-                        }
+    //                     $data = $this->mdl_staff->get_dataShow(null, $optionnale, "row");
+    //                     if ($data->userId) {
+    //                         $eventData['userId'] = $eventData['userId'] . "," . $data->userId;
+    //                     }
 
-                    }
-                }
+    //                 }
+    //             }
 
-                $select['select'] = "employee.name as NAME,employee.lastname as LASTNAME";
-                $emp_data = $this->mdl_staff->get_dataShow($eventData['HEAD'], $select, "row");
-                $eventData['HEAD_NAME'] = $emp_data->NAME . " " . $emp_data->LASTNAME;
+    //             $select['select'] = "employee.name as NAME,employee.lastname as LASTNAME";
+    //             $emp_data = $this->mdl_staff->get_dataShow($eventData['HEAD'], $select, "row");
+    //             $eventData['HEAD_NAME'] = $emp_data->NAME . " " . $emp_data->LASTNAME;
 
-                if ($eventData['TYPE_ID'] == 1) {
-                    $eventData['TYPE'] = "จองห้อง #" . $eventData['CODE'];
-                } elseif ($eventData['TYPE_ID'] == 2) {
-                    $eventData['TYPE'] = "จองรถ #" . $eventData['CODE'];
-                } elseif ($eventData['TYPE_ID'] == 3) {
-                    $eventData['TYPE'] = "นัดหมาย #" . $eventData['CODE'];
-                }
-            }
-        }
+    //             if ($eventData['TYPE_ID'] == 1) {
+    //                 $eventData['TYPE'] = "จองห้อง #" . $eventData['CODE'];
+    //             } elseif ($eventData['TYPE_ID'] == 2) {
+    //                 $eventData['TYPE'] = "จองรถ #" . $eventData['CODE'];
+    //             } elseif ($eventData['TYPE_ID'] == 3) {
+    //                 $eventData['TYPE'] = "นัดหมาย #" . $eventData['CODE'];
+    //             }
+    //         }
+    //     }
 
-        if (count($userId)) {
-            $return = $this->flex_message_action($userId, $eventData);
-        } else {
-            $return = array(
-                'txt' => 'ไม่พบข้อมูล',
-            );
-        }
+    //     if (count($eventData)) {
+    //         $return = $this->flex_message->flex_message_action($eventData);
+    //     } else {
+    //         $return = array(
+    //             'txt' => 'ไม่พบข้อมูล',
+    //         );
+    //     }
 
-        echo json_encode($return);
+    //     echo json_encode($return);
 
-    }
+    // }
 
 }
