@@ -172,7 +172,7 @@ function swal_error(text = [], type) {
 function swal_alert(icon, title, text) {
     Swal.fire(title, text, icon).then((result) => {
 
-        // $('.modal').modal('hide')
+        $('.modal').modal('hide')
 
         let params = new URLSearchParams(url_main.search)
         params.delete("event_id")
@@ -277,6 +277,7 @@ function insert_meeting(insert_data, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 get_userId(resp.data)
+                // flex_alert(resp.data.id)
             }
         })
 }
@@ -315,6 +316,10 @@ function delete_meeting(delete_data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                if(resp.visitor_delete)
+                {
+                    visitor_delete(resp.visitor_delete)
+                }
             }
         })
 }
@@ -333,10 +338,10 @@ function approval(data, text, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                if (text == "อนุมัติ") {
-                    get_userId(resp.data)
-                }
-            }
+                get_userId(resp.data)
+            //     if (text == "อนุมัติ") {
+            // }
+        }
         })
 }
 
@@ -354,8 +359,8 @@ function invitation(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                console.log(resp.data)
-                // get_userId(resp.data)
+                // console.log(resp.data)
+                get_userId(resp.data)
             }
         })
 }
@@ -374,6 +379,7 @@ function processing(data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
+                get_userId(resp.data)
             }
         })
 }

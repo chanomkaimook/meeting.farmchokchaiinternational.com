@@ -27,11 +27,10 @@ class Ctl_flex_message extends MY_Controller
 
     public function flex_message_reply()
     {
-      $userId = textNull($this->input->post('userId'));
-      $msg = textNull($this->input->post('msg'));
-      if($userId && $msg)
+      $eventData = $this->input->post();
+      if(count($eventData))
       {
-        $return = $this->flex_message->flex_message_reply($userId,$msg);
+        $return = $this->flex_message->flex_message_reply($eventData);
         echo json_encode($return);
       }
     }
@@ -55,6 +54,7 @@ class Ctl_flex_message extends MY_Controller
       if(count($eventData))
       {
         $return = $this->flex_message->flex_message_action($eventData);
+      
         echo json_encode($return);
       }
 

@@ -1,5 +1,5 @@
 <script>
-function get_userId(eventData = []) {
+function get_userId(eventData = [], callback = "true") {
     let returnData = "",
         array_userAction = [],
         array_userId = [],
@@ -38,23 +38,20 @@ function get_userId(eventData = []) {
                     arrayVID = [];
 
                 entries.forEach(id => {
+                    // console.log(id)
                     if (resp.eventData.STATUS == 1) {
-                        console.log(id[0])
                         if (id[0] == resp.eventData.HEAD) {
-                            userId = id[1] + ","
+                            userId = id[1]
                             array_flex.append('userId', userId)
                             array_flex.append('role', "head")
                             flex_action(array_flex)
-                            return false
                         }
-                    }
-                    if (resp.eventData.STATUS == 5) {
-                        if (id[0] == resp.eventData.HEAD) {
+                    } else if (resp.eventData.STATUS == 5) {
+                        if (!eventData['eid'] && id[0] == resp.eventData.HEAD) {
                             array_flex.append('userId', id[1])
                             flex_head(array_flex)
                         } else {
                             array_flex.append('role', "visitor")
-                            // console.log(id[1])
                             if (!eventData['data']) {
                                 arrayVID.push(id[0])
                                 arrayUserId.push(id[1])
@@ -64,14 +61,14 @@ function get_userId(eventData = []) {
                                     if (eventData['data'] == 2) {
                                         msg = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
                                             "สำเร็จแล้ว"
-                                    } else if (eventData['data'] == 2) {
+                                    } else if (eventData['data'] == 3) {
                                         msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
-                                            " เนื่องจาก" + $eventData['remark'] +
-                                            "สำเร็จแล้ว"
+                                            " เนื่องจาก" + eventData['remark'] +
+                                            " สำเร็จแล้ว"
                                     }
 
                                     if (eventData['sid'] != eventData['user_action']) {
-                                        msg += "โดยผู้สร้างแบบฟอร์ม";
+                                        msg += " โดยผู้สร้างแบบฟอร์ม";
                                     }
                                     array_reply.append('userId', id[1])
                                     array_reply.append('msg', msg)
@@ -80,8 +77,8 @@ function get_userId(eventData = []) {
                             }
                         }
                     } else {
-                            array_reply.delete('msg')
-                            let msg = '';
+                        array_reply.delete('msg')
+                        let msg = '';
                         if (resp.eventData.STATUS != 1 && resp.eventData.STATUS != 5) {
                             if (resp.eventData.STATUS == 2) {
                                 msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
@@ -92,22 +89,26 @@ function get_userId(eventData = []) {
                             } else if (resp.eventData.STATUS == 4) {
                                 msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
                                     " ถูกยกเลิกแล้ว"
-                        if (eventData['sid'] != eventData['user_action']) {
-                            msg += " โดยผู้สร้างแบบฟอร์ม";
-                        }
+                                if (eventData['sid'] != eventData['user_action']) {
+                                    msg += " โดยผู้สร้างแบบฟอร์ม";
+                                }
                             }
                         }
 
                         array_reply.append('msg', msg)
                         if (!resp.eventData.APPROVE) {
                             array_reply.delete('userId')
+                            array_reply.delete('dnt')
                             if (id[0] == resp.eventData.HEAD) {
                                 array_reply.append('userId', id[1])
+                                array_reply.append('dnt', "true")
                                 flex_reply(array_reply)
                             }
                         } else {
+                            array_reply.delete('dnt')
                             array_reply.delete('userId')
                             array_reply.append('userId', id[1])
+                            array_reply.append('dnt', "true")
                             flex_reply(array_reply)
                         }
                     }
@@ -120,6 +121,10 @@ function get_userId(eventData = []) {
                     array_flex.append('vid', arrayVID)
                     flex_action(array_flex)
                 }
+                /* if (callback) {
+                    flex_alert(eventData['id'], eventData['user_action'])
+                } */
+
             }
 
 
@@ -136,11 +141,11 @@ function flex_reply(data) {
             body: data
         }).then(res => res.json())
         .then((resp) => {
-            console.log('flex_reply')
-            console.log(resp)
-            /* if (!resp.error) {
-                console.log(resp)
-            } */
+            if (!resp.error && !resp.dnt) {
+                // get_userId(resp)
+                flex_alert(resp.id, resp.user_action)
+
+            }
         })
 }
 
@@ -153,28 +158,44 @@ function flex_action(data) {
             body: data
         }).then(res => res.json())
         .then((resp) => {
-            console.log('flex_action')
-            console.log(resp)
-            /* if (!resp.error) {
-                console.log(resp)
-            } */
+            if (!resp.error) {
+                // console.log(resp)
+                // get_userId(resp)
+                flex_alert(resp.id, resp.user_action)
+            }
         })
 }
 
 function flex_head(data) {
-    // return false
-
     let url = new URL('appointment/ctl_flex_message/flex_message_head', domain);
     fetch(url, {
             method: 'post',
             body: data
         }).then(res => res.json())
         .then((resp) => {
-            console.log('flex_action')
-            console.log(resp)
-            /* if (!resp.error) {
-                console.log(resp)
-            } */
+            if (!resp.error) {
+                // get_userId(resp)
+                flex_alert(resp.id, resp.user_action)
+
+            }
         })
+}
+
+function flex_alert(event_id, user_action) {
+    let array = new FormData(),
+        url = new URL('appointment/ctl_line_data/get_user_respond', domain);
+    array.append('id', event_id)
+    array.append('user_action', user_action)
+    fetch(url, {
+            method: 'post',
+            body: array
+        }).then(res => res.json())
+        .then((resp) => {
+            console.log(resp)
+            if (!resp.error && !resp.dnt) {
+                get_userId(resp, null)
+            }
+        })
+
 }
 </script>

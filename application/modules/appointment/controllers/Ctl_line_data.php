@@ -134,7 +134,7 @@ class Ctl_line_data extends MY_Controller
                     $optionnals['where']['event_visitor.event_code'] = $array['code'];
                     $optionnals['where']['event_visitor.event_visitor'] = $vis_id['VID'];
                     $event_vis = (array) $this->mdl_visitor->get_dataShow(null, $optionnals, "row");
-                    $return['role'] = 'vis';
+                    $return['role'] = 'visitor';
                     $return['vid'] = $event_vis['VID'];
                 }
 
@@ -170,6 +170,8 @@ class Ctl_line_data extends MY_Controller
             event.time_begin as TBEGIN,
             event.time_end as TEND,
             event.approve_date as APPROVE,
+            event.disapprove_date as DISAPPROVE,
+            event.cancle_date as CANCEL,
             event.status_complete as STATUS";
 
             $optionnalm['join'] = "all";
@@ -184,17 +186,22 @@ class Ctl_line_data extends MY_Controller
                 $userId[$eventData['HEAD']] = $data['userId'];
             }
 
-            $optionnalv['select'] = "event_visitor.event_visitor as VISITOR";
+            $optionnalv['select'] = "event_visitor.event_visitor as VISITOR,event_visitor.status_complete as VSTATUS";
             $optionnalv['where']['event_id'] = $event_id;
             $visitor = (array) $this->mdl_visitor->get_dataShow(null, $optionnalv);
 
             if ($visitor && count($visitor)) {
+                $i = 0;
                 foreach ($visitor as $key => $value) {
                     $optionnale['where']['staff.employee_id'] = $value->VISITOR;
                     $visitor_userId = (array) $this->mdl_staff->get_dataShow(null, $optionnale, "row");
                     if ($visitor_userId['userId']) {
                         $userId[$visitor_userId['ID']] = $visitor_userId['userId'];
+                        $eventData['VISITOR'][$i]['VUserId'] = $visitor_userId['userId'];
+                        $eventData['VISITOR'][$i]['STATUS'] = $value->VSTATUS;
+                        $eventData['VISITOR'][$i]['VID'] = $visitor_userId['ID'];
                     }
+                    $i++;
                 }
             }
 
@@ -249,13 +256,12 @@ class Ctl_line_data extends MY_Controller
                     $return = $this->crud_valid->approval($data);
 
                     if ($array['data'] == 3) {
-                        echo json_encode($return);
+                        // echo json_encode($return);
                     } else {
                         $event = $this->get_userId($array['id'], true);
                         $eventData = $event['eventData'];
                         $eventData['user_action'] = $array['user_action'];
                         if ($eventData['userId'] && count($eventData['userId'])) {
-                            // echo "11111-------------------------------";
                             $userId = $eventData['userId'];
                             $head_userId = '';
                             $visitor_userId = '';
@@ -263,25 +269,20 @@ class Ctl_line_data extends MY_Controller
                             foreach ($userId as $key => $val) {
                                 if (!empty($val)) {
                                     if ($key == $array['user_action']) {
-                                        // echo "44444-------------------------------";
                                         $head_userId = $val;
-                                        // print_r($eventData);
                                     } else {
-                                        // echo "55555-------------------------------";
-                                        $visitor_userId = $val . " " . $key . " " . $visitor_userId;
+                                        $visitor_userId = $val . " " . $visitor_userId;
                                         $VID = $key . " " . $VID;
 
                                     }
                                 }
                             }
 
-                            echo $VID."<br>";
-                            echo $visitor_userId."<br>";
                             if ($head_userId) {
                                 $eventData['userId'] = null;
                                 $eventData['userId'] = $head_userId;
                                 $eventData['role'] = "head";
-                                // $this->flex_message->flex_message_head($eventData);
+                                $this->flex_message->flex_message_head($eventData);
                             }
 
                             if ($visitor_userId && $VID) {
@@ -289,10 +290,11 @@ class Ctl_line_data extends MY_Controller
                                 $eventData['userId'] = textShow($visitor_userId);
                                 $eventData['vid'] = textShow($VID);
                                 $eventData['role'] = "visitor";
-                                // $this->flex_message->flex_message_action($eventData);
+                                $this->flex_message->flex_message_action($eventData);
                             }
                         }
                     }
+                    echo json_encode($return);
 
                 } else {
                     $return = array(
@@ -301,7 +303,7 @@ class Ctl_line_data extends MY_Controller
                     );
                     echo json_encode($return);
                 }
-            } elseif ($array['role'] == 'vis') { // ถ้าเป็นผู้เข้าร่วม
+            } elseif ($array['role'] == 'visitor') { // ถ้าเป็นผู้เข้าร่วม
                 $data['vid'] = $array['vid'];
                 if ($array['reason']) {
                     $data['reason'] = $array['reason'];
@@ -313,15 +315,114 @@ class Ctl_line_data extends MY_Controller
                 $this->get_userId_respond($array, $return);
                 echo json_encode($return);
             }
-
+            $this->get_user_respond($array['id'], $array['user_action'], "true");
+            //  print_r($test);
         }
+    }
 
+    public function get_user_respond($event_id = null, $data = null, $action = null, $callback = null)
+    {
+        if ($event_id && $data && $action) {
+            $id = $event_id;
+            $user_action = $action;
+        } else {
+            $id = $this->input->post('id');
+            $user_action = $this->input->post('user_action');
+        }
+        if ($id) {
+            $event = $this->get_userId($id, true);
+            $eventData = $event['eventData'];
+
+            $respond = null;
+            $return = [];
+            $dataReply = [];
+
+            if ($eventData['TYPE_ID'] == 1) {
+                $eventData['TYPE'] = "แบบฟอร์มการจองห้อง #" . $eventData['CODE'];
+            } elseif ($eventData['TYPE_ID'] == 2) {
+                $eventData['TYPE'] = "แบบฟอร์มการจองรถ #" . $eventData['CODE'];
+            } elseif ($eventData['TYPE_ID'] == 3) {
+                $eventData['TYPE'] = "แบบฟอร์มการนัดหมาย #" . $eventData['CODE'];
+            }
+
+            if ($eventData['STATUS'] == 5) {
+                $respond = 1;
+
+                if ($eventData['VISITOR']) {
+                    foreach ($eventData['VISITOR'] as $key => $sub_key) {
+                        // foreach($sub_key as $key_val => $value)
+                        // {
+                        if ($sub_key['STATUS'] == 1) {
+                            $respond = null;
+                        }
+                        // }
+                    }
+                }
+                if ($respond) {
+                    $data['item_id'] = $id;
+                    $data['item_code'] = $eventData['CODE'];
+                    $data['item_data'] = $data;
+                    $data['user_action'] = $user_action;
+                    $this->crud_valid->processing($data);
+                    $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
+                }
+            } else if ($eventData['STATUS'] == 2 && $eventData['APPROVE']) {
+                $respond = 1;
+                $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
+
+            } else if ($eventData['STATUS'] == 3 && $eventData['DISAPPROVE']) {
+                $respond = 1;
+                $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการไม่สำเร็จ";
+
+            } else if ($eventData['STATUS'] == 4 && $eventData['CANCEL']) {
+                $respond = 1;
+                $dataReply['msg'] = $eventData['TYPE'] . " ถูกยกเลิกแล้ว";
+
+            } else {
+                $return['error'] = 1;
+                $return['msg'] = "รอผู้ที่เกี่ยวข้องตอบกลับ";
+            }
+
+            if ($dataReply['msg']) {
+                $dataReply['dnt'] = "true";
+                $dataReply['id'] = $eventData['ID'];
+                $dataReply['sid'] = $eventData['OWN'];
+                $dataReply['user_action'] = $user_action;
+                if ($eventData['APPROVE']) {
+                    foreach ($eventData['userId'] as $key => $id) {
+                        $dataReply['userId'] = $id;
+                        $return = $this->flex_message->flex_message_reply($dataReply);
+                    }
+                } else {
+                    $dataReply['userId'] = $eventData['userId'][$eventData['HEAD']];
+                    $return = $this->flex_message->flex_message_reply($dataReply);
+                }
+
+            } else {
+                $return['error'] = 1;
+                $return['msg'] = "รอผู้ที่เกี่ยวข้องตอบกลับ";
+            }
+        }
+        if (!$callback) {
+            echo json_encode($return);
+        }
     }
 
     public function get_userId_respond($array = [], $return = [])
     {
         if (count($array) && count($return)) {
-            $optionnalm['select'] = "event.type_id as TYPE_ID,";
+            $optionnalm['select'] = "event.id as ID,
+            event.code as CODE,
+            event.type_id as TYPE_ID,
+            event.event_name as TOPIC,
+            event.staff_id as HEAD,
+            event.user_start as OWN,
+            event.date_begin as DBEGIN,
+            event.date_end as DEND,
+            event.time_begin as TBEGIN,
+            event.time_end as TEND,
+            event.approve_date as APPROVE,
+            event.status_complete as STATUS";
 
             $optionnalm['where']['event.id'] = $array['id'];
             $optionnalm['where']['event.code'] = $array['code'];
@@ -347,24 +448,20 @@ class Ctl_line_data extends MY_Controller
                 $optionnali['select'] = 'staff.user_id as userId';
                 $datai = $this->mdl_staff->get_dataShow($array['user_action'], $optionnali, "row");
                 if ($datai->userId) {
-                    $userId = $datai->userId;
+                    $eventData['userId'] = $datai->userId;
                 }
             }
+            $eventData['user_action'] = $array['user_action'];
+            $eventData['sid'] = $array['user_action'];
+            $eventData['ID'] = $array['id'];
 
-            if ($array['role'] == 'head') {
+            if ($array['role'] == 'visitor') {
                 if ($array['data'] == 3) {
-                    $eventData['DETAIL'] = 'ไม่อนุมัติการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
+                    $eventData['msg'] = 'คุณปฏิเสธการเข้าร่วมการ' . $eventData['TYPE'] . ' เนื่องจาก' . $array['reason'];
                 } elseif ($array['data'] == 2) {
-                    $eventData['DETAIL'] = 'อนุมัติการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
+                    $eventData['msg'] = 'คุณได้เข้าร่วมการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
                 }
-                // $eventData['userId'] = $userId;
-            } elseif ($array['role'] == 'vis') {
-                if ($array['data'] == 3) {
-                    $eventData['DETAIL'] = 'คุณปฏิเสธการเข้าร่วมการ' . $eventData['TYPE'] . ' เนื่องจาก' . $array['reason'];
-                } elseif ($array['data'] == 2) {
-                    $eventData['DETAIL'] = 'คุณได้เข้าร่วมการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
-                }
-                $this->flex_message->flex_message_reply($userId, $eventData['DETAIL']);
+                $this->flex_message->flex_message_reply($eventData);
             }
         }
         // echo json_encode($return);

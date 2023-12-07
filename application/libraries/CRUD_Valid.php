@@ -229,9 +229,6 @@ class CRUD_Valid
 
         if (count($data) && $code) {
             $check = $this->value_not_null($data, "insert", $data['insert-type-id']);
-            // echo "<pre>";
-            // print_r($check);
-            // echo "</pre>";die;
             if (!$check['error']) {
 
                 $date_begin = null;
@@ -249,8 +246,6 @@ class CRUD_Valid
                 $event_name = textShow($data['insert-name']);
                 $staff_id = textShow($data['insert-head']);
                 $event_description = textShow($data['insert-description']);
-                // $date_begin = textShow($data['insert-dates']);
-                // $date_end = textShow($data['insert-datee']);
                 $time_begin = textShow($data['insert-times']);
                 $time_end = textShow($data['insert-timee']);
                 $rooms_id = textShow($data['insert-rooms-id']);
@@ -284,8 +279,6 @@ class CRUD_Valid
                     'date_end' => $date_end,
                     'time_begin' => $time_begin,
                     'time_end' => $time_end,
-                    /* 'status_complete' => 1,
-                    'status_complete_name' => "รอดำเนินการ", */
                     'status' => 1,
                     'date_start' => date('Y-m-d H:i:s'),
                     'user_start' => $user_action,
@@ -344,7 +337,6 @@ class CRUD_Valid
                             'user_start' => $user_action,
                         );
 
-                        // $ci->mdl_event_car->insert_data($SubDataArray);
                     }
 
                     if ($visitor) {
@@ -363,15 +355,6 @@ class CRUD_Valid
                             $vis = $ci->mdl_visitor->insert_data($VisitorArray);
                         }
                     }
-
-                    /* if ($dataArray['staff_id'] == $dataArray['user_start']) {
-                    $item = [];
-                    $item['item_id'] = $main['data']['id'];
-                    $item['item_code'] = $code;
-                    $item['item_data'] = 2;
-
-                    $this->approval($item);
-                    } */
                     $return = $main;
                 }
             } else {
@@ -530,12 +513,20 @@ class CRUD_Valid
                     'user_update' => $user_action,
                     ); */
 
-                    $VisWhere = array(
+                    $VisWhere['select'] = "event_visitor.event_visitor as VISITOR";
+                    $VisWhere['where'] = array(
                         'event_code' => $code,
                         'event_id' => $main['data']['id'],
 
                     );
-                    $ci->mdl_visitor->delete_data($VisWhere);
+                    $visBefore = (array) $ci->mdl_visitor->get_dataShow(null, $VisWhere);
+                    /* print_r($visBefore);
+                    die; */
+                    $ci->mdl_visitor->delete_data($VisWhere['where']);
+                    $visbefore = [];
+                    foreach ($visBefore as $key => $vb) {
+                        $visbefore[] = $vb->VISITOR;
+                    }
 
                     if ($visitor) {
 
@@ -544,22 +535,27 @@ class CRUD_Valid
                         $dataArray = [];
                         foreach ($visArray as $k_sid => $sid) {
                             $dataVis = explode("-", $sid);
+                            if (!is_numeric(array_search($dataVis[0], $visbefore))) {
+                                $main['visitor_delete'][] = $dataVis[0];
+                            } else {
+                                $dataArray = array(
+                                    'event_code' => $code,
+                                    'event_id' => $main['data']['id'],
+                                    'event_visitor' => $dataVis[0],
+                                    'status_complete' => $dataVis[1],
+                                    'status' => 1,
+                                    'date_start' => date('Y-m-d H:i:s'),
+                                    'user_start' => $user_action,
+                                );
+                                $ci->mdl_visitor->insert_data($dataArray);
+                            }
 
-                            $dataArray = array(
-                                'event_code' => $code,
-                                'event_id' => $main['data']['id'],
-                                'event_visitor' => $dataVis[0],
-                                'status_complete' => $dataVis[1],
-                                'status' => 1,
-                                'date_start' => date('Y-m-d H:i:s'),
-                                'user_start' => $user_action,
-                            );
-                            $ci->mdl_visitor->insert_data($dataArray);
                         }
 
-                        // print_r($visitor);
+                        // print_r($visbefore);
                     }
                     $return = $main;
+                    // print_r($main);
                 }
             } else {
                 $return = $check;
@@ -611,12 +607,12 @@ class CRUD_Valid
 
                 $ci->mdl_event_meeting->delete_data($SubDataArray, $SubwhereArray);
 
-                $VisitorArray = array(
-                    'status' => 0,
-                    'user_update' => $user_action,
-                    'date_update' => date('Y-m-d H:i:s'),
+                /*  $VisitorArray = array(
+                'status' => 0,
+                'user_update' => $user_action,
+                'date_update' => date('Y-m-d H:i:s'),
                 );
-                $vis = $ci->mdl_visitor->delete_data($VisitorArray, $SubwhereArray);
+                $vis = $ci->mdl_visitor->delete_data($VisitorArray, $SubwhereArray); */
 
                 $return = $main;
             }
@@ -654,6 +650,14 @@ class CRUD_Valid
             $main = $ci->mdl_visitor->delete_data($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $VisWhere['select'] = "event_visitor.event_visitor as VISITOR";
+                $VisWhere['where'] = $whereArray;
+                $visBefore = (array) $ci->mdl_visitor->get_dataShow(null, $VisWhere);
+                $visbefore = [];
+                foreach ($visBefore as $key => $vb) {
+                    $main['visitor_delete'][] = $vb->VISITOR;
+                }
+
                 $main['data']['user_action'] = $user_action;
 
                 $return = $main;
@@ -716,7 +720,6 @@ class CRUD_Valid
                 $main['data']['data'] = $item_data;
                 $main['data']['remark'] = $status_complete_name;
                 $main['data']['status'] = $status_complete;
-
 
                 $return = $main;
             }
@@ -825,7 +828,14 @@ class CRUD_Valid
             $main = $ci->mdl_event->processing($dataArray, $whereArray);
 
             if (!$main['error']) {
+                $array_opt['select'] = 'event.staff_id as SID';
+                $head = (array) $ci->mdl_event->get_dataShow($item_id, $array_opt, "row");
+
+                $main['data']['sid'] = $head['SID'];
                 $main['data']['user_action'] = $user_action;
+                $main['data']['data'] = $item_data;
+
+                // $main['data']['user_action'] = $user_action;
 
                 $return = $main;
             }

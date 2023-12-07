@@ -272,7 +272,7 @@ body {
                             dataArray.append('vid', resp.vid)
                         }
 
-                        if (data == 3 && resp.role == 'vis') {
+                        if (data == 3 && resp.role == 'visitor') {
                             swal_reason(dataArray)
                         } else {
                             swal(dataArray)

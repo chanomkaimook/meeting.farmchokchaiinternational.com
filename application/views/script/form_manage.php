@@ -616,13 +616,13 @@ function form_displayed_data(data, modal_detail, modal_update) {
             `
             if (data.VISITOR[i].VSTATUS == 1) {
                 status_vis =
-                    `<span>รอตอบรับ</span>`
+                    `<p class="h5" style="color: #888;">${(i+1)+'. '+data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME} <span> รอตอบรับ</span></p>`
             } else if (data.VISITOR[i].VSTATUS == 2) {
                 status_vis =
-                    `<span>เข้าร่วม</span>`
+                    `<p class="h5">${(i+1)+'. '+data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME} <span> เข้าร่วม</span></p>`
             } else if (data.VISITOR[i].VSTATUS == 3) {
                 status_vis =
-                    `<span>ปฏิเสธ เนื่องจาก ${data.VISITOR[i].VREMARK}</span>`
+                    `<p class="h5 text-danger">${(i+1)+'. '+data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME} <span>ปฏิเสธ เนื่องจาก ${data.VISITOR[i].VREMARK}</span></p>`
             }
 
             if (data.APPROVE_DATE && data.STATUS_COMPLETE == 5) {
@@ -632,7 +632,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
             }
 
 
-            vis_html = vis_html + data.VISITOR[i].VNAME + ' ' + data.VISITOR[i].VLNAME + ' ' + status_vis +
+            vis_html = vis_html + status_vis +
                 '<br>'
 
             $('select[name=update-visitor]').find('option[value=' + data.VISITOR[i].VID + ']').attr('data-status', data
