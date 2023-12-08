@@ -313,7 +313,7 @@ body {
                     .then((resp) => {
                         console.log(resp)
 
-                        if (resp.error) {
+                        if (resp.error != 0) {
                             Swal.fire("ไม่สำเร็จ", resp.txt, "error")
                                 .then(() => {
                                     get_data()

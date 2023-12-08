@@ -145,6 +145,38 @@ class Ctl_line_data extends MY_Controller
 
     }
 
+    public function visitor_delete()
+    {
+        // echo json_encode("test");
+        $data = $this->input->post();
+        if (count($data)) {
+
+            $event = $this->get_userId($data[0], true);
+            $eventData = $event['eventData'];
+            // print_r($eventData);die;
+            $dataReply['msg'] = "คุณได้ถูกยกเลิกคำเชิญให้เข้าร่วมการ" . $eventData['TYPE'] . " แล้ว";
+            $dataReply['user_action'] = $eventData['OWN'];
+            $dataReply['dnt'] = "true";
+            $dataReply['id'] = $data[0];
+            
+            for ($i = 1; $i < count($data); $i++) {
+                
+                $optionnal['select'] = "staff.id as ID,staff.user_id as userId";
+                    $optionnal['where']['staff.employee_id'] = $data[$i];
+
+                    $user = (array) $this->mdl_staff->get_dataShow(null, $optionnal, "row");
+                    if ($user) {
+                        $dataReply['sid'] = $user['ID'];
+                        $dataReply['userId'] = $user['userId'];
+                    }
+
+                    $return = $this->flex_message->flex_message_reply($dataReply);
+                  
+            }
+            echo json_encode($return);
+        }
+    }
+
     public function get_userId($id = null, $callback = false)
     {
         $data = [];
@@ -294,14 +326,13 @@ class Ctl_line_data extends MY_Controller
                             }
                         }
                     }
-                    echo json_encode($return);
-
+                    // echo json_encode($return);
                 } else {
                     $return = array(
                         'error' => 1,
                         'txt' => 'ไม่สามารถทำรายการซ้ำได้',
                     );
-                    echo json_encode($return);
+                    // echo json_encode($return);
                 }
             } elseif ($array['role'] == 'visitor') { // ถ้าเป็นผู้เข้าร่วม
                 $data['vid'] = $array['vid'];
@@ -313,10 +344,10 @@ class Ctl_line_data extends MY_Controller
 
                 $return = $this->crud_valid->invitation($data);
                 $this->get_userId_respond($array, $return);
-                echo json_encode($return);
             }
-            $this->get_user_respond($array['id'], $array['user_action'], "true");
-            //  print_r($test);
+            $this->get_user_respond($array['id'],$array['data'], $array['user_action'], "true");
+            // print_r($return);
+            echo json_encode($return);
         }
     }
 
@@ -359,11 +390,11 @@ class Ctl_line_data extends MY_Controller
                     }
                 }
                 if ($respond) {
-                    $data['item_id'] = $id;
-                    $data['item_code'] = $eventData['CODE'];
-                    $data['item_data'] = $data;
-                    $data['user_action'] = $user_action;
-                    $this->crud_valid->processing($data);
+                    $dataP['item_id'] = $id;
+                    $dataP['item_code'] = $eventData['CODE'];
+                    $dataP['item_data'] = 2;
+                    $dataP['user_action'] = $user_action;
+                    $this->crud_valid->processing($dataP);
                     $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
                 }
             } else if ($eventData['STATUS'] == 2 && $eventData['APPROVE']) {
@@ -403,7 +434,7 @@ class Ctl_line_data extends MY_Controller
                 $return['msg'] = "รอผู้ที่เกี่ยวข้องตอบกลับ";
             }
         }
-        if (!$callback) {
+        if ($callback == null) {
             echo json_encode($return);
         }
     }

@@ -178,7 +178,7 @@ if ($this->session->has_userdata('user_code')) {
             }).catch(err => console.error(err));
         }
         liff.init({
-            liffId: "2000744935-Y5OanZ8n"
+            liffId: "2000744935-g42l7mo7"
         }, () => {
             if (liff.isLoggedIn()) {
                 runApp()

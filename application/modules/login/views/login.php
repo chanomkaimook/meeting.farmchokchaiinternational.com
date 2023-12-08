@@ -92,7 +92,7 @@ if ($this->session->has_userdata('user_code')) {
                                             </h5>
 
                                             <div class="text-center">
-                                                <img class="avatar-xl" src="https://qr-official.line.me/sid/L/886whswd.png" alt="qrcode">
+                                            <img src="<?=base_url('asset/images/qrcode-addfriend.png')?>" width="100px">
                                                 <p>สแกน QR CODE เพื่อรับข้อความ</p>
                                             </div>
                                         </form>

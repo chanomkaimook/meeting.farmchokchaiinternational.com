@@ -297,8 +297,10 @@ function update_meeting(update_data, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 get_userId(resp.data)
-                // if (resp.data.status == 1) {
-                // }
+                if(resp.visitor_delete)
+                {
+                    visitor_delete(resp.visitor_delete,resp.data.id)
+                }
             }
         })
 }
@@ -318,7 +320,7 @@ function delete_meeting(delete_data, ctl) {
                 swal_alert('success', 'สำเร็จ', '')
                 if(resp.visitor_delete)
                 {
-                    visitor_delete(resp.visitor_delete)
+                    visitor_delete(resp.visitor_delete,resp.data.id)
                 }
             }
         })

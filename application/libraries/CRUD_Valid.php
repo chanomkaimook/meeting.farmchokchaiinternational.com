@@ -530,32 +530,37 @@ class CRUD_Valid
 
                     if ($visitor) {
 
+                        $visstatus = [];
+                        $visafter = [];
                         $dataVis = [];
                         $visArray = explode(",", $visitor);
                         $dataArray = [];
+
                         foreach ($visArray as $k_sid => $sid) {
                             $dataVis = explode("-", $sid);
-                            if (!is_numeric(array_search($dataVis[0], $visbefore))) {
-                                $main['visitor_delete'][] = $dataVis[0];
-                            } else {
-                                $dataArray = array(
-                                    'event_code' => $code,
-                                    'event_id' => $main['data']['id'],
-                                    'event_visitor' => $dataVis[0],
-                                    'status_complete' => $dataVis[1],
-                                    'status' => 1,
-                                    'date_start' => date('Y-m-d H:i:s'),
-                                    'user_start' => $user_action,
-                                );
-                                $ci->mdl_visitor->insert_data($dataArray);
-                            }
-
+                            $visafter[] = $dataVis[0];
+                            $visstatus[] = $dataVis[1];
+                            $dataArray = array(
+                                'event_code' => $code,
+                                'event_id' => $main['data']['id'],
+                                'event_visitor' => $dataVis[0],
+                                'status_complete' => $dataVis[1],
+                                'status' => 1,
+                                'date_start' => date('Y-m-d H:i:s'),
+                                'user_start' => $user_action,
+                            );
+                            $ci->mdl_visitor->insert_data($dataArray);
                         }
 
-                        // print_r($visbefore);
+                        foreach ($visbefore as $key => $value) {
+                            if (!is_numeric(array_search($value, $visafter))) {
+                                $main['visitor_delete'][] = $value;
+                            } else {
+
+                            }
+                        }
                     }
                     $return = $main;
-                    // print_r($main);
                 }
             } else {
                 $return = $check;
@@ -614,6 +619,7 @@ class CRUD_Valid
                 );
                 $vis = $ci->mdl_visitor->delete_data($VisitorArray, $SubwhereArray); */
 
+                $main['data']['id'] = $item_id;
                 $return = $main;
             }
         }
@@ -635,29 +641,29 @@ class CRUD_Valid
             $vid = textShow($data['vid']);
             $user_action = textShow($data['user_action']);
 
-            $dataArray = array(
+            /* $dataArray = array(
                 'status' => 0,
                 'user_update' => $user_action,
                 'date_update' => date('Y-m-d H:i:s'),
             );
-
+ */
             $whereArray = array(
                 'id' => $vid,
                 'event_id' => $item_id,
                 'event_code' => $item_code,
             );
-
-            $main = $ci->mdl_visitor->delete_data($dataArray, $whereArray);
-
+            
+            $VisWhere['select'] = "event_visitor.event_visitor as VISITOR";
+            $visBefore = $ci->mdl_visitor->get_dataShow($vid, $VisWhere, "row");
+            $main = $ci->mdl_visitor->delete_data(/* $dataArray,  */$whereArray);
+            // print_r($visBefore);
             if (!$main['error']) {
-                $VisWhere['select'] = "event_visitor.event_visitor as VISITOR";
-                $VisWhere['where'] = $whereArray;
-                $visBefore = (array) $ci->mdl_visitor->get_dataShow(null, $VisWhere);
-                $visbefore = [];
+                // $VisWhere['where'] = $whereArray;
                 foreach ($visBefore as $key => $vb) {
-                    $main['visitor_delete'][] = $vb->VISITOR;
+                    $main['visitor_delete'][] = $vb;
                 }
 
+                $main['data']['id'] = $item_id;
                 $main['data']['user_action'] = $user_action;
 
                 $return = $main;
