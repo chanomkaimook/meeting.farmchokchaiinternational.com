@@ -263,7 +263,7 @@ body {
                     })
                     .then(res => res.json())
                     .then((resp) => {
-                        // console.log(resp)
+                        console.log(resp)
                         if (resp.role == 'head') {
                             dataArray.append('status', resp.status)
                             dataArray.append('role', resp.role)

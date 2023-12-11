@@ -19,8 +19,8 @@ class Flex_message
 
     public function flex_message_action($eventData)
     {
-      // $return = $this->sentMessage();
-      // return $return;
+        // $return = $this->sentMessage();
+        // return $return;
         $return['error'] = "ไม่พบข้อมูล";
 
         if (count($eventData)) {
@@ -71,23 +71,23 @@ class Flex_message
                     $txt3 = "ไม่เข้าร่วม";
                 }
                 for ($i = 0; $i < count($userId); $i++) {
-                  $JsonData = "";
+                    $JsonData = "";
                     if (!empty($userId[$i])) {
                         if ($eventData['vid']) {
                             $vid = explode(" ", $eventData['vid']);
                             $user_action = $vid[$i];
                         }
-                        // $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        // $uri2 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        // $uri3 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+                        $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        $uri2 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        $uri3 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
                         // $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
                         // $uri2 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
                         // $uri3 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
-                        $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+                        // $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        // $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        // $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
                         $JsonData = '{
-                          "to": "'.$userId[$i].'",
+                          "to": "' . $userId[$i] . '",
                           "messages": [
                               {
                                   "type": "flex",
@@ -152,7 +152,7 @@ class Flex_message
                                                                       },
                                                                       {
                                                                           "type": "text",
-                                                                          "text": "' . $detail . '",
+                                                                          "text": "' . $detail_full . '",
                                                                           "size": "sm",
                                                                           "color": "#666666",
                                                                           "flex": 1,
@@ -272,12 +272,12 @@ class Flex_message
                           ]
                       }';
                         // $decode = json_decode($JsonData);
-// echo $JsonData;
+                        // echo $JsonData;
                         $datas['url'] = "https://api.line.me/v2/bot/message/push";
                         // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
                         $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
                         // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
-                       
+
                         $return = $this->sentMessage($JsonData, $datas);
 
                         $return['error'] = null;
@@ -333,7 +333,7 @@ class Flex_message
                 // $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
                 $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
                 $JsonData = '{
-                  "to": "'.$userId.'",
+                  "to": "' . $userId . '",
                   "messages": [
                     {
                       "type": "flex",
@@ -500,12 +500,12 @@ class Flex_message
                   ]
                 }';
 // echo $JsonData;
-                        $datas['url'] = "https://api.line.me/v2/bot/message/push";
-                        // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
-                        $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
-                       // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
-                       
-                        $return = $this->sentMessage($JsonData, $datas);
+                $datas['url'] = "https://api.line.me/v2/bot/message/push";
+                // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
+                $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
+                // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
+
+                $return = $this->sentMessage($JsonData, $datas);
 
                 $return['error'] = null;
                 $return['msg'] = 'สำเร็จ';
@@ -526,19 +526,20 @@ class Flex_message
             $return['error'] = null;
             $return['msg'] = 'สำเร็จ';
             $JsonData = '{
-              "to": "'.$eventData['userId'].'",
+              "to": "' . $eventData['userId'] . '",
               "messages":  [
                {
                           "type": "text",
-                          "text": "'.$eventData['msg'].'"
+                          "text": "' . $eventData['msg'] . '"
                         }
               ]
             }';
 
             $datas['url'] = "https://api.line.me/v2/bot/message/push";
+            // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
             $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
-           // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
-           
+            // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
+
             $return = $this->sentMessage($JsonData, $datas);
 
             $return['error'] = null;

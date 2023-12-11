@@ -14,6 +14,7 @@ function get_userId(eventData = [], callback = "true") {
             body: array
         }).then(res => res.json())
         .then((resp) => {
+            console.log(resp.eventData)
             if (!resp.error) {
                 array_flex.append('ID', resp.eventData.ID)
                 array_flex.append('CODE', resp.eventData.CODE)
@@ -34,6 +35,40 @@ function get_userId(eventData = [], callback = "true") {
                     arrayUserId = [],
                     arrayVID = [];
 
+                if (visitor.length) {
+
+                    for (let i = 0; i < visitor.length; i++) {
+                            arrayVID.push(visitor[i].VID)
+                            arrayUserId.push(visitor[i].VUserId)
+// console.log(visitor[i].VUserId)
+                        array_flex.append('role', "visitor")
+                        if (eventData['data']) {
+                            array_reply.append('id', resp.eventData.id)
+                            array_reply.append('sid', visitor[i].VID)
+                            array_reply.append('user_action', eventData['user_action'])
+                            array_reply.append('dnt', "true")
+
+                            let msg = '';
+                            if (eventData['data'] == 2) {
+                                msg = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
+                                    "สำเร็จแล้ว"
+                            } else if (eventData['data'] == 3) {
+                                msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
+                                    " เนื่องจาก" + eventData['remark'] +
+                                    " สำเร็จแล้ว"
+                            }
+
+                            if (eventData['user_action'] == resp.eventData.OWN) {
+                                msg += " โดยผู้สร้างแบบฟอร์ม";
+                            }
+
+                            array_reply.append('userId', visitor[i].VUserId)
+                            array_reply.append('msg', msg)
+                            flex_reply(array_reply)
+                        }
+                    };
+                }
+
                 if (resp.eventData.STATUS == 1) {
                     array_flex.append('userId', resp.eventData.userId)
                     array_flex.append('role', "head")
@@ -44,89 +79,58 @@ function get_userId(eventData = [], callback = "true") {
                     array_flex.append('userId', resp.eventData.userId)
                     flex_head(array_flex)
 
-                    if (visitor.length) {
 
-                        visitor.forEach(item => {
-                            array_flex.append('role', "visitor")
-                            if (!eventData['data']) {
-                                arrayVID.push(item.VID)
-                                arrayUserId.push(item.VUserId)
-                            } else if (eventData['data']) {
-                                array_reply.append('id', resp.eventData.id)
-                                array_reply.append('sid', item.VID)
-                                array_reply.append('user_action', eventData['user_action'])
-                                array_reply.append('dnt', "true")
+                    if (arrayUserId.length && arrayVID.length) {
+                        array_flex.delete('userId')
+                        array_flex.append('userId', arrayUserId)
+                        array_flex.append('vid', arrayVID)
+                        flex_action(array_flex)
+                    }
 
-                                if (item.VID == eventData['user_action']) {
-                                    let msg = '';
-                                    if (eventData['data'] == 2) {
-                                        msg = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
-                                            "สำเร็จแล้ว"
-                                    } else if (eventData['data'] == 3) {
-                                        msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
-                                            " เนื่องจาก" + eventData['remark'] +
-                                            " สำเร็จแล้ว"
-                                    }
-
-                                    if (eventData['user_action'] == resp.eventData.OWN) {
-                                        msg += " โดยผู้สร้างแบบฟอร์ม";
-                                    }
-                                    array_reply.append('userId', id[1])
-                                    array_reply.append('msg', msg)
-                                    flex_reply(array_reply)
-                                }
+                } else {
+                    array_reply.delete('msg')
+                    let msg = '';
+                    if (resp.eventData.STATUS != 1 && resp.eventData.STATUS != 5) {
+                        if (resp.eventData.STATUS == 2) {
+                            msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                " ดำเนินการสำเร็จแล้ว"
+                        } else if (resp.eventData.STATUS == 3) {
+                            msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                " ดำเนินการไม่สำเร็จ"
+                        } else if (resp.eventData.STATUS == 4) {
+                            msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
+                                " ถูกยกเลิกแล้ว"
+                            if (eventData['user_action'] == resp.eventData.OWN) {
+                                msg += " โดยผู้สร้างแบบฟอร์ม";
                             }
-                        });
-                        
-                        if(arrayUserId.length && arrayVID.length)
-                        {
-                            array_flex.delete('userId')
-                            array_flex.append('userId', arrayUserId)
-                            array_flex.append('vid', arrayVID)
-                            flex_action(array_flex)
                         }
                     }
 
-                }
-            } else {
-                array_reply.delete('msg')
-                let msg = '';
-                if (resp.eventData.STATUS != 1 && resp.eventData.STATUS != 5) {
-                    if (resp.eventData.STATUS == 2) {
-                        msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
-                            " ดำเนินการสำเร็จแล้ว"
-                    } else if (resp.eventData.STATUS == 3) {
-                        msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
-                            " ดำเนินการไม่สำเร็จ"
-                    } else if (resp.eventData.STATUS == 4) {
-                        msg = "แบบฟอร์มการ" + resp.eventData.TYPE +
-                            " ถูกยกเลิกแล้ว"
-                        if (eventData['user_action'] == resp.eventData.OWN) {
-                            msg += " โดยผู้สร้างแบบฟอร์ม";
-                        }
-                    }
-                }
+                    array_reply.append('msg', msg)
+                    // array_reply.append('msg', msg)
 
-                array_reply.append('msg', msg)
-                if (!resp.eventData.APPROVE) {
                     array_reply.delete('userId')
                     array_reply.delete('dnt')
                     array_reply.append('userId', resp.eventData.userId)
                     array_reply.append('dnt', "true")
                     flex_reply(array_reply)
-                } else {
-                    arrayUserId.push(resp.eventData.userId)
-                    array_reply.delete('dnt')
-                    array_reply.delete('userId')
-                    array_reply.append('dnt', "true")
 
-                    for (let i = 0; i < arrayUserId.length; i++) {
-                        array_reply.append('userId', arrayUserId[i])
-                        flex_reply(array_reply)
+                    console.log(arrayUserId)
+
+                    if (resp.eventData.APPROVE) {
+                        if (arrayUserId.length) {
+                            for (let j = 0; j < arrayUserId.length; j++) {
+                                console.log(arrayUserId[j] + " ------------" + j)
+                                array_reply.delete('userId')
+                                // array_reply.append('dnt', "true")
+                                array_reply.append('userId', arrayUserId[j])
+                                flex_reply(array_reply)
+                            }
+                        }
                     }
                 }
-            }
 
+            }
         })
 
 
