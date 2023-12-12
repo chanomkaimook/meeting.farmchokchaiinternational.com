@@ -77,15 +77,15 @@ class Flex_message
                             $vid = explode(" ", $eventData['vid']);
                             $user_action = $vid[$i];
                         }
-                        $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        $uri2 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        $uri3 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+                        // $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        // $uri2 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        // $uri3 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
                         // $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
                         // $uri2 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
                         // $uri3 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
-                        // $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        // $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        // $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+                        $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
                         $JsonData = '{
                           "to": "' . $userId[$i] . '",
                           "messages": [
@@ -274,8 +274,9 @@ class Flex_message
                         // $decode = json_decode($JsonData);
                         // echo $JsonData;
                         $datas['url'] = "https://api.line.me/v2/bot/message/push";
+                        $datas['token'] = "R9AdBv2RDT0cfSYM4bpmf/7LJ+YdvoXFesiUe5UVi6OjWIggPx1YytKNzn/Y7lcBFGydjrR5U2wxSxLJiGeUlsOM7WnQ1AoZ0fVyFrur0exBXg4CnXppfAW7ZbpcoZZ+2tgSxnWqH7jj7pxP9GIDpgdB04t89/1O/w1cDnyilFU="; // Chanel OA FCC Group
                         // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
-                        $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
+                        // $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
                         // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
 
                         $return = $this->sentMessage($JsonData, $datas);
@@ -501,8 +502,9 @@ class Flex_message
                 }';
 // echo $JsonData;
                 $datas['url'] = "https://api.line.me/v2/bot/message/push";
+                $datas['token'] = "R9AdBv2RDT0cfSYM4bpmf/7LJ+YdvoXFesiUe5UVi6OjWIggPx1YytKNzn/Y7lcBFGydjrR5U2wxSxLJiGeUlsOM7WnQ1AoZ0fVyFrur0exBXg4CnXppfAW7ZbpcoZZ+2tgSxnWqH7jj7pxP9GIDpgdB04t89/1O/w1cDnyilFU="; // Chanel OA FCC Group
                 // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
-                $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
+                // $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
                 // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
 
                 $return = $this->sentMessage($JsonData, $datas);
@@ -536,8 +538,9 @@ class Flex_message
             }';
 
             $datas['url'] = "https://api.line.me/v2/bot/message/push";
+            $datas['token'] = "R9AdBv2RDT0cfSYM4bpmf/7LJ+YdvoXFesiUe5UVi6OjWIggPx1YytKNzn/Y7lcBFGydjrR5U2wxSxLJiGeUlsOM7WnQ1AoZ0fVyFrur0exBXg4CnXppfAW7ZbpcoZZ+2tgSxnWqH7jj7pxP9GIDpgdB04t89/1O/w1cDnyilFU="; // Chanel OA FCC Group
             // $datas['token'] = "sSuLH67pPta+bU11+f+aYHBF+fICPUduaMbR6MWQ6Cc7xPbY2PEwqyXw7nkakXRDnDgR8mvZ0oE29XFqU8Ltg8Aov7E+U718d+DyuOfpJBimnqTuN8O6Be9/S5l7vebvBJM+AUbBSoneqyTMzhFYaQdB04t89/1O/w1cDnyilFU="; // Chanel M
-            $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
+            // $datas['token'] = "BDFZcdubjHuFoyWRYgRfBCf0c1ZQZMhJwOsdhfVmO/ymoW4PwoOFOP4QPFWkxTRkdgeDZQfCdZyHyw7+qR0toFR9Hm+OJ/eqrpp1vwYs/8zM0zQ3JVR3Ll6yZrQIT1y0Bh7GZeBvhM0Nb43b5NCIZgdB04t89/1O/w1cDnyilFU="; // Chanel S
             // $datas['token'] = "O7Om2QF6Mf6akoAWlgoaLbznke7k+Mt9sxOWz7T0o16M93/q998eecerKEw3//kkLd2yfc+YKWAdUIyu7VCCIxG//o9m9R7nhowUdKbYgWHX/dIXK/rJuvWt/rhgej1UQbn8ZiO0bTRQ+HjbNRrWjAdB04t89/1O/w1cDnyilFU="; // Chanel O
 
             $return = $this->sentMessage($JsonData, $datas);

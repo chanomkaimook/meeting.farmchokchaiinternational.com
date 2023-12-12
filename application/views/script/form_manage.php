@@ -156,7 +156,7 @@ function form_displayed(data) {
 
     form_displayed_layouts(data.STATUS_COMPLETE, data.class, modal_detail)
     form_displayed_data(data, modal_detail, modal_update)
-    form_displayed_header(data.STATUS_COMPLETE, data.STATUS_COMPLETE_NAME)
+    form_displayed_header(data.STATUS_COMPLETE, data.STATUS_COMPLETE_NAME, data.ID)
 
     /********************************************* Form Data *********************************************/
     if (!data.APPROVE_DATE && !data.DISAPPROVE_DATE && !data.CANCLE_DATE) {
@@ -515,8 +515,13 @@ function form_displayed_layouts(status, role, modal_detail) {
  * 
  */
 
-function form_displayed_header(status, status_text) {
+function form_displayed_header(status, status_text, event_id) {
+    let btn_resend = null;
     if (status == 1 || status == 5) {
+        btn_resend = `
+        <button type="button" class="btn btn-icon waves-effect btn-success btn-resend text-lg-center" data-event-id="${event_id}"><i class="mdi mdi-send"></i> <span>ส่งอีกครั้ง</span></button>
+        `
+        status_text = status_text + btn_resend;
         $('.modal-header').find('.text-warning').removeClass('d-none').html(status_text)
         $('.modal-header').find('.text-success').addClass('d-none')
         $('.modal-header').find('.text-danger').addClass('d-none')
@@ -565,7 +570,7 @@ function form_displayed_data(data, modal_detail, modal_update) {
     $(modal_detail).find('[data-visitor=true]').addClass('d-none')
     $(modal_detail).find('h5.visitor-name').empty()
     $('select[name=update-visitor]').find('option').attr('data-status', 1)
-    
+
     let form_update = {
             '[name=item_id]': data.ID,
             '[name=code]': data.CODE,

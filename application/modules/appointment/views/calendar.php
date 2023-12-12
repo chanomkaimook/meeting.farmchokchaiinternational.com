@@ -45,7 +45,6 @@ div.table-responsive {
 }
 </style>
 <input type="hidden" name="my-id" id="my-id" value="<?= $_SESSION["user_code"] ?>">
-<!-- <input type="hidden" name="my-id" id="my-id" value="1"> -->
 <input type="hidden" name="event-id" id="event-id" value="">
 <!-- Button trigger modal -->
 
@@ -161,6 +160,7 @@ $(document).ready(function() {
      * 14. btn_reject = button delete visitor when imma creater
      * 15. btn_restore = button restore event when event is cancle
      * 16. btn_search = button submit filter
+     * 17. btn_resend = button sending message again
      *
      *
      */
@@ -181,6 +181,7 @@ $(document).ready(function() {
     let btn_reject = '.reject'
     let btn_restore = '.btn-restore'
     let btn_search = '.btn-search'
+    let btn_resend = '.btn-resend'
 
     /**
      *
@@ -205,6 +206,24 @@ $(document).ready(function() {
         data.append('type', $('#hidden_type').val())
 
         reloadData(url_main, data)
+    })
+
+    /**
+     *
+     *
+     * BTN RESEND MESSAGE
+     *
+     *
+     */
+
+    $(document).on('click', btn_resend, function() {
+        let id = $(this).attr('data-event-id'),
+            array = [];
+            array['id'] = id;
+            array['user_action'] = my_id;
+        // console.log(array)
+        // return false;
+        get_userId(array)
     })
 
     /**
