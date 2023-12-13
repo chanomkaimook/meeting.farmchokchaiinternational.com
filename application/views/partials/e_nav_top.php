@@ -154,7 +154,7 @@
 
             <a href="index.html" class="logo text-xl-center logo-dark">
                 <span class="logo-lg">
-                    <font size="5px"><i class="mdi mdi-database-lock"></i> Schedule</font>
+                    <font size="5px"><i class="mdi mdi-presentation-play"></i> E-MEETING</font>
                 </span>
                 </span>
             </a>

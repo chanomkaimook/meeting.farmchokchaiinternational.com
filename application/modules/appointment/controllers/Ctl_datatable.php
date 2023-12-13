@@ -24,7 +24,7 @@ class Ctl_datatable extends MY_Controller
             'staff.employee_id' => $this->user_emp,
         );
 
-        $staff[] = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
+        $staff[] = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
 
         $optionnal_role['where'] = array(
             'staff_owner' => $this->user_emp,
@@ -558,8 +558,7 @@ class Ctl_datatable extends MY_Controller
             if (count($dataShow)) {
                 $optionnal_emp['select'] = "employee.ID as EMP_ID,employee.NAME as NAME,employee.LASTNAME as LASTNAME";
                 $emp = $this->mdl_staff->get_dataShow($dataShow[0]['USER_START'], $optionnal_emp, "row");
-                
-                
+
                 $head = $this->mdl_staff->get_dataShow($dataShow[0]['STAFF_ID'], $optionnal_emp, "row");
 
                 $DataTable = $dataShow;

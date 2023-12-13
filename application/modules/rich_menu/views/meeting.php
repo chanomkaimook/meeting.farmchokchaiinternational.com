@@ -1,180 +1,254 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <title>login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-    <meta content="Coderthemes" name="author" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- App favicon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="<?=base_url('')?>asset/images/favicon-16x16.png">
-
-    <link href="<?=base_url('')?>asset/libs/select2/select2.min.css" rel="stylesheet" type="text/css" />
-
-    <link href="<?=base_url('')?>asset/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
-    <script src="<?=base_url('asset/js/jquery/jquery-3.5.1.min.js')?>"></script>
-    <!-- App css -->
-    <link href="<?=base_url('asset/css/bootstrap.min.css')?>" rel="stylesheet" type="text/css"
-        id="bootstrap-stylesheet" />
-    <link href="<?=base_url('asset/css/icons.min.css')?>" rel="stylesheet" type="text/css" />
-    <link href="<?=base_url('asset/css/app.min.css')?>" rel="stylesheet" type="text/css" id="app-stylesheet" />
-
-</head>
-<style>
-body {
-    margin: 0px;
-    padding: 0px;
-}
-</style>
-
-<?php
-/* $this->session->sess_destroy();
-if ($this->session->has_userdata('user_code')) {
-
-    print_r($this->session->userdata());
-}
- */
+<div class="row" align="left">
+    <?php
+$default_month = date("n");
+$default_year = date("Y");
+$month = array(
+    '1' => 'มกราคม',
+    '2' => 'กุมภาพันธ์',
+    '3' => 'มีนาคม',
+    '4' => 'เมษายน',
+    '5' => 'พฤษภาคม',
+    '6' => 'มิถุนายน',
+    '7' => 'กรกฎาคม',
+    '8' => 'สิงหาคม',
+    '9' => 'กันยายน',
+    '10' => 'ตุลาคม',
+    '11' => 'พฤศจิกายน',
+    '12' => 'ธันวาคม',
+);
 ?>
+    <div class="col-5">
+        <select class="form-control" name="month">
+            <option selected>เดือน</option>
+            <?php
+                for ($i = 1; $i <= count($month); $i++) {
+                $m = '';
+                $i < 10 ? $m = "0".$i : $m = $i;
 
-<body>
-    <div class="authentication-bg authentication-bg-pattern d-flex align-items-center pb-0 vh-100">
-
-        <div class="account-pages w-100 mt-5 mb-5">
-            <div class="container">
-
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6 col-xl-5">
-                        <div class="card mb-0">
-
-                            <div class="card-body p-4">
-
-                                <div class="account-box">
-                                    <div class="account-logo-box">
-                                        <div class="text-center">
-                                            <!-- <a href="index.html">
-                                                <img src="<?=base_url('asset/images/logo-dark.png')?>" alt="" height="30">
-                                            </a> -->
-                                        </div>
-                                        <div class="text-center">
-                                            <h2 class="text-uppercase mb-1  text-center">ลงทะเบียน</h2>
-                                            <!-- <div class="small text-center"></div> -->
-                                        </div>
-                                    </div>
-
-                                    <div class="account-content mt-4">
-                                        <form class="form-horizontal" id="login">
-                                            <div id="userId"></div>
-                                            <div class="form-group">
-                                                <label class="control-label">ชื่อ-นามสกุล</label>
-                                                <select class="form-control" data-toggle="select2" name="employee">
-                                                    <option selected></option>
-                                                    <?php foreach ($employee as $emp) {
-    ?>
-                                                    <option value="<?=$emp->ID?>"><?=$emp->NAME . " " . $emp->LASTNAME?>
-                                                    </option>
-                                                    <?php
-}?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group row text-center mt-2">
-                                                <div class="col-12">
-                                                    <button
-                                                        class="btn btn-md btn-block btn-primary waves-effect waves-light"
-                                                        id="btn_login" type="button">ลงทะเบียน</button>
-                                                </div>
-                                            </div>
-                                        </form>
-
-                                        <div class="img d-none">
-                                            <img src="<?=base_url('asset/images/qrcode-addfriend.png')?>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- end card-body -->
-                    </div>
-                    <!-- end card -->
-                </div>
-                <!-- end row -->
-            </div>
-            <!-- end container -->
-        </div>
-        <!-- end page -->
+                $date_begin = date("m-01", mktime(0, 0, 0, $m));
+                $date_end = date("m-t", mktime(0, 0, 0, $m));
+            ?>
+            <option value="<?=$i?>" data-dates="<?=$date_begin;?>" data-datee="<?=$date_end;?>"
+                <?=$default_month == $i ? "selected" : ""?>><?=$month[$i]?></option>
+            <?php
+                }
+            ?>
+        </select>
     </div>
 
-    <script src="<?=base_url('')?>asset/libs/select2/select2.min.js"></script>
-    <!-- Sweet alert -->
-    <script src="<?=base_url('')?>asset/libs/sweetalert2/sweetalert2.min.js"></script>
-    <!-- D:\xampp\htdocs\datacenter.com\asset\js\jquery\jquery-3.5.1.min.js -->
+    <div class="col-5">
+        <select class="form-control" name="year">
+            <?php
+            foreach($year as $key => $value)
+                {
+                    $years = "";
+                    $value->YEARS == $value->YEARE ? $years = $value->YEARS : $years = $value->YEARE
+            ?>
+            <option value="<?=$years?>" <?=$default_year == $years ? "selected" : ""?>><?=$years?></option>
+            <?php
+                }
+            ?>
+        </select>
+    </div>
+    <div class="col-2">
+        <button type="button" class="btn btn-primary btn-search"><i class="fa fa-search"
+                aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12" align="left">
+        <button type="button" data-dates="<?=$btndate["day"]?>" data-datee="<?=$btndate["day"]?>"
+            class="btn btn-primary btn-today">today</button>
+        <button type="button" data-dates="<?=$btndate["tmr"]?>" data-datee="<?=$btndate["tmr"]?>"
+            class="btn btn-primary btn-tmr">tmr</button>
+        <button type="button" data-dates="<?=$btndate["weekds"]?>" data-datee="<?=$btndate["weekde"]?>"
+            class="btn btn-primary btn-week">week</button>
+    </div>
+</div>
+<!-- INPUT HIDDEN FOR FILTER -->
+<input type="hidden" name="sid">
+<input type="hidden" name="dates">
+<input type="hidden" name="datee">
+<!-- INPUT HIDDEN FOR FILTER -->
+<div class="row">
+    <div class="col-12">
+        <div class="card-box">
+            <h4 class="header-title mb-3"><?php
+            echo $month[$default_month];
+            ?></h4>
 
-    <script src="https://static.line-scdn.net/liff/edge/versions/2.9.1/sdk.js"></script>
-    <script>
-    let domain
+            <h4 class="topic">
+
+            </h4>
+        </div>
+    </div>
+    <!-- end col -->
+
+</div>
+<!-- end row -->
+<script>
+$(document).ready(function() {
+    let url_host = window.location.host;
+    let url_current = window.location.href;
+    let url_length = url_current.indexOf(url_host);
+    let url_newCurrent = url_current.slice(url_length);
+    let url_split = url_newCurrent.split("/");
+    let url_moduleControl
+
     if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1') {
-        domain = window.location.protocol + '//' + window.location.hostname + '/' + window.location.pathname.split('/')[
-            1] + '/'
+        url_moduleControl = window.location.pathname.split('/')[1]
     } else {
-        domain = window.location.protocol + '//' + window.location.hostname + '/'
-    } // let domain = window.location.origin
-    $(document).ready(function() {
+        url_moduleControl = "";
+    }
+    console.log(url_split)
 
-
-        // select2
-        $('[data-toggle=select2]').select2({
-            theme: "bootstrap"
-        });
-
-
-        function dataShow(eventData = []) {
-            if (eventData) {
-                console.log(eventData)
-            }
+    function path(name = null) {
+        let pathname = window.location.origin;
+        if (name) {
+            pathname = pathname + '/' + name
         }
 
+        return pathname
+    }
 
-        function get_data(userId = null) {
-            if (userId) {
-                let url_getdata = new URL('rich_menu/ctl_get_userid/get_data', domain),
-                    data = new FormData();
+    $('.btn-search').click(function(e) {
+        let val = $('select[name=month]').val(),
+            dates = $('select[name=month]').find('option[value=' + val + ']').attr('data-dates'),
+            datee = $('select[name=month]').find('option[value=' + val + ']').attr('data-datee'),
+            year = $('select[name=year]').val()
 
-                data.append('userId', userId)
+        $('input[name=dates]').val(year + '-' + dates)
+        $('input[name=datee]').val(year + '-' + datee)
 
-                fetch(url_getdata, {
-                        method: 'POST',
-                        body: data,
-                    })
-                    .then(res => res.json())
-                    .then((resp) => {
-                        if (!resp.error) {
-                            dataShow(resp.eventData)
-                        } else {
-                            swal.fire('ผิดพลาด', resp.txt, 'warning')
-                        }
-                    })
-            }
-
-        }
-
-        function runApp() {
-            liff.getProfile().then(profile => {
-                console.log(profile)
-                get_data(profile.userId)
-            }).catch(err => console.error(err));
-        }
-        liff.init({
-            liffId: "2000744935-opRBzQPz" // meeting
-        }, () => {
-            if (liff.isLoggedIn()) {
-                runApp()
-            } else {
-                liff.login();
-            }
-        }, err => console.error(err.code, error.message));
+        filter()
+        return false;
     })
-    </script>
+    $('.btn-today').click(function(e) {
+        let dates = $(this).attr('data-dates'),
+            datee = $(this).attr('data-datee')
+
+        $('input[name=dates]').val(dates)
+        $('input[name=datee]').val(datee)
+        filter()
+        return false;
+    })
+    $('.btn-tmr').click(function(e) {
+        let dates = $(this).attr('data-dates'),
+            datee = $(this).attr('data-datee')
+
+        $('input[name=dates]').val(dates)
+        $('input[name=datee]').val(datee)
+        filter()
+        return false;
+    })
+    $('.btn-week').click(function(e) {
+        let dates = $(this).attr('data-dates'),
+            datee = $(this).attr('data-datee')
+
+        $('input[name=dates]').val(dates)
+        $('input[name=datee]').val(datee)
+        filter()
+        return false;
+    })
+
+    function filter() {
+        let url = new URL('rich_menu/ctl_get_userId/get_data_filter', domain),
+            data = new FormData()
+
+        let sid = $('input[name=sid]').val(),
+            dates = $('input[name=dates]').val(),
+            datee = $('input[name=datee]').val()
+
+        data.append("sid", sid)
+        data.append("dates", dates)
+        data.append("datee", datee)
+        data.append("type_id", 3)
+
+        fetch(url, {
+                method: 'POST',
+                body: data,
+            })
+            .then(res => res.json())
+            .then((resp) => {
+                dataShow(resp)
+            })
+    }
+
+    function get_data(userId) {
+        let url = new URL('rich_menu/ctl_get_userId/get_data', domain),
+            data = new FormData()
+
+        data.append("userId", userId)
+        data.append("type_id", 3)
+
+        fetch(url, {
+                method: 'POST',
+                body: data,
+            })
+            .then(res => res.json())
+            .then((resp) => {
+                dataShow(resp)
+            })
+    }
+
+    function dataShow(eventData = []) {
+        let html = ''
+        console.log(eventData)
+        if (!eventData.msg) {
+            $.each(eventData, function(index, item) {
+                if (index != "sid") {
+                    html += `
+                    <ul class="detail list-group h5">
+                        <li class="list-group-item">
+                            <a class="detail" data-event-id="${item.ID}" data-event-code="${item.CODE}">
+                                <p>
+                                    (${item.STATUS_NAME}) 
+                                    การจองห้องประชุม #${item.CODE} <br> 
+                                    
+                                </p>
+                                <p>
+                                ${item.TOPIC} 
+                                    วันที่ ${item.DATE_BEGIN_SHOW} - ${item.DATE_END_SHOW} 
+                                    เวลา ${item.TIME_BEGIN_SHOW} - ${item.TIME_END_SHOW} 
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                    `
+                }
+            })
+        } else {
+            html = "คุณยังไม่มีข้อมูลการนัดหมายกิจกรรมในเดือนนี้"
+        }
+        $('h4.topic').html(html)
+        $('input[name=sid]').val(eventData.sid)
+    }
+
+    $(document).on('click', 'a.detail', function() {
+        let id = $(this).attr('data-event-id'),
+            code = $(this).attr('data-event-code');
+        let url = new URL("appointment/ctl_line_data?id=" + id + "&code=" + code, domain);
+        window.open(url)
+
+    })
+
+    // get_data("U985c5f9034f1055b1d05229589244b7b")
+
+
+    function runApp() {
+        liff.getProfile().then(profile => {
+            console.log(profile)
+            get_data(profile.userId)
+        }).catch(err => console.error(err));
+    }
+    liff.init({
+        liffId: "2000744935-opRBzQPz" // meeting
+    }, () => {
+        if (liff.isLoggedIn()) {
+            runApp()
+        } else {
+            liff.login();
+        }
+    }, err => console.error(err.code, error.message));
+})
+</script>
