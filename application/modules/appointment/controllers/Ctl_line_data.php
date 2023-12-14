@@ -154,7 +154,9 @@ class Ctl_line_data extends MY_Controller
             $event = $this->get_userId($data[0], true);
             $eventData = $event['eventData'];
             // print_r($eventData);die;
-            $dataReply['msg'] = "คุณได้ถูกยกเลิกคำเชิญให้เข้าร่วมการ" . $eventData['TYPE'] . " แล้ว";
+            $dataReply['msg1'] = "คุณได้ถูกยกเลิกคำเชิญให้เข้าร่วมการ" . $eventData['TYPE'] . " แล้ว";
+            $dataReply['msg2'] = "";
+            $dataReply['msg3'] = "";
             $dataReply['user_action'] = $eventData['OWN'];
             $dataReply['dnt'] = "true";
             $dataReply['id'] = $data[0];
@@ -170,7 +172,11 @@ class Ctl_line_data extends MY_Controller
                     $dataReply['userId'] = $user['userId'];
                 }
 
-                $return = $this->flex_message->flex_message_reply($dataReply);
+                if ($eventData['APPROVE']) {
+                    $return = $this->flex_message->flex_message_reply($dataReply);
+                } else {
+                    $return['msg'] = "ไม่สามารถส่งข้อความได้เนื่องจากประธานยังไม่อนุมัติ";
+                }
 
             }
             echo json_encode($return);
@@ -371,6 +377,15 @@ class Ctl_line_data extends MY_Controller
                 $eventData['TYPE'] = "แบบฟอร์มการนัดหมาย #" . $eventData['CODE'];
             }
 
+            if ($eventData['DBEGIN'] == $eventData['DEND']) {
+                $date = "\\n วันที่ " . date("d/m/Y", strtotime($eventData['DBEGIN']));
+            } else {
+                $date = "\\n วันที่ " . date("d/m/Y", strtotime($eventData['DBEGIN'])) . " - " . date("d/m/Y", strtotime($eventData['DEND']));
+            }
+
+            $dataReply['msg2'] = "\\n\\n หัวข้อ " . $eventData['TOPIC'];
+            $dataReply['msg3'] = $date . "\\n เวลา " . date("H:i", strtotime($eventData['TBEGIN'])) . " - " . date("H:i", strtotime($eventData['TEND']));
+
             if ($eventData['VISITOR']) {
                 $visitor_userId = '';
                 $VID = '';
@@ -393,27 +408,27 @@ class Ctl_line_data extends MY_Controller
                     $dataP['item_data'] = 2;
                     $dataP['user_action'] = $user_action;
                     $this->crud_valid->processing($dataP);
-                    $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
+                    $dataReply['msg1'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
                 }
 
             } else if ($eventData['STATUS'] == 2 && $eventData['APPROVE']) {
                 $respond = 1;
-                $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
+                $dataReply['msg1'] = $eventData['TYPE'] . " ดำเนินการสำเร็จแล้ว";
 
             } else if ($eventData['STATUS'] == 3 && $eventData['DISAPPROVE']) {
                 $respond = 1;
-                $dataReply['msg'] = $eventData['TYPE'] . " ดำเนินการไม่สำเร็จ";
+                $dataReply['msg1'] = $eventData['TYPE'] . " ดำเนินการไม่สำเร็จ";
 
             } else if ($eventData['STATUS'] == 4 && $eventData['CANCEL']) {
                 $respond = 1;
-                $dataReply['msg'] = $eventData['TYPE'] . " ถูกยกเลิกแล้ว";
+                $dataReply['msg1'] = $eventData['TYPE'] . " ถูกยกเลิกแล้ว";
 
             } else {
                 $return['error'] = 1;
-                $return['msg'] = "รอผู้ที่เกี่ยวข้องตอบกลับ";
+                $return['msg1'] = "รอผู้ที่เกี่ยวข้องตอบกลับ";
             }
 
-            if ($dataReply['msg'] && $respond) {
+            if ($dataReply['msg1'] && $respond) {
                 $dataReply['dnt'] = "true";
                 $dataReply['id'] = $eventData['ID'];
                 $dataReply['sid'] = $eventData['OWN'];
@@ -484,21 +499,31 @@ class Ctl_line_data extends MY_Controller
             }
 
             $optionnale['select'] = 'staff.user_id as userId';
-                $datai = $this->mdl_staff->get_dataShow($array['user_action'], $optionnale, "row");
-                if ($datai->userId) {
-                    $eventData['userId'] = $datai->userId;
-                }
-            
+            $datai = $this->mdl_staff->get_dataShow($array['user_action'], $optionnale, "row");
+            if ($datai->userId) {
+                $eventData['userId'] = $datai->userId;
+            }
+
             $eventData['user_action'] = $array['user_action'];
             $eventData['sid'] = $array['user_action'];
             $eventData['ID'] = $array['id'];
 
             if ($array['role'] == 'visitor') {
                 if ($array['data'] == 3) {
-                    $eventData['msg'] = 'คุณปฏิเสธการเข้าร่วมการ' . $eventData['TYPE'] . ' เนื่องจาก' . $array['reason'];
+                    $eventData['msg1'] = 'คุณได้ปฏิเสธการเข้าร่วมการ' . $eventData['TYPE'] . ' เนื่องจาก' . $array['reason'];
                 } elseif ($array['data'] == 2) {
-                    $eventData['msg'] = 'คุณได้เข้าร่วมการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
+                    $eventData['msg1'] = 'คุณได้ตอบรับการเข้าร่วมการ' . $eventData['TYPE'] . ' สำเร็จแล้ว';
                 }
+
+                if ($eventData['DBEGIN'] == $eventData['DEND']) {
+                    $date = "\\n วันที่ " . date("d/m/Y", strtotime($eventData['DBEGIN']));
+                } else {
+                    $date = "\\n วันที่ " . date("d/m/Y", strtotime($eventData['DBEGIN'])) . " - " . date("d/m/Y", strtotime($eventData['DEND']));
+                }
+    
+                $eventData['msg2'] = "\\n\\n หัวข้อ " . $eventData['TOPIC'];
+                $eventData['msg3'] = $date . "\\n เวลา " . date("H:i", strtotime($eventData['TBEGIN'])) . " - " . date("H:i", strtotime($eventData['TEND']));
+
                 $this->flex_message->flex_message_reply($eventData);
             }
         }

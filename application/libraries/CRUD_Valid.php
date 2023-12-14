@@ -884,7 +884,7 @@ class CRUD_Valid
             if (!$main['error']) {
                 $main['data']['user_action'] = $user_action;
 
-                $check_approve = $this->auto_approve($item_id, $item_code, $user_action);
+                $check_approve = $this->auto_approve($item_id, $user_action);
                 if (!$check_approve['error']) {
                     if ($check_approve['auto_approve']) {
                         $apv['item_id'] = $item_id;

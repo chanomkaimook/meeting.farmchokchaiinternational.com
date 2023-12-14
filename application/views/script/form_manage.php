@@ -210,7 +210,6 @@ function form_displayed_layouts(status, role, modal_detail) {
             },
             2: { // สถานะ success
                 me: {
-                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
@@ -219,7 +218,6 @@ function form_displayed_layouts(status, role, modal_detail) {
                     'div.meeting-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
-                    'div.action-header': 'd-none',
                     'div.status-inline': 'col-6',
                     'div.action-approval': 'd-none',
                     'div.action-respond': 'd-none',
@@ -357,10 +355,12 @@ function form_displayed_layouts(status, role, modal_detail) {
             2: { // สถานะ success
                 me: {
                     'div.status-inline': 'col-3',
+                    'div.action-header': 'd-none',
                     '.status-inline': 'd-none',
                 }, // role 'me' ประธานสร้างวาระเอง ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 owner: {
                     'div.status-inline': 'col-3',
+                    'div.action-header': 'd-none',
                     '.status-inline': 'd-none',
                 }, // role 'owner' สร้างให้ผู้อื่นเป็นประธาน ทำอะไรไม่ได้เพราะดำเนินการสำเร็จแล้ว
                 child: {

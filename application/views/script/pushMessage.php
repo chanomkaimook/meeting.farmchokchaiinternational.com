@@ -33,21 +33,20 @@ function get_userId(eventData = [], callback = "true") {
                 array_flex.append('HEAD_NAME', resp.eventData.HEAD_NAME)
                 array_flex.append('TYPE', resp.eventData.TYPE)
 
-                if(!eventData['user_action'])
-                {
+                if (!eventData['user_action']) {
                     eventData['user_action'] = resp.eventData.OWN;
                 }
 
                 let visitor = resp.eventData.VISITOR,
-                    arrayUserId = [],
-                    arrayVID = [];
+                    arrayUserId = '',
+                    arrayVID = '';
 
                 if (visitor) {
 
                     array_flex.append('role', "visitor")
                     for (let i = 0; i < visitor.length; i++) {
-                        arrayVID.push(visitor[i].VID)
-                        arrayUserId.push(visitor[i].VUserId)
+                        arrayVID = visitor[i].VID + " " + arrayVID
+                        arrayUserId = visitor[i].VUserId + " " + arrayUserId
 
                         if (eventData['data']) {
                             array_reply.delete('userId')
@@ -62,22 +61,36 @@ function get_userId(eventData = [], callback = "true") {
                                 array_reply.append('user_action', eventData['user_action'])
                                 // array_reply.append('dnt')
 
-                                let msg = '';
+                                let msg1 = '',
+                                    msg2 = '',
+                                    msg3 = '',
+                                    date = '',
+                                    time = '';
                                 if (eventData['data'] == 2) {
-                                    msg = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
-                                        "สำเร็จแล้ว"
-                                } else if (eventData['data'] == 3) {
-                                    msg = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
-                                        " เนื่องจาก" + eventData['remark'] +
+                                    msg1 = "คุณได้ตอบรับการเข้าร่วมการ" + resp.eventData.TYPE +
                                         " สำเร็จแล้ว"
+                                } else if (eventData['data'] == 3) {
+                                    msg1 = "คุณได้ปฏิเสธการเข้าร่วมการ" + resp.eventData.TYPE +
+                                        " เนื่องจาก" + eventData['remark']
                                 }
 
                                 if (eventData['user_action'] == resp.eventData.OWN) {
-                                    msg += " โดยผู้สร้างแบบฟอร์ม";
+                                    msg1 += " โดยผู้สร้างแบบฟอร์ม";
                                 }
 
+                                if (resp.eventData.DBEGIN == resp.eventData.DEND) {
+                                    date = "\\n วันที่ " + resp.eventData.DBEGIN
+                                } else {
+                                    date = "\\n วันที่ " + resp.eventData.DBEGIN + " - " + resp.eventData.DEND
+                                }
+
+                                msg2 = "\\n\\n หัวข้อ " + resp.eventData.TOPIC
+                                msg3 = date + " \\n เวลา " + resp.eventData.TBEGIN + " - " + resp.eventData.TEND
+
                                 array_reply.append('userId', visitor[i].VUserId)
-                                array_reply.append('msg', msg)
+                                array_reply.append('msg1', msg1)
+                                array_reply.append('msg2', msg2)
+                                array_reply.append('msg3', msg3)
                                 flex_reply(array_reply)
                             }
                         }
@@ -94,12 +107,13 @@ function get_userId(eventData = [], callback = "true") {
                     array_flex.append('userId', resp.eventData.userId)
                     flex_head(array_flex)
 
-
-                    if (arrayUserId.length && arrayVID.length) {
-                        array_flex.delete('userId')
-                        array_flex.append('userId', arrayUserId)
-                        array_flex.append('vid', arrayVID)
-                        flex_action(array_flex)
+                    if (!eventData['eid']) {
+                        if (arrayUserId && arrayVID) {
+                            array_flex.delete('userId')
+                            array_flex.append('userId', arrayUserId)
+                            array_flex.append('vid', arrayVID)
+                            flex_action(array_flex)
+                        }
                     }
 
                 }
@@ -186,7 +200,7 @@ async function flex_alert(event_id, user_action) {
         .then((resp) => {
             console.log(resp)
             if (!resp.error && !resp.dnt) {
-                get_userId(resp, null)
+                // get_userId(resp, null)
             }
         })
 

@@ -80,12 +80,14 @@ class Flex_message
                         // $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
                         // $uri2 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
                         // $uri3 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
-                        // $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        // $uri2 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        // $uri3 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
-                        $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
-                        $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
-                        $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+
+                        $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        $uri2 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        $uri3 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
+
+                        // $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $user_action;
+                        // $uri2 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=2&user_action=" . $user_action;
+                        // $uri3 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&data=3&user_action=" . $user_action;
                         $JsonData = '{
                           "to": "' . $userId[$i] . '",
                           "messages": [
@@ -331,8 +333,8 @@ class Flex_message
                 $time = date('H:i', strtotime($eventData['TBEGIN'])) . " - " . date('H:i', strtotime($eventData['TEND'])) . " น.";
 
                 // $uri1 = "http://127.0.0.1/meeting.farmchokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
-                // $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
-                $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
+                $uri1 = "https://meeting.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
+                // $uri1 = "https://booking.chokchaiinternational.com/appointment/ctl_line_data?id=" . $id . "&code=" . $code . "&user_action=" . $eventData['user_action'];
                 $JsonData = '{
                   "to": "' . $userId . '",
                   "messages": [
@@ -531,9 +533,9 @@ class Flex_message
               "to": "' . $eventData['userId'] . '",
               "messages":  [
                {
-                          "type": "text",
-                          "text": "' . $eventData['msg'] . '"
-                        }
+                    "type": "text",
+                    "text": "' . $eventData['msg1'] . $eventData['msg2'] . $eventData['msg3'] . '"
+                }
               ]
             }';
 

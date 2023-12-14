@@ -27,19 +27,18 @@ class Ctl_get_userId extends MY_Controller
     {
         $array = $this->input->post();
         $eventData = [];
-        
-            if (count($array)) {
-                $optionnal_staff['select'] = "staff.employee_id as EID,
+
+        if (count($array)) {
+            $optionnal_staff['select'] = "staff.employee_id as EID,
                  employee.code as ECODE,
                  employee.name as NAME,
                 employee.lastname as LASTNAME";
 
-                $staff = (array) $this->mdl_staff->get_dataShow($array['sid'], $optionnal_staff, "row");
-                
+            $staff = (array) $this->mdl_staff->get_dataShow($array['sid'], $optionnal_staff, "row");
 
-                if (count($staff)) {
+            if (count($staff)) {
 
-                    $optionnal_event['select'] = "event.id as ID,
+                $optionnal_event['select'] = "event.id as ID,
                     event.code as CODE,
                     event.type_id as TYPE_ID,
                     event.event_name as TOPIC,
@@ -61,73 +60,78 @@ class Ctl_get_userId extends MY_Controller
                     event_car.CAR_NAME,
                     event_car.DRIVER_ID,
                     event_car.DRIVER_NAME";
-                    
-                    $optionnal_event['where'] = array(
-                        '(event.date_begin BETWEEN "'.$array['dates'].'" AND "'.$array['datee'].'" or event.date_end BETWEEN "'.$array['dates'].'" AND "'.$array['datee'].'")' => null,
-                        // '' => null,
-                        'event.staff_id' => $array['sid'],
-                        'event.type_id' => $array['type_id'],
-                    );
 
-                    $optionnal_event['join'] = "all";
-                    $event_main = $this->mdl_event->get_dataShow(null, $optionnal_event);
+                $optionnal_event['where'] = array(
+                    '(event.date_begin BETWEEN "' . $array['dates'] . '" AND "' . $array['datee'] . '" or event.date_end BETWEEN "' . $array['dates'] . '" AND "' . $array['datee'] . '")' => null,
+                    // '' => null,
+                    'event.staff_id' => $array['sid'],
+                    'event.type_id' => $array['type_id'],
+                );
 
-                    // print_r($event_main);
+                $optionnal_event['join'] = "all";
+                $event_main = $this->mdl_event->get_dataShow(null, $optionnal_event);
 
-                    $optionnal_visitor['select'] = "event_visitor.id as VID,
+                // print_r($event_main);
+
+                $optionnal_visitor['select'] = "event_visitor.id as VID,
                     event_visitor.event_id as EVENT_ID,
                     event_visitor.event_code as EVENT_CODE,
                     event_visitor.status_complete as VSTATUS,
                     event_visitor.status_remark as VREMARK";
 
-                    $optionnal_visitor['where'] = array(
-                        'event_visitor.event_visitor' => $staff['EID'],
-                    );
+                $optionnal_visitor['where'] = array(
+                    'event_visitor.event_visitor' => $staff['EID'],
+                );
 
-                    $data_visitor = $this->mdl_visitor->get_dataShow(null, $optionnal_visitor);
+                $data_visitor = $this->mdl_visitor->get_dataShow(null, $optionnal_visitor);
 
-                    $this_month = date("m");
-                    $count = 0;
-                    if ($event_main && count($event_main)) {
-                        for ($index_head = 0; $index_head < count($event_main); $index_head++) {
-                                $event_main[$index_head]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_main[$index_head]->DBEGIN);
-                                $event_main[$index_head]->DATE_END_SHOW = toThaiDateTimeString($event_main[$index_head]->DEND);
-                                $event_main[$index_head]->TIME_BEGIN_SHOW = toTime($event_main[$index_head]->TBEGIN);
-                                $event_main[$index_head]->TIME_END_SHOW = toTime($event_main[$index_head]->TEND);
-                                $eventData[$count] = $event_main[$index_head];
-                            
-                                $count++;
-                        }
+                $this_month = date("m");
+                $count = 0;
+                if ($event_main && count($event_main)) {
+                    for ($index_head = 0; $index_head < count($event_main); $index_head++) {
+                        $event_main[$index_head]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_main[$index_head]->DBEGIN);
+                        $event_main[$index_head]->DATE_END_SHOW = toThaiDateTimeString($event_main[$index_head]->DEND);
+                        $event_main[$index_head]->TIME_BEGIN_SHOW = toTime($event_main[$index_head]->TBEGIN);
+                        $event_main[$index_head]->TIME_END_SHOW = toTime($event_main[$index_head]->TEND);
+                        $eventData['head'][$count] = $event_main[$index_head];
+
+                        $count++;
                     }
-
-                    if ($data_visitor && count($data_visitor)) {
-                        $optionnal_event['where'] = [];
-                        $count += 1;
-                        for ($index_vis = 0; $index_vis < count($data_visitor); $index_vis++) {
-                            $event_visitor = (array) $this->mdl_event->get_dataShow($data_visitor[$index_vis]->EVENT_ID, $optionnal_event, "row");
-                            if ($event_visitor) {
-                                    $event_visitor[$index_vis]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_visitor[$index_vis]->DBEGIN);
-                                    $event_visitor[$index_vis]->DATE_END_SHOW = toThaiDateTimeString($event_visitor[$index_vis]->DEND);
-                                    $event_visitor[$index_vis]->TIME_BEGIN_SHOW = toTime($event_visitor[$index_vis]->TBEGIN);
-                                    $event_visitor[$index_vis]->TIME_END_SHOW = toTime($event_visitor[$index_vis]->TEND);
-                                    $eventData[$count] = $event_visitor[$index_vis];
-                                
-                                    $count++;
-                            }
-                        }
-                    }
-
-
-                    if (!count($eventData)) {
-                        $eventData['error'] = 0;
-                        $eventData['msg'] = "ไม่มีข้อมูล";
-                    }
-                    $eventData['sid'] = $array['sid'];
-
                 }
-                echo json_encode($eventData);
+
+                if ($data_visitor && count($data_visitor)) {
+                    $count += 1;
+                    for ($index_vis = 0; $index_vis < count($data_visitor); $index_vis++) {
+                        $optionnal_event['where'] = [];
+                        $optionnal_event['where'] = array(
+                            '(event.date_begin BETWEEN "' . $array['dates'] . '" AND "' . $array['datee'] . '" or event.date_end BETWEEN "' . $array['dates'] . '" AND "' . $array['datee'] . '")' => null,
+                            // '' => null,
+                            'event.id' => $data_visitor[$index_vis]->EVENT_ID,
+                            'event.type_id' => $array['type_id'],
+                        );
+                        $event_visitor = (array) $this->mdl_event->get_dataShow(null, $optionnal_event, "row");
+                        if ($event_visitor) {
+                            $event_visitor["DATE_BEGIN_SHOW"] = toThaiDateTimeString($event_visitor["DBEGIN"]);
+                            $event_visitor["DATE_END_SHOW"] = toThaiDateTimeString($event_visitor["DEND"]);
+                            $event_visitor["TIME_BEGIN_SHOW"] = toTime($event_visitor["TBEGIN"]);
+                            $event_visitor["TIME_END_SHOW"] = toTime($event_visitor["TEND"]);
+                            $eventData['visitor'][$count] = $event_visitor;
+
+                            $count++;
+                        }
+                    }
+                }
+
+                if (!count($eventData)) {
+                    $eventData['error'] = 0;
+                    $eventData['msg'] = "ไม่มีข้อมูล";
+                }
+                $eventData['sid'] = $array['sid'];
+
             }
-        
+            echo json_encode($eventData);
+        }
+
     }
 
     public function get_data()
@@ -135,20 +139,20 @@ class Ctl_get_userId extends MY_Controller
         $userId = $this->input->post("userId");
         $type_id = $this->input->post("type_id");
         $eventData = [];
-        
-            if ($userId || $type_id) {
-                $optionnal_staff['select'] = "staff.id as SID,
+
+        if ($userId || $type_id) {
+            $optionnal_staff['select'] = "staff.id as SID,
                  staff.employee_id as EID,
                  employee.code as ECODE,
                  employee.name as NAME,
                 employee.lastname as LASTNAME";
 
-                $optionnal_staff['where']["user_id"] = $userId;
-                $staff = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
+            $optionnal_staff['where']["user_id"] = $userId;
+            $staff = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
 
-                if (count($staff)) {
+            if (count($staff)) {
 
-                    $optionnal_event['select'] = "event.id as ID,
+                $optionnal_event['select'] = "event.id as ID,
                     event.code as CODE,
                     event.type_id as TYPE_ID,
                     event.event_name as TOPIC,
@@ -171,78 +175,81 @@ class Ctl_get_userId extends MY_Controller
                     event_car.DRIVER_ID,
                     event_car.DRIVER_NAME";
 
-                    $optionnal_event['where'] = array(
-                        'event.staff_id' => $staff['SID'],
-                        'event.type_id' => $type_id,
-                    );
+                $optionnal_event['where'] = array(
+                    'event.staff_id' => $staff['SID'],
+                    'event.type_id' => $type_id,
+                );
 
-                    $optionnal_event['join'] = "all";
-                    $event_main = $this->mdl_event->get_dataShow(null, $optionnal_event);
+                $optionnal_event['join'] = "all";
+                $event_main = $this->mdl_event->get_dataShow(null, $optionnal_event);
 
-                    $optionnal_visitor['select'] = "event_visitor.id as VID,
+                $optionnal_visitor['select'] = "event_visitor.id as VID,
                     event_visitor.event_id as EVENT_ID,
                     event_visitor.event_code as EVENT_CODE,
                     event_visitor.status_complete as VSTATUS,
                     event_visitor.status_remark as VREMARK";
 
-                    $optionnal_visitor['where'] = array(
-                        'event_visitor.event_visitor' => $staff['EID'],
-                    );
+                $optionnal_visitor['where'] = array(
+                    'event_visitor.event_visitor' => $staff['EID'],
+                );
 
-                    $data_visitor = $this->mdl_visitor->get_dataShow(null, $optionnal_visitor);
+                $data_visitor = $this->mdl_visitor->get_dataShow(null, $optionnal_visitor);
 
-                    $this_month = date("m");
-                    $count = 0;
-                    if ($event_main && count($event_main)) {
-                        for ($index_head = 0; $index_head < count($event_main); $index_head++) {
-                            $months = date("m", strtotime($event_main[$index_head]->DBEGIN));
-                            $monthe = date("m", strtotime($event_main[$index_head]->DEND));
-                            
+                $this_month = date("m");
+                $count = 0;
+                if ($event_main && count($event_main)) {
+                    for ($index_head = 0; $index_head < count($event_main); $index_head++) {
+                        $months = date("m", strtotime($event_main[$index_head]->DBEGIN));
+                        $monthe = date("m", strtotime($event_main[$index_head]->DEND));
+
+                        if ($months == $this_month || $monthe == $this_month) {
+                            $event_main[$index_head]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_main[$index_head]->DBEGIN);
+                            $event_main[$index_head]->DATE_END_SHOW = toThaiDateTimeString($event_main[$index_head]->DEND);
+                            $event_main[$index_head]->TIME_BEGIN_SHOW = toTime($event_main[$index_head]->TBEGIN);
+                            $event_main[$index_head]->TIME_END_SHOW = toTime($event_main[$index_head]->TEND);
+                            $eventData['head'][$count] = $event_main[$index_head];
+
+                            $count++;
+                        }
+                    }
+                }
+
+                if ($data_visitor && count($data_visitor)) {
+                    $optionnal_event['where'] = [];
+                    $count += 1;
+                    for ($index_vis = 0; $index_vis < count($data_visitor); $index_vis++) {
+                        $optionnal_event['where'] = [];
+                        $optionnal_event['where'] = array(
+                            'event.id' => $data_visitor[$index_vis]->EVENT_ID,
+                            'event.type_id' => $type_id,
+                        );
+                        $event_visitor = (array) $this->mdl_event->get_dataShow(null, $optionnal_event, "row");
+                        if ($event_visitor) {
+                            $months = date("m", strtotime($event_visitor["DBEGIN"]));
+                            $monthe = date("m", strtotime($event_visitor["DEND"]));
+
                             if ($months == $this_month || $monthe == $this_month) {
-                                $event_main[$index_head]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_main[$index_head]->DBEGIN);
-                                $event_main[$index_head]->DATE_END_SHOW = toThaiDateTimeString($event_main[$index_head]->DEND);
-                                $event_main[$index_head]->TIME_BEGIN_SHOW = toTime($event_main[$index_head]->TBEGIN);
-                                $event_main[$index_head]->TIME_END_SHOW = toTime($event_main[$index_head]->TEND);
-                                $eventData[$count] = $event_main[$index_head];
-                                
-                            
+                                $event_visitor["DATE_BEGIN_SHOW"] = toThaiDateTimeString($event_visitor["DBEGIN"]);
+                                $event_visitor["DATE_END_SHOW"] = toThaiDateTimeString($event_visitor["DEND"]);
+                                $event_visitor["TIME_BEGIN_SHOW"] = toTime($event_visitor["TBEGIN"]);
+                                $event_visitor["TIME_END_SHOW"] = toTime($event_visitor["TEND"]);
+                                $eventData['visitor'][$count] = $event_visitor;
+
                                 $count++;
                             }
                         }
                     }
-
-                    if ($data_visitor && count($data_visitor)) {
-                        $optionnal_event['where'] = [];
-                        $count += 1;
-                        for ($index_vis = 0; $index_vis < count($data_visitor); $index_vis++) {
-                            $event_visitor = (array) $this->mdl_event->get_dataShow($data_visitor[$index_vis]->EVENT_ID, $optionnal_event, "row");
-                            if ($event_visitor) {
-                                $months = date("m", strtotime($event_visitor[$index_vis]->DBEGIN));
-                                $monthe = date("m", strtotime($event_visitor[$index_vis]->DEND));
-                                
-                                if ($months == $this_month || $monthe == $this_month) {
-                                    $event_visitor[$index_vis]->DATE_BEGIN_SHOW = toThaiDateTimeString($event_visitor[$index_vis]->DBEGIN);
-                                    $event_visitor[$index_vis]->DATE_END_SHOW = toThaiDateTimeString($event_visitor[$index_vis]->DEND);
-                                    $event_visitor[$index_vis]->TIME_BEGIN_SHOW = toTime($event_visitor[$index_vis]->TBEGIN);
-                                    $event_visitor[$index_vis]->TIME_END_SHOW = toTime($event_visitor[$index_vis]->TEND);
-                                    $eventData[$count] = $event_visitor[$index_vis];
-                                    
-                                
-                                    $count++;
-                                }
-                            }
-                        }
-                    }
-
-                    if (!count($eventData)) {
-                        $eventData['error'] = 0;
-                        $eventData['msg'] = "ไม่มีข้อมูล";
-                    }
-                    $eventData['sid'] = $staff['SID'];
                 }
-                echo json_encode($eventData);
+
+                if (!count($eventData)) {
+                    $eventData['error'] = 0;
+                    $eventData['msg'] = "ไม่มีข้อมูล";
+                }
+                $eventData['sid'] = $staff['SID'];
             }
-        
+            echo json_encode($eventData);
+        }
+
     }
 
 }

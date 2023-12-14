@@ -68,12 +68,12 @@ function btn_displayed(status = null, role = null) {
         },
         btn_success = {
             me: {
-                header: '',
+                header: '.action-header',
                 body: '',
                 footer: ''
             },
             owner: {
-                header: '',
+                header: '.action-header',
                 body: '',
                 footer: ''
             },
