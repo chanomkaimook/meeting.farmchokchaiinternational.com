@@ -107,8 +107,8 @@
                             <?php
 foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
-                            <?php
+                            <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
+                                <?php
 }
 ?>
                         </select>
@@ -116,8 +116,8 @@ foreach ($staff as $key => $val) {
 
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="insert-description"
-                            cols="30" rows="5"></textarea>
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="insert-description" cols="30" rows="5"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-6 mb-2">
@@ -215,8 +215,8 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="update-description"
-                            cols="30"
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="update-description" cols="30"
                             rows="5">กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="row">
@@ -326,8 +326,8 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="detail-description"
-                            cols="30" rows="5"
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="detail-description" cols="30" rows="5"
                             disabled>กิจกรรมเก็บหินที่สำนักงานฟาร์ม เดินทางนำโดยรถตู้บริษัท ทะเบียน กข1234 นำทีมนำโดย นาย G</textarea>
                     </div>
                     <div class="row">
@@ -427,12 +427,13 @@ foreach ($time as $value) {
                     <div class="row">
                         <div class="col-6 mb-2"><label class="control-label">นำโดย <span class="text-danger">*</span>
                             </label>
-                  <select class="form-control form-white" name="insert-head" required>
+                            <select class="form-control form-white" name="insert-head" required>
                                 <option disabled selected>กรุณาเลือก...</option>
                                 <?php
 foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
+                                <option value="<?=$val['ID'];?>" data-employee-id="<?=$val['EMPLOYEE_ID'];?>">
+                                    <?=$val['staff_name'];?>
                                 </option>
                                 <?php
 }
@@ -467,8 +468,8 @@ foreach ($room as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="insert-description"
-                            cols="30" rows="5"></textarea>
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="insert-description" cols="30" rows="5"></textarea>
                     </div>
 
                     <div class="row">
@@ -532,7 +533,8 @@ foreach ($time as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">ผู้เข้าร่วม</label>
-                        <select name="insert-visitor" class="form-control select2-multiple" data-toggle="select2" multiple="multiple" data-placeholder="Choose ...">
+                        <select name="insert-visitor" class="form-control select2-multiple" data-toggle="select2"
+                            multiple="multiple" data-placeholder="Choose ...">
 
                             <?php foreach ($employee as $emp) {
     ?>
@@ -592,7 +594,8 @@ foreach ($time as $value) {
                                 <?php
 foreach ($staff as $key => $val) {
     ?>
-                                <option value="<?=$val['ID'];?>"><?=$val['staff_name'];?>
+                                <option value="<?=$val['ID'];?>" data-employee-id="<?=$val['EMPLOYEE_ID'];?>">
+                                    <?=$val['staff_name'];?>
                                 </option>
                                 <?php
 }
@@ -628,8 +631,8 @@ foreach ($room as $value) {
                     </div>
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="update-description"
-                            cols="30" rows="5"></textarea>
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="update-description" cols="30" rows="5"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-6 mb-2">
@@ -737,7 +740,7 @@ foreach ($time as $value) {
                 <!-- <h4 class="modal-title-status text-orange d-none"></h4> -->
                 <!-- </div> -->
                 <!-- </div> -->
-                
+
             </div>
 
             <div class="modal-body pb-0">
@@ -845,8 +848,8 @@ foreach ($room as $value) {
                     <div class="form-group">
                         <label class="control-label">เนื้อหาการประชุม</label>
                         <!-- <p class="detail-description"></p> -->
-                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white" name="detail-description"
-                            cols="30" rows="5" disabled></textarea>
+                        <textarea maxlength="150" placeholder="Enter name" class="form-control form-white"
+                            name="detail-description" cols="30" rows="5" disabled></textarea>
                     </div>
                     <div class="row">
                         <div class="col-6 mb-2">
@@ -945,3 +948,140 @@ foreach ($room as $value) {
     </div>
 </div>
 <!-- END READ Modal -meeting- -->
+
+<!-- READ Modal -manage the queue- -->
+<div class="modal fade none-border" id="modal-tab-content" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLongTitle" aria-hidden="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-modal-hide="#modal-tab-content" data-dismiss="modal"
+                    aria-label="Close">&times;</button>
+                <div class="d-flex">
+                    <div>
+                        <h4 class="modal-title">ตรวจสอบคิว</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body pb-0">
+                <div class="card-box">
+
+                    <div class="row justify-content-end">
+                        <?php
+                                include APPPATH . "views/partials/dom_filter_rooms.php";
+                                include APPPATH . "views/partials/dom_filter_user.php";
+                            ?>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+
+                            <ul class="nav nav-tabs">
+
+                                <li class="nav-item">
+                                    <a href="#room" data-toggle="tab" aria-expanded="false"
+                                        class="nav-link active tabs-room">
+                                        <span class="d-block d-sm-none"><i class="mdi mdi-home-variant"></i></span>
+                                        <span class="d-none d-sm-block">จองห้องประชุม</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="#meeting" data-toggle="tab" aria-expanded="true"
+                                        class="nav-link tabs-meeting">
+                                        <span class="d-block d-sm-none"><i class="mdi mdi-account"></i></span>
+                                        <span class="d-none d-sm-block">นัดหมายกิจกรรม</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content">
+
+                                <div class="tab-pane show active" id="room">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover mb-0" id="queue_room">
+                                            <thead>
+                                                <tr>
+                                                    <th>#CODE</th>
+                                                    <th>ห้องประชุม</th>
+                                                    <th>หัวข้อการประชุม</th>
+                                                    <th>ประธานการประชุม</th>
+                                                    <th>วันที่</th>
+                                                    <th>เวลา</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>#R2312001</td>
+                                                    <td>ห้องประชุมใหญ่ 2</td>
+                                                    <td>จองห้องประชุม</td>
+                                                    <td>ปริษา ผิวอ่อน</td>
+                                                    <td>พฤ. 14/12/2023</td>
+                                                    <td>08:00 - 11:30</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#R2312002</td>
+                                                    <td>ห้องประชุมใหญ่ 2</td>
+                                                    <td>จองห้องประชุม</td>
+                                                    <td>ปริษา ผิวอ่อน</td>
+                                                    <td>ศ. 15/12/2023</td>
+                                                    <td>08:00 - 11:30</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="meeting">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered mb-0" id="queue_meeting">
+                                            <thead>
+                                                <tr>
+                                                    <th>#CODE</th>
+                                                    <th>สถานที่</th>
+                                                    <th>หัวข้อกิจกรรม</th>
+                                                    <th>ผู้นำกิจกรรม</th>
+                                                    <th>วันที่</th>
+                                                    <th>เวลา</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>#M2312003</td>
+                                                    <td>16 ไร่</td>
+                                                    <td>ปลูกป่า</td>
+                                                    <td>ปริษา ผิวอ่อน</td>
+                                                    <td>พ. 13/12/2023</td>
+                                                    <td>16:30 - 17:30</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#M2312004</td>
+                                                    <td>สนง.ฟาร์ม</td>
+                                                    <td>OJT งานระบบ</td>
+                                                    <td>ปริษา ผิวอ่อน</td>
+                                                    <td>ศ. 15/12/2023</td>
+                                                    <td>13:00 - 17:30</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- end col -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">ปิด</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- END READ Modal -manage the queue- -->

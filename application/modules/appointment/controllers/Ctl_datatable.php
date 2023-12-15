@@ -46,15 +46,57 @@ class Ctl_datatable extends MY_Controller
 
         $data['time'] = $this->mdl_calendar->get_time();
 
-        $optionnalr['where'] = array(
-            'branch' => "สำนักงานรังสิต",
-        );
-        $data['room'] = $this->mdl_rooms->get_data(null, $optionnalr);
+        /* $optionnalr['where'] = array(
+        'branch' => "สำนักงานรังสิต",
+        ); */
+        $data['room'] = $this->mdl_rooms->get_data( /* null, $optionnalr */);
         $data['employee'] = $this->mdl_employee->get_dataShow();
 
         $this->template->set_layout('lay_datatable');
         $this->template->title($this->_title);
         $this->template->build('datatable', $data);
+    }
+
+    public function get_dataQueue()
+    {
+        $array = $this->input->post();
+        $optionnal['where']['event.date_begin <> '] = "0000-00-00";
+        $optionnal['where']['event.date_end <> '] = "0000-00-00";
+        $optionnal['where']['event.type_id < '] = 4;
+        $optionnal['select'] = "event.id as ID,
+        event.code as CODE,
+        event.staff_id as STAFF_ID,
+        event.type_id as TYPE_ID,
+        event.event_name as TOPIC,
+        event.date_begin as DATE_BEGIN,
+        event.date_end as DATE_END,
+        event.time_begin as TIME_BEGIN,
+        event.time_end as TIME_END,
+        event_meeting.rooms_id as ROOMS_ID,
+        event_meeting.rooms_name as ROOMS_NAME,
+        event_car.car_id as CAR_ID,
+        event_car.car_name as CAR_NAME,
+        event_car.driver_id as DRIVER_ID,
+        event_car.driver_name as DRIVER_NAME";
+
+        if (count($array)) {
+            $user = $array['user'];
+
+            if ($user) {
+                $optionnal['where']['event.staff_id'] = $user;
+            }
+
+        }
+
+        
+
+            $result = array(
+                "recordsTotal" => count($dataReturn),
+                "recordsFiltered" => $dataall,
+                "data" => $dataReturn,
+            );
+            echo json_encode($result);
+        
     }
 
     public function status($status_complete, $child = null)
@@ -194,7 +236,7 @@ class Ctl_datatable extends MY_Controller
                         $DataTable[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1 days"));
                         $DataTable[$i]['title'] = $dataVal["EVENT_NAME"];
                         $DataTable[$i]['className'] = $attr['color'];
-                        $DataTable[$i]['STATUS_SHOW'] = $attr['status'];
+                        $DataTable[$i]['STATUS_SHOW'] = $dataVal['TYPE_NAME'] . " #" . $dataVal['CODE'] . "<br>" . $dataVal['STATUS_COMPLETE_NAME'];
                         $DataTable[$i]['class'] = $state;
                         // $DataTable[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
 
@@ -272,7 +314,7 @@ class Ctl_datatable extends MY_Controller
                 $DataTable['end'] = $dataShow["DATE_END"];
                 $DataTable['title'] = $dataShow["EVENT_NAME"];
                 $DataTable['className'] = $attr['color'];
-                $DataTable['STATUS_SHOW'] = $attr['status'];
+                $DataTable['STATUS_SHOW'] = $dataShow['TYPE_NAME'] . " #" . $dataShow['CODE'] . "<br>" . $dataShow['STATUS_COMPLETE_NAME'];
                 $DataTable['class'] = $state;
 
                 $optionnals['select'] = "event_visitor.*";
@@ -566,7 +608,7 @@ class Ctl_datatable extends MY_Controller
                 $DataTable[0]['USER_START_NAME'] = $emp->NAME;
                 $DataTable[0]['USER_START_LNAME'] = $emp->LASTNAME;
                 $DataTable[0]['class'] = "draft";
-                $DataTable[0]['STATUS_SHOW'] = "แบบร่าง";
+                $DataTable[0]['STATUS_SHOW'] = "แบบร่าง" . $dataShow[0]['TYPE_NAME'] . " #" . $dataShow[0]['CODE'] . "<br>" . $dataShow[0]['STATUS_COMPLETE_NAME'];
 
                 $optionnals['where'] = array(
                     'event_visitor.event_code' => $dataShow[0]["CODE"],

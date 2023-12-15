@@ -101,6 +101,15 @@ function datatableReload(url_draft) {
     createDraftModal(url_draft)
 }
 
+async function createQueue(url, array = []) {
+    let response = await fetch(url, {
+        method: 'post',
+        body: array
+    })
+
+    return response.json()
+}
+
 async function get_data(url, array = []) {
     let response = await fetch(url, {
         method: 'post',

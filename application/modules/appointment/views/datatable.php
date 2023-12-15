@@ -56,33 +56,33 @@ div.table-responsive {
             <div class="col-4">
                 <?//=print_r($_SESSION)?>
                 <button type="button" id="btn-insert" data-toggle="modal" data-target="#insert-modal"
-                    class="btn btn-primary"><i class="fa fa-plus"></i> Booking</button>
+                    class="btn-lg btn-primary"><i class="fa fa-plus"></i> Booking</button>
+                <button type="button" id="btn-tab-content" data-toggle="modal" data-target="#modal-tab-content"
+                    class="btn-lg btn-primary"><i class="mdi mdi-inbox-multiple"></i> ตรวจสอบคิว</button>
                 <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#draft-modal">แบบร่าง</button> -->
             </div>
 
             <div class="col-8">
-                <div class="filter-card">
-                    <div class="row justify-content-end">
-                        <?php
-                            include APPPATH . "views/partials/dom_filter_type.php";
-                            include APPPATH . "views/partials/dom_filter_user.php";
-                            include APPPATH . "views/partials/dom_filter_status.php";
-                            include APPPATH . "views/partials/dom_filter_permit.php";
+                <div class="row justify-content-end">
+                    <?php
+                        include APPPATH . "views/partials/dom_filter_type.php";
+                        include APPPATH . "views/partials/dom_filter_user.php";
+                        include APPPATH . "views/partials/dom_filter_status.php";
+                        include APPPATH . "views/partials/dom_filter_permit.php";
                         ?>
-                    </div>
-                    <div class="row justify-content-end">
-                        <?php
-                            include APPPATH . "views/partials/dom_filter_date.php";
+                </div>
+                <div class="row justify-content-end">
+                    <?php
+                        include APPPATH . "views/partials/dom_filter_date.php";
                         ?>
-                    </div>
-                    <div class="row justify-content-end">
-                        <?php
-                            include APPPATH . "views/partials/dom_filter_time.php";
+                </div>
+                <div class="row justify-content-end">
+                    <?php
+                        include APPPATH . "views/partials/dom_filter_time.php";
                         ?>
-                        <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
-                                aria-hidden="true"></i></button>
-                    </div>
+                    <button type="button" class="btn btn-secondary btn-search"><i class="fa fa-search"
+                            aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -199,6 +199,46 @@ $(document).ready(function() {
 
     /**
      *
+     * EVENT CHANGE
+     *
+     *
+     * HEAD <> VISITOR
+     */
+
+     $("select[name=insert-head]").change(function() {
+            $('select[name=insert-visitor]').empty()
+
+        let sid = $(this).val(),
+            eid = $(this).find('option[value=' + sid + ']').attr('data-employee-id');
+
+            get_employee(eid).then((resp) => {
+            let visitor = ''
+            $.each(resp, function(index, item) {
+                visitor +=
+                    `<option value="${item.ID}">${item.NAME + " " + item.LASTNAME}</option>`
+            })
+            $('select[name=insert-visitor]').html(visitor)
+        })
+    })
+    
+    $("select[name=update-head]").change(function() {
+            $('select[name=update-visitor]').empty()
+
+        let sid = $(this).val(),
+            eid = $(this).find('option[value=' + sid + ']').attr('data-employee-id');
+
+        get_employee(eid).then((resp) => {
+            let visitor = ''
+            $.each(resp, function(index, item) {
+                visitor +=
+                    `<option value="${item.ID}">${item.NAME + " " + item.LASTNAME}</option>`
+            })
+            $('select[name=update-visitor]').html(visitor)
+        })
+    })
+
+    /**
+     *
      * EVENT CLICK
      *
      * 
@@ -306,9 +346,32 @@ $(document).ready(function() {
      *
      * ADDITIONAL FUNCTIONS
      *
+     *
+     * # GET EMPLOYEE 
+     * (HEAD <> VISITOR)
      * 
+     *
+     */
+
+     async function get_employee(eid = null) {
+        let url = new URL("appointment/ctl_calendar/get_employee", domain),
+            data = new FormData();
+        data.append('employee_id', eid)
+        let respond = await fetch(url, {
+            method: 'post',
+            body: data
+        })
+
+        return respond.json();
+
+    }
+
+    /**
+     *
+     *
      * # VALIDATION FUNCTION
-     * 
+     *
+     *
      */
 
      function valid(type = null, data = []) {

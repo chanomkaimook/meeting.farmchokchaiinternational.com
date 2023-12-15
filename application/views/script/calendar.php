@@ -54,6 +54,14 @@ function reloadData(url, filter = null) {
     }
 }
 
+async function createQueue(url, array = []) {
+    let response = await fetch(url, {
+        method: 'post',
+        body: array
+    })
+
+    return response.json()
+}
 
 async function get_data(url, array = []) {
     let response = await fetch(url, {

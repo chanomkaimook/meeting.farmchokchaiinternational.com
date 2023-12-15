@@ -186,7 +186,7 @@ function swal_alert(icon, title, text) {
 }
 
 function swal_reason(data, ctl) {
-    
+
     Swal.fire({
         title: "กรุณาระบุเหตุผลที่ไม่เข้าร่วม",
         input: "text",
@@ -297,9 +297,8 @@ function update_meeting(update_data, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 get_userId(resp.data)
-                if(resp.visitor_delete)
-                {
-                    visitor_delete(resp.visitor_delete,resp.data.id)
+                if (resp.visitor_delete) {
+                    visitor_delete(resp.visitor_delete, resp.data.id)
                 }
             }
         })
@@ -318,9 +317,8 @@ function delete_meeting(delete_data, ctl) {
                 swal_alert('error', 'ไม่สำเร็จ', resp.txt)
             } else {
                 swal_alert('success', 'สำเร็จ', '')
-                if(resp.visitor_delete)
-                {
-                    visitor_delete(resp.visitor_delete,resp.data.id)
+                if (resp.visitor_delete) {
+                    visitor_delete(resp.visitor_delete, resp.data.id)
                 }
             }
         })
@@ -341,9 +339,9 @@ function approval(data, text, ctl) {
             } else {
                 swal_alert('success', 'สำเร็จ', '')
                 get_userId(resp.data)
-            //     if (text == "อนุมัติ") {
-            // }
-        }
+                //     if (text == "อนุมัติ") {
+                // }
+            }
         })
 }
 

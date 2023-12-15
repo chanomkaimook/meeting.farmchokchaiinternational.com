@@ -6,13 +6,15 @@
                 <li class="has-submenu d-none">
                     <a href="<?=base_url('dashboard/ctl_dashboard/')?>"> <i
                             class="mdi mdi-tablet-dashboard"></i>Dashboard</a>
-                    <!-- <ul class="submenu">
-                        <li><a href="index.html"> Dashboard 1</a></li>
-                        <li><a href="dashboard-2.html"> Dashboard 2</a></li>
-                    </ul> -->
+                </li>
+                <li class="has-submenu">
+                    <a href="<?=base_url('appointment/ctl_calendar/')?>"><i class="mdi mdi-calendar-month"></i> ปฏิทิน</a>
+                </li>
+                <li class="has-submenu">
+                    <a href="<?=base_url('appointment/ctl_datatable/')?>"><i class="mdi mdi-table"></i> ตารางข้อมูล</a>
                 </li>
 
-                <li class="has-submenu">
+                <li class="has-submenu d-none">
                     <a href="#">
                         <i class="mdi mdi-calendar-month"></i>การนัดหมาย
                     </a>

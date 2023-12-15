@@ -100,7 +100,147 @@ function detail_drafts(data) {
 /**
  * 
  * function
- * detail_drafts(data)
+ * queue_room(data)
+ * function สำหรับสร้าง DataTable โดยที่
+ * data รับค่ามาจาก function createDraftModal
+ * แล้วนำข้อมูลมาแสดงใน DataTable
+ * 
+ */
+
+function queue_room(data) {
+    $('#queue_room').DataTable().destroy();
+
+    $('#queue_room').DataTable({
+        data: data,
+        autoWidth: false,
+        "order": [],
+        columns: [{
+                "data": "TYPE_NAME"
+            },
+            {
+                "data": "EVENT_NAME"
+            },
+            {
+                "data": "ID"
+            },
+        ],
+        "createdRow": function(row, data, index) {
+            let table_btn_name =
+                `
+                <div class="btn-group dropdown">
+                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">รายละเอียด</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">แก้ไข</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-update-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">นำไปใช้</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" class="dropdown-item delete-meeting" data-event-id='${data['ID']}' data-event-code='${data['CODE']}'>
+                                <span class="align-middle">ลบ</span>
+                            </a>
+                        </div>
+                </div>
+         `
+            $('td', row).eq(2).html(table_btn_name)
+        },
+
+        // dom: datatable_dom,
+        // buttons: datatable_button,
+    });
+}
+
+/**
+ * 
+ * 
+ */
+
+/**
+ * 
+ * function
+ * queue_meeting(data)
+ * function สำหรับสร้าง DataTable โดยที่
+ * data รับค่ามาจาก function createDraftModal
+ * แล้วนำข้อมูลมาแสดงใน DataTable
+ * 
+ */
+
+function queue_meeting(data) {
+    $('#queue_meeting').DataTable().destroy();
+
+    $('#queue_meeting').DataTable({
+        data: data,
+        autoWidth: false,
+        "order": [],
+        columns: [{
+                "data": "TYPE_NAME"
+            },
+            {
+                "data": "EVENT_NAME"
+            },
+            {
+                "data": "ID"
+            },
+        ],
+        "createdRow": function(row, data, index) {
+            let table_btn_name =
+                `
+                <div class="btn-group dropdown">
+                    <a class="text-primary dropdown-toggle mr-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <i class="mdi mdi-dots-vertical"></i>
+                    </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-detail-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">รายละเอียด</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-draft-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">แก้ไข</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" data-id="${data['ID']}" class="dropdown-item btn-update-meeting" data-toggle="modal" data-dismiss="modal">
+                                <span class="align-middle">นำไปใช้</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="" class="dropdown-item delete-meeting" data-event-id='${data['ID']}' data-event-code='${data['CODE']}'>
+                                <span class="align-middle">ลบ</span>
+                            </a>
+                        </div>
+                </div>
+         `
+            $('td', row).eq(2).html(table_btn_name)
+        },
+
+        // dom: datatable_dom,
+        // buttons: datatable_button,
+    });
+}
+
+/**
+ * 
+ * 
+ */
+
+/**
+ * 
+ * function
+ * form_displayed(data)
  * function สำหรับสร้าง DataTable โดยที่
  * data รับค่ามาจาก function createDraftModal
  * แล้วนำข้อมูลมาแสดงใน DataTable
@@ -156,7 +296,7 @@ function form_displayed(data) {
 
     form_displayed_layouts(data.STATUS_COMPLETE, data.class, modal_detail)
     form_displayed_data(data, modal_detail, modal_update)
-    form_displayed_header(data.STATUS_COMPLETE, data.STATUS_COMPLETE_NAME, data.ID)
+    form_displayed_header(data.STATUS_COMPLETE, data.STATUS_SHOW, data.ID)
 
     /********************************************* Form Data *********************************************/
     if (!data.APPROVE_DATE && !data.DISAPPROVE_DATE && !data.CANCLE_DATE) {
@@ -178,7 +318,7 @@ function form_displayed(data) {
 /**
  * 
  * function
- * detail_drafts(data)
+ * form_displayed_layouts(status, role, modal_detail)
  * function สำหรับสร้าง DataTable โดยที่
  * data รับค่ามาจาก function createDraftModal
  * แล้วนำข้อมูลมาแสดงใน DataTable
@@ -508,7 +648,7 @@ function form_displayed_layouts(status, role, modal_detail) {
 /**
  * 
  * function
- * detail_drafts(data)
+ * form_displayed_header(status, status_text, event_id)
  * function สำหรับสร้าง DataTable โดยที่
  * data รับค่ามาจาก function createDraftModal
  * แล้วนำข้อมูลมาแสดงใน DataTable
@@ -557,7 +697,7 @@ function form_displayed_header(status, status_text, event_id) {
 /**
  * 
  * function
- * detail_drafts(data)
+ * form_displayed_data(data, modal_detail, modal_update)
  * function สำหรับสร้าง DataTable โดยที่
  * data รับค่ามาจาก function createDraftModal
  * แล้วนำข้อมูลมาแสดงใน DataTable

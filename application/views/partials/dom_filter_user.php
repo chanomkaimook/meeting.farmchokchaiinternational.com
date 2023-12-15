@@ -1,11 +1,11 @@
 <input type="hidden" name="hidden_user" id="hidden_user">
-<div class="pl-1">
+<div class="pl-1 w-20">
     <select class="form-control form-white select2" data-toggle="select2" name="user">
-        <option>จัดการ</option>
+        <option>รายชื่อ</option>
         <?php
-                                    foreach ($staff as $data) {
+                                    foreach ($staff as $key => $data) {
                                         ?>
-        <option value="<?=$data->ID?>"><?=$data->NAME . " " . $data->LASTNAME?></option>
+        <option value="<?=$data['ID']?>"><?=$data['NAME'] . " " . $data['LASTNAME']?></option>
         <?php
                                     }
                                     ?>

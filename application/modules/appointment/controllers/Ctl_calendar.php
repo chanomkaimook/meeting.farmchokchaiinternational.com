@@ -24,7 +24,7 @@ class Ctl_calendar extends MY_Controller
             'staff.employee_id' => $this->user_emp,
         );
 
-        $staff[] = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff,"row");
+        $staff[] = (array) $this->mdl_staff->get_dataShow(null, $optionnal_staff, "row");
 
         $optionnal_role['where'] = array(
             'staff_owner' => $this->user_emp,
@@ -46,15 +46,28 @@ class Ctl_calendar extends MY_Controller
 
         $data['time'] = $this->mdl_calendar->get_time();
 
-        $optionnalr['where'] = array(
+        /* $optionnalr['where'] = array(
             'branch' => "สำนักงานรังสิต",
-        );
-        $data['room'] = $this->mdl_rooms->get_data(null, $optionnalr);
-        $data['employee'] = $this->mdl_employee->get_dataShow();
+        ); */
+        $data['room'] = $this->mdl_rooms->get_data(/* null, $optionnalr */);
+        $data['employee'] = $this->get_employee();
 
         $this->template->set_layout('lay_calendar');
         $this->template->title($this->_title);
         $this->template->build('calendar', $data);
+    }
+
+    public function get_employee()
+    {
+        $optionnal = [];
+        if ($this->input->post('employee_id')) {
+            $optionnal["where"]["employee.id <> "] = $this->input->post('employee_id');
+            $return = $this->mdl_employee->get_dataShow(null, $optionnal);
+            echo json_encode($return);
+        } else {
+            $return = $this->mdl_employee->get_dataShow();
+            return $return;
+        }
     }
 
     public function status($status_complete, $child = null)
@@ -179,7 +192,7 @@ class Ctl_calendar extends MY_Controller
                         $Calendar[$i]['end'] = date('Y-m-d', strtotime($dataVal["DATE_END"] . "+ 1 days"));
                         $Calendar[$i]['title'] = $dataVal["EVENT_NAME"];
                         $Calendar[$i]['className'] = $attr['color'];
-                        $Calendar[$i]['STATUS_SHOW'] = $attr['status'];
+                        $Calendar[$i]['STATUS_SHOW'] = $dataVal['TYPE_NAME'] . " #" . $dataVal['CODE'] . "<br>" . $dataVal['STATUS_COMPLETE_NAME'];
                         $Calendar[$i]['class'] = $state;
                         // $Calendar[$i]['test_day'] = date('W', strtotime($dataVal['DATE_END']));
 
@@ -237,11 +250,11 @@ class Ctl_calendar extends MY_Controller
             $datee = $array['datee'];
             $times = $array['times'];
             $timee = $array['timee'];
-            $user = $array['user'];
-            $permit = $array['permit'];
-            $status = $array['status'];
+            $user = intval($array['user']);
+            $permit = intval($array['permit']);
+            $status = intval($array['status']);
             $area = $array['area'];
-            $type = $array['type'];
+            $type = intval($array['type']);
 
             if ($dates && $datee) {
                 $optionnal['where']['(event.date_begin BETWEEN "' . $dates . '" AND "' . $datee . '")'] = null;
@@ -462,7 +475,7 @@ class Ctl_calendar extends MY_Controller
                 $Calendar[0]['USER_START_NAME'] = $emp->NAME;
                 $Calendar[0]['USER_START_LNAME'] = $emp->LASTNAME;
                 $Calendar[0]['class'] = "draft";
-                $Calendar[0]['STATUS_SHOW'] = "แบบร่าง";
+                $Calendar[0]['STATUS_SHOW'] = "แบบร่าง" . $dataShow[0]['TYPE_NAME'] . " #" . $dataShow[0]['CODE'] . "<br>" . $dataShow[0]['STATUS_COMPLETE_NAME'];
 
                 $optionnals['where'] = array(
                     'event_visitor.event_code' => $dataShow[0]["CODE"],
